@@ -1,5 +1,6 @@
 import { BarChart3, Boxes, Coffee, LayoutGrid, Settings } from 'lucide-react';
 import NavLink from './NavLink.jsx';
+import QrNotificationControls from './QrNotificationControls.jsx';
 import { getCurrentRoutePath } from '../services/router.js';
 
 const navItems = [
@@ -45,7 +46,10 @@ export default function AppShell({ title, subtitle, actions, children, contentCl
                 <h2 className="text-2xl font-black text-stone-950">{title}</h2>
                 {subtitle ? <p className="mt-1 text-sm font-semibold text-stone-500">{subtitle}</p> : null}
               </div>
-              {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
+              <div className="flex flex-wrap items-center gap-2">
+                <QrNotificationControls />
+                {actions}
+              </div>
             </div>
 
             <nav className="flex gap-2 overflow-x-auto pb-1 lg:hidden">

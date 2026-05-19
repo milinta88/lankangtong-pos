@@ -36,9 +36,11 @@ import {
 import { saveReceiptDetail } from '../services/receiptCache.js';
 import { navigateTo } from '../App.jsx';
 import { getCurrentRoutePath, PRODUCTION_ORDER_URL } from '../services/router.js';
+import { playQrPendingBeep } from '../services/qrPendingAlerts.js';
 import {
   consumePendingTableFocus,
   peekPendingTableFocus,
+  QR_PENDING_FOCUS_EVENT,
   readQrPendingSoundEnabled,
   readSeenPendingCount,
   writeQrPendingSoundEnabled,
@@ -225,31 +227,6 @@ function getTablePendingCount(table) {
 
 function getTablePendingTotal(table) {
   return toNumber(table?.order?.pending_total || 0);
-}
-
-function playPendingAlertSound() {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-
-    if (!AudioContext) return;
-
-    const context = new AudioContext();
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-
-    oscillator.type = 'sine';
-    oscillator.frequency.value = 880;
-    gain.gain.setValueAtTime(0.0001, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.18, context.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.22);
-    oscillator.connect(gain);
-    gain.connect(context.destination);
-    oscillator.start();
-    oscillator.stop(context.currentTime + 0.24);
-    window.setTimeout(() => context.close().catch(() => {}), 400);
-  } catch (error) {
-    // Browsers may block audio until a user interaction. The visual alert still covers the workflow.
-  }
 }
 
 export default function Tables() {
@@ -612,10 +589,10 @@ export default function Tables() {
     tables.forEach((table) => {
       const tableNo = table.table_no;
       const pendingCount = getTablePendingCount(table);
-      const previousCount =
-        tableNo in seenPendingCountsRef.current
-          ? toNumber(seenPendingCountsRef.current[tableNo])
-          : readSeenPendingCount(tableNo);
+      const previousCount = Math.max(
+        tableNo in seenPendingCountsRef.current ? toNumber(seenPendingCountsRef.current[tableNo]) : 0,
+        readSeenPendingCount(tableNo),
+      );
 
       if (pendingCount > previousCount) {
         newAlerts.push({
@@ -649,7 +626,7 @@ export default function Tables() {
       setPendingToast(newestAlert);
 
       if (soundEnabled) {
-        playPendingAlertSound();
+        playQrPendingBeep();
       }
     }
   }, [soundEnabled, tables]);
@@ -721,7 +698,7 @@ export default function Tables() {
     }
   }
 
-  React.useEffect(() => {
+  function openFocusedPendingTable() {
     if (!tables.length || isWorking || isPayingTable || isClearingTable) {
       return;
     }
@@ -741,6 +718,19 @@ export default function Tables() {
     consumePendingTableFocus();
     setPendingToast(null);
     void handleSelectTable(table, { focusPending: true });
+  }
+
+  React.useEffect(() => {
+    openFocusedPendingTable();
+  }, [isClearingTable, isPayingTable, isWorking, tables]);
+
+  React.useEffect(() => {
+    const handleFocusPendingTable = () => {
+      openFocusedPendingTable();
+    };
+
+    window.addEventListener(QR_PENDING_FOCUS_EVENT, handleFocusPendingTable);
+    return () => window.removeEventListener(QR_PENDING_FOCUS_EVENT, handleFocusPendingTable);
   }, [isClearingTable, isPayingTable, isWorking, tables]);
 
   function addToCart(menu) {

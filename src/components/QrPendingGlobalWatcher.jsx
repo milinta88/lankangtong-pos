@@ -3,7 +3,9 @@ import { BellRing } from 'lucide-react';
 import Button from './Button.jsx';
 import { getTables, isGetTablesRequestInFlight } from '../services/api.js';
 import { getCurrentRoutePath, navigateTo } from '../services/router.js';
+import { playQrPendingBeep, showQrPendingBrowserNotification } from '../services/qrPendingAlerts.js';
 import {
+  readQrBrowserNotificationEnabled,
   readQrPendingSoundEnabled,
   readSeenPendingCount,
   requestPendingTableFocus,
@@ -34,31 +36,6 @@ function getPendingCount(table) {
 
 function getPendingTotal(table) {
   return toNumber(table?.order?.pending_total || 0);
-}
-
-function playPendingAlertSound() {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-
-    if (!AudioContext) return;
-
-    const context = new AudioContext();
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-
-    oscillator.type = 'sine';
-    oscillator.frequency.value = 880;
-    gain.gain.setValueAtTime(0.0001, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.18, context.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.22);
-    oscillator.connect(gain);
-    gain.connect(context.destination);
-    oscillator.start();
-    oscillator.stop(context.currentTime + 0.24);
-    window.setTimeout(() => context.close().catch(() => {}), 400);
-  } catch (error) {
-    // Browsers may block audio until a user interaction. The visual alert still covers the workflow.
-  }
 }
 
 function buildPendingToast(tables) {
@@ -96,6 +73,11 @@ function buildPendingToast(tables) {
   };
 }
 
+function openTablesForToast(toast) {
+  requestPendingTableFocus(toast.table_no);
+  navigateTo('/tables');
+}
+
 export default function QrPendingGlobalWatcher() {
   const [routePath, setRoutePath] = React.useState(getCurrentRoutePath);
   const [toast, setToast] = React.useState(null);
@@ -129,10 +111,6 @@ export default function QrPendingGlobalWatcher() {
         return;
       }
 
-      if (document.visibilityState !== 'visible') {
-        return;
-      }
-
       if (isPollingRef.current || isGetTablesRequestInFlight()) {
         if (import.meta.env.DEV) {
           console.log('[QR Pending] poll skipped: GET_TABLES in flight');
@@ -153,17 +131,17 @@ export default function QrPendingGlobalWatcher() {
           return;
         }
 
-        if (getCurrentRoutePath() === '/tables') {
-          return;
-        }
-
         const nextToast = buildPendingToast(result.tables || []);
 
         if (nextToast) {
           setToast(nextToast);
 
           if (readQrPendingSoundEnabled()) {
-            playPendingAlertSound();
+            playQrPendingBeep();
+          }
+
+          if (readQrBrowserNotificationEnabled()) {
+            showQrPendingBrowserNotification(nextToast, () => openTablesForToast(nextToast));
           }
         }
       } catch (error) {
@@ -185,8 +163,7 @@ export default function QrPendingGlobalWatcher() {
 
   const openTables = () => {
     setToast(null);
-    requestPendingTableFocus(toast.table_no);
-    navigateTo('/tables');
+    openTablesForToast(toast);
   };
 
   return (

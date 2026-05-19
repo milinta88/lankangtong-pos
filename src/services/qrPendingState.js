@@ -1,7 +1,10 @@
 export const QR_PENDING_FOCUS_TABLE_KEY = 'langangtong.tables.focusPendingTable';
-export const QR_PENDING_SOUND_STORAGE_KEY = 'langangtong.tables.soundEnabled';
+export const QR_PENDING_FOCUS_EVENT = 'langangtong:focus-pending-table';
+export const QR_PENDING_SOUND_STORAGE_KEY = 'qrSoundEnabled';
+export const QR_BROWSER_NOTIFICATION_STORAGE_KEY = 'qrBrowserNotificationEnabled';
 
 const QR_PENDING_SEEN_PREFIX = 'qrPendingSeen:';
+const LEGACY_QR_PENDING_SOUND_STORAGE_KEY = 'langangtong.tables.soundEnabled';
 
 function storageGet(storage, key) {
   try {
@@ -61,6 +64,10 @@ export function requestPendingTableFocus(tableNo) {
   if (!tableNo || typeof sessionStorage === 'undefined') return;
 
   storageSet(sessionStorage, QR_PENDING_FOCUS_TABLE_KEY, tableNo);
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(QR_PENDING_FOCUS_EVENT, { detail: { tableNo } }));
+  }
 }
 
 export function consumePendingTableFocus() {
@@ -80,11 +87,29 @@ export function peekPendingTableFocus() {
 export function readQrPendingSoundEnabled() {
   if (typeof localStorage === 'undefined') return false;
 
-  return storageGet(localStorage, QR_PENDING_SOUND_STORAGE_KEY) === 'true';
+  const storedValue = storageGet(localStorage, QR_PENDING_SOUND_STORAGE_KEY);
+
+  if (storedValue !== null) {
+    return storedValue === 'true';
+  }
+
+  return storageGet(localStorage, LEGACY_QR_PENDING_SOUND_STORAGE_KEY) === 'true';
 }
 
 export function writeQrPendingSoundEnabled(isEnabled) {
   if (typeof localStorage === 'undefined') return;
 
   storageSet(localStorage, QR_PENDING_SOUND_STORAGE_KEY, isEnabled ? 'true' : 'false');
+}
+
+export function readQrBrowserNotificationEnabled() {
+  if (typeof localStorage === 'undefined') return false;
+
+  return storageGet(localStorage, QR_BROWSER_NOTIFICATION_STORAGE_KEY) === 'true';
+}
+
+export function writeQrBrowserNotificationEnabled(isEnabled) {
+  if (typeof localStorage === 'undefined') return;
+
+  storageSet(localStorage, QR_BROWSER_NOTIFICATION_STORAGE_KEY, isEnabled ? 'true' : 'false');
 }
