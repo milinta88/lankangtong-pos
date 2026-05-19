@@ -395,7 +395,7 @@ function getTablesSeedRecords_() {
     tables.push({
       table_id: tableId,
       table_no: tableId,
-      table_name: 'โต๊ะ ' + index,
+      table_name: index === 10 ? 'ซุ้มน้ำ 1' : 'โต๊ะ ' + index,
       status: 'AVAILABLE',
       current_order_id: '',
       qr_token: makeTableQrToken_(),

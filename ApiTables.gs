@@ -4,6 +4,7 @@ var TABLE_STATUS_READY_TO_PAY = 'READY_TO_PAY';
 var TEST_TABLE_NO_PROPERTY = 'TEST_TABLE_NO';
 var TEST_TABLE_ORDER_ID_PROPERTY = 'TEST_TABLE_ORDER_ID';
 var TEST_TABLE_DEFAULT_NO = 'T01';
+var TABLE_10_DISPLAY_NAME = 'ซุ้มน้ำ 1';
 
 function handleTableAction_(action, request) {
   switch (action) {
@@ -80,7 +81,8 @@ function ensureDefaultTables_() {
 
   for (var index = 1; index <= 10; index++) {
     var tableNo = 'T' + ('0' + index).slice(-2);
-    var tableName = 'โต๊ะ ' + index;
+    var tableName = getDefaultTableDisplayName_(index);
+    var legacyTableName = 'โต๊ะ ' + index;
     var existing = existingByKey[tableNo];
 
     if (!existing) {
@@ -110,7 +112,7 @@ function ensureDefaultTables_() {
       updates.table_no = tableNo;
     }
 
-    if (!existingName || existingName === tableNo) {
+    if (!existingName || existingName === tableNo || (tableNo === 'T10' && existingName === legacyTableName)) {
       updates.table_name = tableName;
     }
 
@@ -142,6 +144,20 @@ function ensureDefaultTables_() {
   if (recordsToAppend.length) {
     appendRowsToTable_(table, recordsToAppend);
   }
+}
+
+function getDefaultTableDisplayName_(index) {
+  return Number(index) === 10 ? TABLE_10_DISPLAY_NAME : 'โต๊ะ ' + index;
+}
+
+function normalizeTableDisplayName_(tableNo, tableName) {
+  var normalizedTableNo = stringValue_(tableNo).toUpperCase();
+
+  if (normalizedTableNo === 'T10') {
+    return TABLE_10_DISPLAY_NAME;
+  }
+
+  return stringValue_(tableName || tableNo);
 }
 
 function makeTableQrToken_() {
@@ -1023,7 +1039,7 @@ function getTableQrLinks_(request) {
 
     return {
       table_no: tableNo,
-      table_name: stringValue_(getValueByAliases_(table, ['table_name'], tableNo)),
+      table_name: normalizeTableDisplayName_(tableNo, getValueByAliases_(table, ['table_name'], tableNo)),
       qr_token: token,
       qr_url: baseUrl + separator + 'table=' + encodeURIComponent(tableNo) + '&token=' + encodeURIComponent(token)
     };
@@ -1090,7 +1106,10 @@ function regenerateTableQrTokens_(request) {
 
       responseTables.push({
         table_no: stringValue_(getValueByAliases_(record, ['table_no', 'table_id'], '')),
-        table_name: stringValue_(getValueByAliases_(record, ['table_name', 'table_no', 'table_id'], '')),
+        table_name: normalizeTableDisplayName_(
+          getValueByAliases_(record, ['table_no', 'table_id'], ''),
+          getValueByAliases_(record, ['table_name', 'table_no', 'table_id'], '')
+        ),
         qr_token: token
       });
     });
@@ -1506,10 +1525,12 @@ function findTableByOrder_(tables, order) {
 }
 
 function normalizeTableRecord_(table) {
+  var tableNo = stringValue_(getValueByAliases_(table, ['table_no', 'table_id'], ''));
+
   return {
     table_id: stringValue_(getValueByAliases_(table, ['table_id'], '')),
-    table_no: stringValue_(getValueByAliases_(table, ['table_no', 'table_id'], '')),
-    table_name: stringValue_(getValueByAliases_(table, ['table_name', 'table_no', 'table_id'], '')),
+    table_no: tableNo,
+    table_name: normalizeTableDisplayName_(tableNo, getValueByAliases_(table, ['table_name', 'table_no', 'table_id'], '')),
     status: normalizeTableStatus_(getValueByAliases_(table, ['status'], TABLE_STATUS_AVAILABLE)),
     current_order_id: stringValue_(getValueByAliases_(table, ['current_order_id'], '')),
     qr_token: stringValue_(getValueByAliases_(table, ['qr_token'], '')),

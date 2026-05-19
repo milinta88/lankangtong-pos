@@ -27,6 +27,14 @@ function formatMoney(value) {
   }).format(toNumber(value));
 }
 
+function formatTableDisplayName(tableNo) {
+  if (String(tableNo || '').toUpperCase() === 'T10') {
+    return 'ซุ้มน้ำ 1';
+  }
+
+  return tableNo ? `โต๊ะ ${tableNo}` : 'ไม่พบข้อมูลโต๊ะ';
+}
+
 function makeCartItem(menu) {
   return {
     cart_id: `${menu.menu_id}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -335,7 +343,7 @@ export default function CustomerOrder() {
           <div className="mt-5 grid gap-3 rounded-[24px] border border-[#eadbc9] bg-[#fffaf3] p-4 text-left">
             <div className="flex justify-between gap-3">
               <span className="font-bold text-stone-500">โต๊ะ</span>
-              <span className="font-black">{visibleSuccess.table_no}</span>
+              <span className="font-black">{formatTableDisplayName(visibleSuccess.table_no)}</span>
             </div>
             <div className="flex justify-between gap-3">
               <span className="font-bold text-stone-500">เลขออเดอร์</span>
@@ -359,7 +367,7 @@ export default function CustomerOrder() {
           <div className="mt-1 flex items-end justify-between gap-3">
             <div>
               <h1 className="text-2xl font-black">สั่งอาหารที่โต๊ะ</h1>
-              <p className="text-sm font-bold text-stone-500">{tableNo ? `โต๊ะ ${tableNo}` : 'ไม่พบข้อมูลโต๊ะ'}</p>
+              <p className="text-sm font-bold text-stone-500">{formatTableDisplayName(tableNo)}</p>
             </div>
             <span className="rounded-full border border-[#d9c2aa] bg-white px-3 py-1 text-xs font-black text-[#6f4e37] shadow-sm">
               QR Order

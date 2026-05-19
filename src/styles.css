@@ -53,33 +53,37 @@ textarea {
     overflow: visible;
     padding: 3mm;
     font-size: 13.5px;
-    line-height: 1.42;
+    line-height: 1.12;
     box-shadow: none !important;
   }
 
   .receipt-print-area > .my-2 {
-    margin-top: 2.6mm;
-    margin-bottom: 2.6mm;
+    margin-top: 3px;
+    margin-bottom: 3px;
   }
 
   .receipt-shop-name {
     font-size: 21px !important;
-    line-height: 1.18;
+    line-height: 1.08;
     font-weight: 900;
   }
 
   .receipt-subtitle,
   .receipt-meta {
     font-size: 13.5px;
-    line-height: 1.42;
+    line-height: 1.12;
   }
 
-  .receipt-items {
-    gap: 9px;
+  .receipt-meta > :not([hidden]) ~ :not([hidden]),
+  .receipt-items > :not([hidden]) ~ :not([hidden]),
+  .receipt-summary > :not([hidden]) ~ :not([hidden]),
+  .receipt-payment > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1px;
+    margin-bottom: 0;
   }
 
   .receipt-item {
-    padding: 3px 0;
+    padding: 1px 0;
     break-inside: avoid;
   }
 
@@ -91,7 +95,7 @@ textarea {
   .receipt-item-name,
   .receipt-item-total {
     font-size: 15.5px;
-    line-height: 1.34;
+    line-height: 1.12;
     font-weight: 800;
   }
 
@@ -106,15 +110,15 @@ textarea {
   }
 
   .receipt-item-detail {
-    margin-top: 2px;
+    margin-top: 0;
     font-size: 14px !important;
-    line-height: 1.35;
+    line-height: 1.1;
   }
 
   .receipt-summary {
-    padding-top: 1mm;
+    padding-top: 0;
     font-size: 15px;
-    line-height: 1.42;
+    line-height: 1.12;
   }
 
   .receipt-summary > div,
@@ -124,11 +128,11 @@ textarea {
   }
 
   .receipt-total-row {
-    margin-top: 5px;
-    padding-top: 4px;
+    margin-top: 2px;
+    padding-top: 2px;
     border-top: 1px dashed #000;
     font-size: 26px !important;
-    line-height: 1.1;
+    line-height: 1.05;
     font-weight: 900;
   }
 
@@ -138,23 +142,28 @@ textarea {
 
   .receipt-payment {
     font-size: 16.5px;
-    line-height: 1.42;
+    line-height: 1.12;
   }
 
   .receipt-promptpay {
     font-size: 13px;
-    line-height: 1.35;
+    line-height: 1.12;
+  }
+
+  .receipt-promptpay p {
+    margin-top: 1px;
+    margin-bottom: 0;
   }
 
   .receipt-qr {
     width: 30mm;
     height: 30mm;
-    margin: 0 auto;
+    margin: 1px auto 0;
   }
 
   .receipt-footer {
     font-size: 13px;
-    line-height: 1.35;
+    line-height: 1.12;
   }
 
   .no-print {
