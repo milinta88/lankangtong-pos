@@ -70,14 +70,19 @@ function getDailyReport_(request) {
     summary.total_sales += orderTotal;
 
     (itemsByOrderId[orderId] || []).forEach(function (item) {
+      if (isSkippedOrderItem_(item)) {
+        return;
+      }
+
       var menuId = stringValue_(getValueByAliases_(item, ['menu_id'], ''));
       var menuName = stringValue_(getValueByAliases_(item, ['menu_name_snapshot', 'menu_name'], menuId));
       var quantity = numberValue_(getValueByAliases_(item, ['quantity', 'qty'], 0));
       var itemTotal = numberValue_(getValueByAliases_(item, ['total'], 0));
       var itemType = stringValue_(getValueByAliases_(item, ['item_type', 'itemType'], '')).toUpperCase();
+      var itemStatus = stringValue_(getValueByAliases_(item, ['status'], '')).toUpperCase();
       var itemKey = menuId || menuName;
 
-      if (!itemKey || quantity <= 0) {
+      if (itemStatus === ORDER_ITEM_STATUS_PENDING_CONFIRM || !itemKey || quantity <= 0) {
         return;
       }
 

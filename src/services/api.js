@@ -352,6 +352,14 @@ export function addItemsToTableOrder(payload) {
   return postAction('ADD_ITEMS_TO_TABLE_ORDER', payload);
 }
 
+export function confirmTablePendingItems(payload) {
+  return postAction('CONFIRM_TABLE_PENDING_ITEMS', payload);
+}
+
+export function rejectTablePendingItems(payload) {
+  return postAction('REJECT_TABLE_PENDING_ITEMS', payload);
+}
+
 export function payTableOrder(payload) {
   return postAction('PAY_TABLE_ORDER', payload);
 }

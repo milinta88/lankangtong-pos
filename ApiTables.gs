@@ -19,6 +19,12 @@ function handleTableAction_(action, request) {
     case 'ADD_ITEMS_TO_TABLE_ORDER':
       return addItemsToTableOrder_(request || {});
 
+    case 'CONFIRM_TABLE_PENDING_ITEMS':
+      return confirmTablePendingItems_(request || {});
+
+    case 'REJECT_TABLE_PENDING_ITEMS':
+      return rejectTablePendingItems_(request || {});
+
     case 'PAY_TABLE_ORDER':
       return payTableOrder_(request || {});
 
@@ -194,19 +200,32 @@ function getTables_(request) {
 
   stepStart = perfStart_();
   var orderById = indexRecordsByValue_(orders, ['order_id']);
-  var itemCountByOrderId = buildItemCountByOrderId_(orderItems, currentOrderIds);
+  var orderItemSummaryByOrderId = buildOrderItemSummaryByOrderId_(orderItems, currentOrderIds);
   var response = {
     success: true,
     tables: tables.map(function (table) {
       var normalized = normalizeTableRecord_(table);
       var orderId = normalized.current_order_id;
       var order = orderId ? orderById[orderId] : null;
+      var orderItemSummary = orderItemSummaryByOrderId[orderId] || {
+        totals: {
+          total: 0,
+          item_count: 0
+        },
+        pending_totals: {
+          total: 0,
+          item_count: 0
+        }
+      };
 
       if (order) {
         normalized.order = {
           order_no: stringValue_(getValueByAliases_(order, ['order_no'], '')),
-          total: numberValue_(getValueByAliases_(order, ['total'], 0)),
-          item_count: itemCountByOrderId[orderId] || 0,
+          total: orderItemSummary.totals.total,
+          item_count: orderItemSummary.totals.item_count,
+          pending_item_count: orderItemSummary.pending_totals.item_count,
+          pending_total: orderItemSummary.pending_totals.total,
+          has_pending_items: orderItemSummary.pending_totals.item_count > 0,
           created_at: getValueByAliases_(order, ['created_at'], '')
         };
       }
@@ -435,6 +454,103 @@ function addItemsToTableOrder_(request) {
   }
 }
 
+function confirmTablePendingItems_(request) {
+  return updateTablePendingItemStatuses_(request, ORDER_ITEM_STATUS_NEW, 'Pending QR items confirmed');
+}
+
+function rejectTablePendingItems_(request) {
+  return updateTablePendingItemStatuses_(request, ORDER_ITEM_STATUS_REJECTED, 'Pending QR items rejected');
+}
+
+function updateTablePendingItemStatuses_(request, nextStatus, message) {
+  var orderId = stringValue_(request.order_id || request.orderId);
+  var requestedItemIds = Array.isArray(request.item_ids || request.itemIds)
+    ? (request.item_ids || request.itemIds).map(stringValue_)
+    : [];
+  var shouldUpdateAllPending = requestedItemIds.length === 0;
+
+  if (!orderId) {
+    return {
+      success: false,
+      error: 'MISSING_ORDER_ID',
+      message: 'Missing order_id'
+    };
+  }
+
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+
+  try {
+    ensureTableDatabaseReady_();
+
+    var timestamp = nowIso_();
+    var ordersTable = getSheetTable_('orders');
+    var order = findRecordByValue_(ordersTable.records, ['order_id'], orderId);
+
+    if (!order) {
+      return {
+        success: false,
+        error: 'ORDER_NOT_FOUND',
+        message: 'Order not found'
+      };
+    }
+
+    if (isOrderPaid_(order)) {
+      return {
+        success: false,
+        error: 'ORDER_ALREADY_PAID',
+        message: 'Order is already paid'
+      };
+    }
+
+    var orderItemsTable = getSheetTable_('order_items');
+    var allOrderItems = getOrderItemsFromRecords_(orderItemsTable.records, orderId);
+    var requestedById = {};
+    requestedItemIds.forEach(function (itemId) {
+      if (itemId) {
+        requestedById[itemId] = true;
+      }
+    });
+    var itemsToUpdate = allOrderItems.filter(function (item) {
+      var itemId = stringValue_(getValueByAliases_(item, ['item_id'], ''));
+
+      return isPendingConfirmOrderItem_(item) && (shouldUpdateAllPending || requestedById[itemId]);
+    });
+
+    if (!itemsToUpdate.length) {
+      var tablesTable = getSheetTable_('tables');
+      var table = findTableByOrderId_(tablesTable.records, orderId) || findTableByOrder_(tablesTable.records, order);
+
+      return buildTableOrderResponse_(table, orderId, 'No pending QR items to update', {
+        order: order,
+        items: allOrderItems,
+        payments: []
+      });
+    }
+
+    updateOrderItemStatusRows_(orderItemsTable, itemsToUpdate, nextStatus, timestamp);
+
+    var totals = calculateConfirmedOrderItemTotals_(allOrderItems);
+    updateOrderTotals_(ordersTable, order, totals, timestamp);
+
+    var diningTablesTable = getSheetTable_('tables');
+    var diningTable = findTableByOrderId_(diningTablesTable.records, orderId) || findTableByOrder_(diningTablesTable.records, order);
+
+    return buildTableOrderResponse_(diningTable, orderId, message, {
+      order: order,
+      items: allOrderItems,
+      payments: []
+    });
+  } catch (err) {
+    return {
+      success: false,
+      message: err && err.message ? err.message : String(err)
+    };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
 function payTableOrder_(request) {
   var totalStart = perfStart_();
   var orderId = stringValue_(request.order_id || request.orderId);
@@ -497,6 +613,22 @@ function payTableOrder_(request) {
     var orderItems = getOrderItemsFromRecords_(tables.order_items.records, orderId);
     perfLog_('PAY_TABLE_ORDER read order_items', stepStart);
 
+    var pendingItems = getPendingConfirmOrderItems_(orderItems);
+
+    if (pendingItems.length) {
+      var pendingResponse = {
+        success: false,
+        error: 'PENDING_ITEMS_EXIST',
+        message: 'Please confirm or reject pending QR items before payment.'
+      };
+
+      perfLog_('PAY_TABLE_ORDER total', totalStart);
+
+      return pendingResponse;
+    }
+
+    var confirmedOrderItems = getConfirmedBillOrderItems_(orderItems);
+
     stepStart = perfStart_();
     tables.menus = getSheetTable_('menus');
     perfLog_('PAY_TABLE_ORDER read menus', stepStart);
@@ -511,7 +643,7 @@ function payTableOrder_(request) {
     perfLog_('PAY_TABLE_ORDER ' + (settingsResult.fromCache ? 'cached settings' : 'read settings'), stepStart);
 
     stepStart = perfStart_();
-    var directStockPlan = buildDirectStockPlan_(orderItems, tables.menus.records);
+    var directStockPlan = buildDirectStockPlan_(confirmedOrderItems, tables.menus.records);
     var allowNegativeStock = isTruthy_(settingsMap.allow_negative_stock || false);
     var insufficientStock = findInsufficientDirectStock_(directStockPlan, allowNegativeStock);
     var stockLogsTable = directStockPlan.length ? getSheetTableHeadersOnly_('stock_logs') : null;
@@ -580,7 +712,7 @@ function payTableOrder_(request) {
 
     stepStart = perfStart_();
     var normalizedOrder = normalizeOrderRecord_(order);
-    var normalizedItems = orderItems.map(normalizeOrderItemRecord_);
+    var normalizedItems = confirmedOrderItems.map(normalizeOrderItemRecord_);
     var normalizedPayment = normalizePaymentRecord_(paymentRecord);
     var receipt = buildReceiptSummaryFromSettings_(normalizedOrder, normalizedPayment, settingsMap);
     perfLog_('PAY_TABLE_ORDER build receipt', stepStart);
@@ -793,15 +925,20 @@ function submitQrTableOrder_(request) {
       appendOrderNote_(ordersTable, order, buildQrOrderNote_(request), timestamp);
     }
 
-    var addResult = addItemsToTableOrderInternal_(ordersTable, order, items, 'QR', timestamp);
+    var addResult = addItemsToTableOrderInternal_(ordersTable, order, items, 'QR', timestamp, {
+      status: ORDER_ITEM_STATUS_PENDING_CONFIRM
+    });
+    var submittedTotals = calculateOrderItemTotals_(addResult.newItems);
 
     return {
       success: true,
       message: 'Order submitted',
       table_no: tableNo,
       order_no: stringValue_(getValueByAliases_(order, ['order_no'], '')),
-      items: addResult.allItems.map(normalizeOrderItemRecord_),
-      total: addResult.totals.total
+      items: addResult.newItems.map(normalizeOrderItemRecord_),
+      total: submittedTotals.total,
+      pending_total: addResult.pending_totals.total,
+      pending_item_count: addResult.pending_totals.item_count
     };
   } catch (err) {
     return {
@@ -845,14 +982,18 @@ function createEmptyTableOrder_(ordersTable, table, request, createdBy, timestam
   return order;
 }
 
-function addItemsToTableOrderInternal_(ordersTable, order, items, createdBy, timestamp) {
+function addItemsToTableOrderInternal_(ordersTable, order, items, createdBy, timestamp, options) {
+  options = options || {};
   var menusTable = getSheetTable_('menus');
   var orderItemsTable = getSheetTable_('order_items');
   var menuById = indexRecordsByValue_(menusTable.records, ['menu_id']);
   var existingItems = getOrderItemsFromRecords_(orderItemsTable.records, order.order_id);
-  var newItems = buildTableOrderItemRecords_(order.order_id, items, menuById, createdBy, timestamp);
+  var newItems = buildTableOrderItemRecords_(order.order_id, items, menuById, createdBy, timestamp, {
+    status: options.status || ORDER_ITEM_STATUS_NEW
+  });
   var allItems = existingItems.concat(newItems);
-  var totals = calculateOrderItemTotals_(allItems);
+  var totals = calculateConfirmedOrderItemTotals_(allItems);
+  var pendingTotals = calculatePendingOrderItemTotals_(allItems);
 
   appendRowsToTable_(orderItemsTable, newItems);
   updateOrderTotals_(ordersTable, order, totals, timestamp);
@@ -860,11 +1001,15 @@ function addItemsToTableOrderInternal_(ordersTable, order, items, createdBy, tim
   return {
     newItems: newItems,
     allItems: allItems,
-    totals: totals
+    totals: totals,
+    pending_totals: pendingTotals
   };
 }
 
-function buildTableOrderItemRecords_(orderId, items, menuById, createdBy, timestamp) {
+function buildTableOrderItemRecords_(orderId, items, menuById, createdBy, timestamp, options) {
+  options = options || {};
+  var status = stringValue_(options.status || ORDER_ITEM_STATUS_NEW) || ORDER_ITEM_STATUS_NEW;
+
   return items.map(function (item) {
     var menuId = stringValue_(item.menu_id || item.menuId);
     var quantity = numberValue_(item.quantity || item.qty || 0);
@@ -896,7 +1041,7 @@ function buildTableOrderItemRecords_(orderId, items, menuById, createdBy, timest
       discount: discount,
       total: total,
       note: stringValue_(item.note || ''),
-      status: ORDER_STATUS_NEW,
+      status: status,
       created_at: timestamp,
       updated_at: timestamp,
       created_by: createdBy
@@ -987,14 +1132,14 @@ function buildTableOrderResponse_(table, orderId, message, preloaded) {
     .filter(function (payment) {
       return stringValue_(getValueByAliases_(payment, ['order_id'], '')) === orderId;
     });
-  var items = sourceItems.map(normalizeOrderItemRecord_);
+  var confirmedSourceItems = getConfirmedBillOrderItems_(sourceItems);
+  var pendingSourceItems = getPendingConfirmOrderItems_(sourceItems);
+  var items = confirmedSourceItems.map(normalizeOrderItemRecord_);
+  var pendingItems = pendingSourceItems.map(normalizeOrderItemRecord_);
   var payments = sourcePayments.map(normalizePaymentRecord_);
-  var totals = calculateOrderItemTotals_(items);
+  var totals = calculateOrderItemTotals_(confirmedSourceItems);
+  var pendingTotals = calculateOrderItemTotals_(pendingSourceItems);
   var normalizedOrder = normalizeOrderRecord_(order);
-
-  totals.subtotal = normalizedOrder.subtotal || totals.subtotal;
-  totals.discount = normalizedOrder.discount || totals.discount;
-  totals.total = normalizedOrder.total || totals.total;
 
   return {
     success: true,
@@ -1002,8 +1147,14 @@ function buildTableOrderResponse_(table, orderId, message, preloaded) {
     table: table ? normalizeTableRecord_(table) : {},
     order: normalizedOrder,
     items: items,
+    pending_items: pendingItems,
     payments: payments,
-    totals: totals
+    totals: totals,
+    pending_totals: {
+      subtotal: pendingTotals.subtotal,
+      item_count: pendingTotals.item_count,
+      total: pendingTotals.total
+    }
   };
 }
 
@@ -1013,12 +1164,18 @@ function buildEmptyTableOrderResponse_(table) {
     table: normalizeTableRecord_(table),
     order: null,
     items: [],
+    pending_items: [],
     payments: [],
     totals: {
       subtotal: 0,
       discount: 0,
       total: 0,
       item_count: 0
+    },
+    pending_totals: {
+      subtotal: 0,
+      item_count: 0,
+      total: 0
     }
   };
 }
@@ -1132,6 +1289,48 @@ function buildItemCountByOrderId_(orderItems, allowedOrderIds) {
   return counts;
 }
 
+function buildOrderItemSummaryByOrderId_(orderItems, allowedOrderIds) {
+  var summaries = {};
+
+  orderItems.forEach(function (item) {
+    if (isSkippedOrderItem_(item)) {
+      return;
+    }
+
+    var orderId = stringValue_(getValueByAliases_(item, ['order_id'], ''));
+
+    if (!orderId) {
+      return;
+    }
+
+    if (allowedOrderIds && !allowedOrderIds[orderId]) {
+      return;
+    }
+
+    if (!summaries[orderId]) {
+      summaries[orderId] = {
+        confirmedItems: [],
+        pendingItems: []
+      };
+    }
+
+    if (isPendingConfirmOrderItem_(item)) {
+      summaries[orderId].pendingItems.push(item);
+    } else if (getConfirmedBillOrderItems_([item]).length) {
+      summaries[orderId].confirmedItems.push(item);
+    }
+  });
+
+  Object.keys(summaries).forEach(function (orderId) {
+    summaries[orderId] = {
+      totals: calculateOrderItemTotals_(summaries[orderId].confirmedItems),
+      pending_totals: calculateOrderItemTotals_(summaries[orderId].pendingItems)
+    };
+  });
+
+  return summaries;
+}
+
 function calculateOrderItemTotals_(items) {
   var totals = {
     subtotal: 0,
@@ -1153,6 +1352,67 @@ function calculateOrderItemTotals_(items) {
   });
 
   return totals;
+}
+
+function getOrderItemStatus_(item) {
+  return stringValue_(getValueByAliases_(item, ['status'], '')).toUpperCase();
+}
+
+function isPendingConfirmOrderItem_(item) {
+  return getOrderItemStatus_(item) === ORDER_ITEM_STATUS_PENDING_CONFIRM;
+}
+
+function isConfirmedOrderItemStatus_(status) {
+  var normalized = stringValue_(status).toUpperCase();
+
+  return normalized === ORDER_ITEM_STATUS_NEW || normalized === ORDER_ITEM_STATUS_PAID;
+}
+
+function getConfirmedBillOrderItems_(items) {
+  return (items || []).filter(function (item) {
+    var status = getOrderItemStatus_(item);
+
+    return !isSkippedOrderItem_(item) &&
+      !isPendingConfirmOrderItem_(item) &&
+      (isConfirmedOrderItemStatus_(status) || status === '');
+  });
+}
+
+function getPendingConfirmOrderItems_(items) {
+  return (items || []).filter(function (item) {
+    return !isSkippedOrderItem_(item) && isPendingConfirmOrderItem_(item);
+  });
+}
+
+function calculateConfirmedOrderItemTotals_(items) {
+  return calculateOrderItemTotals_(getConfirmedBillOrderItems_(items));
+}
+
+function calculatePendingOrderItemTotals_(items) {
+  return calculateOrderItemTotals_(getPendingConfirmOrderItems_(items));
+}
+
+function updateOrderItemStatusRows_(orderItemsTable, items, nextStatus, timestamp) {
+  if (!items.length) {
+    return;
+  }
+
+  var statusColumn = getHeaderColumn_(orderItemsTable.headers, ['status']);
+  var updatedAtColumn = getHeaderColumn_(orderItemsTable.headers, ['updated_at']);
+
+  if (!statusColumn) {
+    throw new Error('order_items sheet is missing status header');
+  }
+
+  items.forEach(function (item) {
+    orderItemsTable.sheet.getRange(item._rowNumber, statusColumn).setValue(nextStatus);
+    item.status = nextStatus;
+
+    if (updatedAtColumn) {
+      orderItemsTable.sheet.getRange(item._rowNumber, updatedAtColumn).setValue(timestamp);
+      item.updated_at = timestamp;
+    }
+  });
 }
 
 function buildQrOrderNote_(request) {
@@ -1263,10 +1523,44 @@ function getOrCreateUnpaidTestTableOrderDetail_() {
   return detail;
 }
 
+function submitQrTableOrderForTest_(tableNo) {
+  tableNo = stringValue_(tableNo || getStoredTestTableNo_());
+  var tables = getTables_({}).tables;
+  var table = tables.filter(function (row) {
+    return row.table_no === tableNo;
+  })[0] || tables[0];
+
+  if (!table) {
+    return {
+      success: false,
+      message: 'No active test table found'
+    };
+  }
+
+  return submitQrTableOrder_({
+    table_no: table.table_no,
+    qr_token: table.qr_token,
+    customer_name: 'Test Customer',
+    note: 'QR pending order test',
+    items: [
+      {
+        menu_id: TEST_DIRECT_STOCK_MENU_ID,
+        quantity: 1
+      }
+    ]
+  });
+}
+
 function testGetTables() {
   var result = getTables_({});
   Logger.log(JSON.stringify(result, null, 2));
   return result;
+}
+
+function testGetTableOrder() {
+  var detail = getOrCreateUnpaidTestTableOrderDetail_();
+  Logger.log(JSON.stringify(detail, null, 2));
+  return detail;
 }
 
 function testOpenTable() {
@@ -1327,6 +1621,53 @@ function testSubmitQrTableOrder() {
       }
     ]
   });
+  var detail = getTableOrder_({
+    table_no: table.table_no
+  });
+
+  result.verification = {
+    pending_item_count: detail.pending_items ? detail.pending_items.length : 0,
+    first_pending_status: detail.pending_items && detail.pending_items[0] ? detail.pending_items[0].status : '',
+    confirmed_total: detail.totals ? detail.totals.total : 0,
+    pending_total: detail.pending_totals ? detail.pending_totals.total : 0,
+    passed: result.success &&
+      detail.success &&
+      detail.pending_items &&
+      detail.pending_items.length > 0 &&
+      detail.pending_items[detail.pending_items.length - 1].status === ORDER_ITEM_STATUS_PENDING_CONFIRM
+  };
+
+  Logger.log(JSON.stringify(result, null, 2));
+  return result;
+}
+
+function testConfirmTablePendingItems() {
+  ensureDirectStockTestMenu_();
+  var submitResult = submitQrTableOrderForTest_(getStoredTestTableNo_());
+
+  if (!submitResult.success) {
+    Logger.log(JSON.stringify(submitResult, null, 2));
+    return submitResult;
+  }
+
+  var detailBefore = getTableOrder_({
+    table_no: submitResult.table_no
+  });
+  var pendingBefore = detailBefore.pending_items ? detailBefore.pending_items.length : 0;
+  var result = confirmTablePendingItems_({
+    order_id: detailBefore.order.order_id,
+    confirmed_by: 'TEST'
+  });
+  var pendingAfter = result.pending_items ? result.pending_items.length : 0;
+
+  result.verification = {
+    pending_before: pendingBefore,
+    pending_after: pendingAfter,
+    confirmed_item_count: result.totals ? result.totals.item_count : 0,
+    passed: result.success && pendingBefore > 0 && pendingAfter === 0 &&
+      result.items &&
+      result.items.length > 0
+  };
 
   Logger.log(JSON.stringify(result, null, 2));
   return result;
@@ -1363,6 +1704,7 @@ function testPayTableOrder() {
 
   var orderId = detail.order.order_id;
   var tableNo = detail.table ? detail.table.table_no : getStoredTestTableNo_();
+  var pendingRejectPassed = false;
 
   if (!detail.totals || numberValue_(detail.totals.item_count) <= 0 || numberValue_(detail.totals.total) <= 0) {
     detail = addItemsToTableOrder_({
@@ -1401,6 +1743,50 @@ function testPayTableOrder() {
     }
   }
 
+  var qrSubmitResult = submitQrTableOrderForTest_(tableNo);
+
+  if (qrSubmitResult.success) {
+    detail = getTableOrder_({
+      order_id: orderId
+    });
+
+    var rejectResult = payTableOrder_({
+      order_id: orderId,
+      method: 'CASH',
+      amount: detail.totals ? detail.totals.total : 0,
+      received: detail.totals ? detail.totals.total : 0,
+      created_by: 'TEST'
+    });
+
+    pendingRejectPassed = !rejectResult.success && rejectResult.error === 'PENDING_ITEMS_EXIST';
+
+    detail = confirmTablePendingItems_({
+      order_id: orderId,
+      confirmed_by: 'TEST'
+    });
+
+    if (!detail.success) {
+      var confirmFailure = {
+        success: false,
+        message: detail.message || 'Unable to confirm pending QR items before payment',
+        order: detail.order || null,
+        payment: null,
+        deductedStock: [],
+        verification: {
+          table_no: tableNo,
+          order_id: orderId,
+          current_order_id: detail.table ? detail.table.current_order_id : '',
+          total_deducted_qty: 0,
+          pending_payment_rejected: pendingRejectPassed,
+          passed: false
+        }
+      };
+
+      Logger.log(JSON.stringify(confirmFailure, null, 2));
+      return confirmFailure;
+    }
+  }
+
   var amount = detail.totals.total;
   var stockBefore = getMenuStockQtyForTest_(TEST_DIRECT_STOCK_MENU_ID);
   var result = payTableOrder_({
@@ -1435,10 +1821,12 @@ function testPayTableOrder() {
     total_deducted_qty: totalDeductedQty,
     stock_qty_decreased: stockQtyDecreased,
     table_released: tableReleased,
+    pending_payment_rejected: pendingRejectPassed,
     passed: result.success &&
       tableReleased &&
       totalDeductedQty > 0 &&
-      stockQtyDecreased
+      stockQtyDecreased &&
+      pendingRejectPassed
   };
 
   var finalResult = {

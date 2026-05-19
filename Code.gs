@@ -51,6 +51,8 @@ function doPost(e) {
       case 'OPEN_TABLE':
       case 'GET_TABLE_ORDER':
       case 'ADD_ITEMS_TO_TABLE_ORDER':
+      case 'CONFIRM_TABLE_PENDING_ITEMS':
+      case 'REJECT_TABLE_PENDING_ITEMS':
       case 'PAY_TABLE_ORDER':
       case 'GET_TABLE_QR_LINKS':
       case 'REGENERATE_TABLE_QR_TOKENS':

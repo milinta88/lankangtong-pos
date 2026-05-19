@@ -92,7 +92,7 @@ function createOrder_(request) {
         discount: itemDiscount,
         total: lineTotal,
         note: stringValue_(item.note || ''),
-        status: ORDER_STATUS_NEW,
+        status: ORDER_ITEM_STATUS_NEW,
         created_at: timestamp,
         updated_at: timestamp
       });
@@ -548,7 +548,7 @@ function buildPaidOrderRecordsForCheckout_(
       discount: itemDiscount,
       total: lineTotal,
       note: stringValue_(item.note || ''),
-      status: ORDER_STATUS_PAID,
+      status: ORDER_ITEM_STATUS_PAID,
       created_at: timestamp,
       updated_at: timestamp
     });
@@ -1181,7 +1181,10 @@ function findRecordByValue_(records, aliases, value) {
 function isSkippedOrderItem_(item) {
   var status = stringValue_(getValueByAliases_(item, ['status'], '')).toUpperCase();
 
-  return status === 'CANCELLED' || status === 'CANCELED' || status === 'VOID';
+  return status === 'CANCELLED' ||
+    status === 'CANCELED' ||
+    status === 'VOID' ||
+    status === ORDER_ITEM_STATUS_REJECTED;
 }
 
 function testCheckoutOrderDirectStock() {

@@ -2,6 +2,7 @@ import React from 'react';
 import QRCode from 'qrcode';
 import {
   AlertTriangle,
+  BellRing,
   CheckCircle2,
   Minus,
   Plus,
@@ -11,9 +12,11 @@ import {
   Search,
   ShoppingBag,
   Utensils,
+  Volume2,
 } from 'lucide-react';
 import {
   addItemsToTableOrder,
+  confirmTablePendingItems,
   getCachedMenuResponse,
   getCachedSettingsResponse,
   getCachedTablesResponse,
@@ -141,15 +144,23 @@ function markPaidTableAvailable(tables, detail, paidOrder, orderId) {
 function buildTableOrderSummary(detail) {
   const order = detail?.order || {};
   const totals = detail?.totals || {};
+  const pendingTotals = detail?.pending_totals || {};
   const items = Array.isArray(detail?.items) ? detail.items : [];
+  const pendingItems = Array.isArray(detail?.pending_items) ? detail.pending_items : [];
   const itemCount = totals.item_count === undefined
     ? items.reduce((sum, item) => sum + toNumber(item.quantity), 0)
     : toNumber(totals.item_count);
+  const pendingItemCount = pendingTotals.item_count === undefined
+    ? pendingItems.reduce((sum, item) => sum + toNumber(item.quantity), 0)
+    : toNumber(pendingTotals.item_count);
 
   return {
     order_no: order.order_no || '',
     total: toNumber(totals.total === undefined ? order.total : totals.total),
     item_count: itemCount,
+    pending_item_count: pendingItemCount,
+    pending_total: toNumber(pendingTotals.total === undefined ? pendingTotals.subtotal : pendingTotals.total),
+    has_pending_items: pendingItemCount > 0,
     created_at: order.created_at || '',
   };
 }
@@ -193,6 +204,57 @@ function markTableOrderActive(tables, detail) {
   });
 }
 
+const PENDING_SEEN_STORAGE_KEY = 'langangtong.tables.pendingSeenCounts';
+
+function readSeenPendingCounts() {
+  try {
+    return JSON.parse(sessionStorage.getItem(PENDING_SEEN_STORAGE_KEY) || '{}') || {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function writeSeenPendingCounts(counts) {
+  try {
+    sessionStorage.setItem(PENDING_SEEN_STORAGE_KEY, JSON.stringify(counts || {}));
+  } catch (error) {
+    // Ignore session storage failures; alerts still work for the current render.
+  }
+}
+
+function getTablePendingCount(table) {
+  return toNumber(table?.order?.pending_item_count || 0);
+}
+
+function getTablePendingTotal(table) {
+  return toNumber(table?.order?.pending_total || 0);
+}
+
+function playPendingAlertSound() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContext) return;
+
+    const context = new AudioContext();
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+
+    oscillator.type = 'sine';
+    oscillator.frequency.value = 880;
+    gain.gain.setValueAtTime(0.0001, context.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.18, context.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.22);
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.start();
+    oscillator.stop(context.currentTime + 0.24);
+    window.setTimeout(() => context.close().catch(() => {}), 400);
+  } catch (error) {
+    // Browsers may block audio until a user interaction. The visual alert still covers the workflow.
+  }
+}
+
 export default function Tables() {
   const cachedMenu = React.useMemo(() => getCachedMenuResponse(), []);
   const cachedSettings = React.useMemo(() => getCachedSettingsResponse(), []);
@@ -213,6 +275,8 @@ export default function Tables() {
   const [received, setReceived] = React.useState('');
   const [qrCards, setQrCards] = React.useState([]);
   const [showQrCards, setShowQrCards] = React.useState(false);
+  const [pendingToast, setPendingToast] = React.useState(null);
+  const [soundEnabled, setSoundEnabled] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(() => !cachedTables?.success);
   const [isRefreshingTables, setIsRefreshingTables] = React.useState(false);
   const [isWorking, setIsWorking] = React.useState(false);
@@ -229,6 +293,8 @@ export default function Tables() {
   });
   const isMountedRef = React.useRef(false);
   const tablesRef = React.useRef(tables);
+  const pendingSectionRef = React.useRef(null);
+  const seenPendingCountsRef = React.useRef(readSeenPendingCounts());
   const tablePaymentMessages = React.useMemo(
     () => [
       'กำลังปิดบิลโต๊ะ...',
@@ -493,8 +559,73 @@ export default function Tables() {
     }),
     [tables],
   );
+  const pendingTables = React.useMemo(
+    () => tables.filter((table) => getTablePendingCount(table) > 0),
+    [tables],
+  );
+  const selectedPendingItems = React.useMemo(
+    () => (Array.isArray(selectedDetail?.pending_items) ? selectedDetail.pending_items : []),
+    [selectedDetail],
+  );
+  const selectedPendingCount = selectedPendingItems.reduce((sum, item) => sum + toNumber(item.quantity), 0);
 
-  async function handleSelectTable(table) {
+  React.useEffect(() => {
+    if (!tables.length) return;
+
+    const nextSeenCounts = { ...seenPendingCountsRef.current };
+    let newestAlert = null;
+
+    tables.forEach((table) => {
+      const tableNo = table.table_no;
+      const pendingCount = getTablePendingCount(table);
+      const previousCount = toNumber(seenPendingCountsRef.current[tableNo] || 0);
+
+      if (pendingCount > previousCount) {
+        newestAlert = {
+          table_no: tableNo,
+          table_name: table.table_name,
+          pending_item_count: pendingCount,
+          pending_total: getTablePendingTotal(table),
+        };
+      }
+
+      nextSeenCounts[tableNo] = pendingCount;
+    });
+
+    seenPendingCountsRef.current = nextSeenCounts;
+    writeSeenPendingCounts(nextSeenCounts);
+
+    if (newestAlert) {
+      setPendingToast(newestAlert);
+
+      if (soundEnabled) {
+        playPendingAlertSound();
+      }
+    }
+  }, [soundEnabled, tables]);
+
+  function markTablePendingSeen(tableNo, count = 0) {
+    if (!tableNo) return;
+
+    const nextSeenCounts = {
+      ...seenPendingCountsRef.current,
+      [tableNo]: toNumber(count),
+    };
+
+    seenPendingCountsRef.current = nextSeenCounts;
+    writeSeenPendingCounts(nextSeenCounts);
+  }
+
+  function handleOpenPendingTable(tableNo) {
+    const table = tablesRef.current.find((row) => row.table_no === tableNo);
+
+    if (!table) return;
+
+    setPendingToast(null);
+    void handleSelectTable(table, { focusPending: true });
+  }
+
+  async function handleSelectTable(table, options = {}) {
     setIsWorking(true);
     setError('');
     setRefreshWarning('');
@@ -513,9 +644,16 @@ export default function Tables() {
       }
 
       setSelectedDetail(result);
+      markTablePendingSeen(table.table_no, result.pending_totals?.item_count || 0);
 
       if (table.status === 'AVAILABLE' && result.order) {
         commitTablesOptimistically((currentTables) => markTableOrderActive(currentTables, result));
+      }
+
+      if (options.focusPending) {
+        window.setTimeout(() => {
+          pendingSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
       }
     } catch (selectError) {
       if (isMountedRef.current) {
@@ -597,10 +735,52 @@ export default function Tables() {
     }
   }
 
+  async function handleConfirmPendingItems(itemIds) {
+    const orderId = selectedDetail?.order?.order_id;
+
+    if (!orderId || isWorking || isPayingTable) return;
+
+    setIsWorking(true);
+    setError('');
+    setRefreshWarning('');
+
+    try {
+      const result = await confirmTablePendingItems({
+        order_id: orderId,
+        item_ids: itemIds,
+        confirmed_by: 'STAFF',
+      });
+
+      if (!result.success) throw new Error(result.message || 'CONFIRM_TABLE_PENDING_ITEMS failed');
+
+      if (!isMountedRef.current || getCurrentRoutePath() !== '/tables') {
+        return;
+      }
+
+      setSelectedDetail(result);
+      markTablePendingSeen(result.table?.table_no, result.pending_totals?.item_count || 0);
+      commitTablesOptimistically((currentTables) => markTableOrderActive(currentTables, result));
+      setPendingToast(null);
+    } catch (confirmError) {
+      if (isMountedRef.current) {
+        setError(confirmError.message || 'Cannot confirm QR items');
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setIsWorking(false);
+      }
+    }
+  }
+
   async function handlePayTable() {
     const orderId = selectedDetail?.order?.order_id;
 
     if (!orderId || selectedTotal <= 0 || isWorking || isPayingTable) return;
+
+    if (selectedPendingItems.length) {
+      setError('ยังมีรายการใหม่จาก QR ที่ยังไม่ได้รับเข้าบิล');
+      return;
+    }
 
     setIsPayingTable(true);
     setTablePaymentStep(0);
@@ -740,6 +920,74 @@ export default function Tables() {
         </div>
       ) : null}
 
+      {pendingTables.length ? (
+        <section className="mb-4 rounded-[28px] border border-amber-300 bg-gradient-to-r from-amber-50 to-rose-50 p-4 shadow-xl shadow-amber-900/10">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-start gap-3">
+              <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-md shadow-amber-900/20">
+                <BellRing size={20} />
+              </span>
+              <div>
+                <h2 className="text-lg font-black text-stone-950">
+                  มีรายการใหม่จาก QR {pendingTables.length} โต๊ะ
+                </h2>
+                <p className="text-sm font-semibold text-amber-800">
+                  กดเลือกโต๊ะเพื่อรับรายการเข้าบิลก่อนชำระเงิน
+                </p>
+              </div>
+            </div>
+            <label className="inline-flex items-center gap-2 rounded-2xl border border-amber-200 bg-white/80 px-3 py-2 text-xs font-black text-amber-800">
+              <input
+                type="checkbox"
+                checked={soundEnabled}
+                onChange={(event) => setSoundEnabled(event.target.checked)}
+                className="h-4 w-4 accent-amber-600"
+              />
+              <Volume2 size={15} />
+              เปิดเสียงแจ้งเตือน
+            </label>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {pendingTables.map((table) => (
+              <button
+                key={table.table_no}
+                type="button"
+                onClick={() => handleOpenPendingTable(table.table_no)}
+                className="rounded-2xl bg-white px-3 py-2 text-sm font-black text-rose-700 shadow-sm ring-1 ring-rose-200 transition hover:bg-rose-50"
+              >
+                {table.table_no}: {formatMoney(getTablePendingCount(table))} รายการ
+              </button>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {pendingToast ? (
+        <div className="fixed right-4 top-4 z-50 w-[min(360px,calc(100vw-32px))] rounded-[26px] border border-amber-300 bg-white p-4 shadow-2xl shadow-stone-950/20">
+          <div className="flex items-start gap-3">
+            <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-500 text-white">
+              <BellRing size={20} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-black text-stone-950">
+                โต๊ะ {pendingToast.table_no} มีรายการใหม่จาก QR {formatMoney(pendingToast.pending_item_count)} รายการ
+              </p>
+              <p className="mt-1 text-sm font-semibold text-stone-500">
+                ยอดรอยืนยัน ฿{formatMoney(pendingToast.pending_total)}
+              </p>
+              <div className="mt-3 flex gap-2">
+                <Button size="sm" variant="dark" onClick={() => handleOpenPendingTable(pendingToast.table_no)}>
+                  เปิดดู
+                </Button>
+                <Button size="sm" variant="ghost" onClick={() => setPendingToast(null)}>
+                  ปิด
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {showQrCards ? (
         <section className="table-qr-print mb-5 rounded-[30px] border border-[#eadbc9] bg-white/90 p-4 shadow-xl shadow-stone-900/5">
           <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -820,6 +1068,11 @@ export default function Tables() {
                         </div>
                         <StatusBadge tone={statusTone(table.status)}>{statusLabel(table.status)}</StatusBadge>
                       </div>
+                      {getTablePendingCount(table) > 0 ? (
+                        <div className="mt-3 inline-flex rounded-full bg-rose-600 px-3 py-1 text-xs font-black text-white shadow-md shadow-rose-900/20">
+                          รายการใหม่ {formatMoney(getTablePendingCount(table))}
+                        </div>
+                      ) : null}
                       {table.order ? (
                         <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
                           <div className="rounded-2xl bg-white/80 p-2 shadow-sm">
@@ -901,6 +1154,50 @@ export default function Tables() {
                   <StatusBadge tone="coffee">UNPAID</StatusBadge>
                 </div>
 
+                {selectedPendingItems.length ? (
+                  <section
+                    ref={pendingSectionRef}
+                    className="mt-4 rounded-[24px] border border-amber-300 bg-amber-50 p-3 shadow-sm shadow-amber-900/10"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <h3 className="text-base font-black text-amber-950">รายการใหม่จาก QR</h3>
+                        <p className="text-xs font-bold text-amber-800">
+                          ยังไม่รวมในยอดบิล ต้องรับเข้าบิลก่อนชำระเงิน
+                        </p>
+                      </div>
+                      <StatusBadge tone="warning">{formatMoney(selectedPendingCount)} รายการ</StatusBadge>
+                    </div>
+                    <div className="mt-3 space-y-2">
+                      {selectedPendingItems.map((item) => (
+                        <div key={item.item_id} className="rounded-2xl border border-amber-200 bg-white p-3">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <p className="font-black text-stone-950">{item.menu_name_snapshot}</p>
+                              <p className="text-xs font-semibold text-stone-500">
+                                x{item.quantity} · ฿{formatMoney(item.unit_price)}
+                              </p>
+                              {item.note ? <p className="mt-1 text-xs font-semibold text-amber-700">{item.note}</p> : null}
+                            </div>
+                            <p className="font-black">฿{formatMoney(item.total)}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <Button
+                      onClick={() => handleConfirmPendingItems()}
+                      disabled={isWorking || isPayingTable}
+                      variant="success"
+                      size="lg"
+                      className="mt-3 w-full rounded-2xl"
+                    >
+                      <CheckCircle2 size={18} />
+                      รับทั้งหมดเข้าบิล
+                    </Button>
+                  </section>
+                ) : null}
+
+                <h3 className="mt-4 text-sm font-black text-stone-700">รายการในบิล</h3>
                 <div className="mt-4 max-h-[320px] space-y-2 overflow-y-auto pr-1">
                   {(selectedDetail.items || []).length ? (
                     selectedDetail.items.map((item) => (
@@ -1007,6 +1304,12 @@ export default function Tables() {
           </section>
 
           {selectedDetail?.order ? (
+            <>
+            {selectedPendingItems.length ? (
+              <div className="rounded-[24px] border border-amber-200 bg-amber-50 p-4 text-sm font-black text-amber-800 shadow-sm">
+                ยังมีรายการใหม่จาก QR ที่ยังไม่ได้รับเข้าบิล
+              </div>
+            ) : null}
             <PaymentPanel
               total={selectedTotal}
               method={paymentMethod}
@@ -1016,11 +1319,12 @@ export default function Tables() {
               isBusy={isPayingTable}
               busyLabel={tablePaymentMessages[tablePaymentStep]}
               busyHint={isSlowTablePayment ? 'ระบบกำลังบันทึกข้อมูล กรุณาอย่าปิดหน้านี้' : ''}
-              canSubmit={selectedTotal > 0 && !isWorking}
+              canSubmit={selectedTotal > 0 && !isWorking && !selectedPendingItems.length}
               onMethodChange={setPaymentMethod}
               onReceivedChange={setReceived}
               onSubmit={handlePayTable}
             />
+            </>
           ) : null}
         </aside>
       </div>

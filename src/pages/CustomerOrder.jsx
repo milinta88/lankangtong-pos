@@ -312,7 +312,7 @@ export default function CustomerOrder() {
             <CheckCircle2 size={52} />
           </span>
           <h1 className="mt-4 text-3xl font-black">ส่งออเดอร์แล้ว</h1>
-          <p className="mt-2 text-sm font-semibold text-stone-500">พนักงานได้รับรายการของคุณแล้ว</p>
+          <p className="mt-2 text-sm font-semibold text-stone-500">กรุณารอพนักงานยืนยันรายการก่อนเข้าบิล</p>
           <div className="mt-5 grid gap-3 rounded-[24px] border border-[#eadbc9] bg-[#fffaf3] p-4 text-left">
             <div className="flex justify-between gap-3">
               <span className="font-bold text-stone-500">โต๊ะ</span>
