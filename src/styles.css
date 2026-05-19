@@ -52,42 +52,47 @@ textarea {
     box-sizing: border-box;
     overflow: visible;
     padding: 3mm;
-    font-size: 12.5px;
-    line-height: 1.35;
+    font-size: 13.5px;
+    line-height: 1.42;
     box-shadow: none !important;
   }
 
+  .receipt-print-area > .my-2 {
+    margin-top: 2.6mm;
+    margin-bottom: 2.6mm;
+  }
+
   .receipt-shop-name {
-    font-size: 18px !important;
-    line-height: 1.2;
+    font-size: 21px !important;
+    line-height: 1.18;
     font-weight: 900;
   }
 
   .receipt-subtitle,
   .receipt-meta {
-    font-size: 12.5px;
-    line-height: 1.35;
+    font-size: 13.5px;
+    line-height: 1.42;
   }
 
   .receipt-items {
-    gap: 7px;
+    gap: 9px;
   }
 
   .receipt-item {
-    padding: 2px 0;
+    padding: 3px 0;
     break-inside: avoid;
   }
 
   .receipt-item-row {
     align-items: flex-start;
-    gap: 7px;
+    gap: 8px;
   }
 
   .receipt-item-name,
   .receipt-item-total {
-    font-size: 13.5px;
-    line-height: 1.32;
-    font-weight: 700;
+    font-size: 15.5px;
+    line-height: 1.34;
+    font-weight: 800;
   }
 
   .receipt-item-name {
@@ -96,35 +101,49 @@ textarea {
   }
 
   .receipt-item-total {
-    min-width: 14mm;
+    min-width: 15mm;
+    white-space: nowrap;
   }
 
   .receipt-item-detail {
-    margin-top: 1px;
-    font-size: 12.5px !important;
-    line-height: 1.3;
+    margin-top: 2px;
+    font-size: 14px !important;
+    line-height: 1.35;
   }
 
   .receipt-summary {
-    font-size: 13.5px;
-    line-height: 1.35;
+    padding-top: 1mm;
+    font-size: 15px;
+    line-height: 1.42;
+  }
+
+  .receipt-summary > div,
+  .receipt-payment > div,
+  .receipt-meta > div {
+    gap: 2mm;
   }
 
   .receipt-total-row {
-    margin-top: 2px;
-    font-size: 21px !important;
-    line-height: 1.18;
+    margin-top: 5px;
+    padding-top: 4px;
+    border-top: 1px dashed #000;
+    font-size: 26px !important;
+    line-height: 1.1;
     font-weight: 900;
   }
 
+  .receipt-total-row span:last-child {
+    white-space: nowrap;
+  }
+
   .receipt-payment {
-    font-size: 14.5px;
-    line-height: 1.35;
+    font-size: 16.5px;
+    line-height: 1.42;
   }
 
   .receipt-promptpay {
-    font-size: 12.5px;
-    line-height: 1.3;
+    font-size: 13px;
+    line-height: 1.35;
   }
 
   .receipt-qr {
@@ -134,8 +153,8 @@ textarea {
   }
 
   .receipt-footer {
-    font-size: 12px;
-    line-height: 1.3;
+    font-size: 13px;
+    line-height: 1.35;
   }
 
   .no-print {
