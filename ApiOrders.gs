@@ -19,6 +19,9 @@ function handleOrderAction_(action, request) {
     case 'PAY_ORDER':
       return payOrder_(request || {});
 
+    case 'GET_RECENT_ORDERS':
+      return getRecentOrders_(request || {});
+
     case 'GET_ORDER_DETAIL':
       return getOrderDetail_(request || {});
 
@@ -388,20 +391,88 @@ function payOrder_(request) {
   }
 }
 
+function getRecentOrders_(request) {
+  initializeDatabaseSheets_();
+
+  var requestedLimit = Math.floor(numberValue_(request.limit || 20));
+  var limit = requestedLimit > 0 ? requestedLimit : 20;
+  var includeCancelled = isTruthy_(request.include_cancelled || request.includeCancelled || false);
+
+  limit = Math.min(limit, 100);
+
+  var orders = readSheetRecordsByHeaders_('orders');
+  var orderItemsByOrderId = groupBillRecordsByOrderId_(readSheetRecordsByHeaders_('order_items'));
+  var paymentsByOrderId = groupBillRecordsByOrderId_(readSheetRecordsByHeaders_('payments'));
+  var recentOrders = [];
+
+  orders.forEach(function (order) {
+    var normalizedOrder = normalizeOrderRecord_(order);
+    var orderId = normalizedOrder.order_id;
+    var status = stringValue_(normalizedOrder.status).toUpperCase();
+    var paymentStatus = stringValue_(normalizedOrder.payment_status).toUpperCase();
+
+    if (!orderId) {
+      return;
+    }
+
+    if (!includeCancelled && isCancelledOrderStatus_(status, paymentStatus)) {
+      return;
+    }
+
+    var payments = (paymentsByOrderId[orderId] || []).map(normalizePaymentRecord_);
+    var latestPayment = getLatestPaymentByTime_(payments);
+    var sortAt = getOrderRecentSortValue_(normalizedOrder, latestPayment);
+
+    recentOrders.push({
+      order_id: orderId,
+      order_no: normalizedOrder.order_no,
+      order_type: normalizedOrder.order_type,
+      table_no: normalizedOrder.table_no,
+      status: normalizedOrder.status,
+      payment_status: normalizedOrder.payment_status,
+      total: normalizedOrder.total,
+      payment_method: latestPayment ? latestPayment.method : '',
+      created_at: normalizedOrder.created_at,
+      closed_at: normalizedOrder.closed_at,
+      item_count: calculateRecentOrderItemCount_(orderItemsByOrderId[orderId] || [], includeCancelled),
+      _sort_at: sortAt
+    });
+  });
+
+  recentOrders = recentOrders
+    .sort(function (a, b) {
+      return getBillTimeValue_(b._sort_at) - getBillTimeValue_(a._sort_at);
+    })
+    .slice(0, limit)
+    .map(function (order) {
+      delete order._sort_at;
+      return order;
+    });
+
+  return {
+    success: true,
+    orders: recentOrders
+  };
+}
+
 function getOrderDetail_(request) {
   var orderId = stringValue_(request.order_id || request.orderId);
+  var orderNo = stringValue_(request.order_no || request.orderNo);
 
-  if (!orderId) {
+  if (!orderId && !orderNo) {
     return {
       success: false,
       error: 'MISSING_ORDER_ID',
-      message: 'Missing order_id'
+      message: 'Missing order_id or order_no'
     };
   }
 
   initializeDatabaseSheets_();
 
-  var order = findRecordByValue_(readSheetRecordsByHeaders_('orders'), ['order_id'], orderId);
+  var orders = readSheetRecordsByHeaders_('orders');
+  var order = orderId
+    ? findRecordByValue_(orders, ['order_id'], orderId)
+    : findRecordByValue_(orders, ['order_no'], orderNo);
 
   if (!order) {
     return {
@@ -412,7 +483,17 @@ function getOrderDetail_(request) {
   }
 
   var normalizedOrder = normalizeOrderRecord_(order);
-  var items = getOrderItemsForOrder_(orderId).map(normalizeOrderItemRecord_);
+  orderId = normalizedOrder.order_id;
+
+  var sourceItems = readSheetRecordsByHeaders_('order_items').filter(function (item) {
+    return stringValue_(getValueByAliases_(item, ['order_id'], '')) === orderId;
+  });
+  var isCancelledOrder = isCancelledOrderStatus_(normalizedOrder.status, normalizedOrder.payment_status);
+  var items = sourceItems
+    .filter(function (item) {
+      return shouldIncludeOrderDetailItem_(item, isCancelledOrder);
+    })
+    .map(normalizeOrderItemRecord_);
   var payments = readSheetRecordsByHeaders_('payments')
     .filter(function (payment) {
       return stringValue_(getValueByAliases_(payment, ['order_id'], '')) === orderId;
@@ -425,8 +506,105 @@ function getOrderDetail_(request) {
     order: normalizedOrder,
     items: items,
     payments: payments,
+    totals: buildOrderDetailTotals_(normalizedOrder, sourceItems, isCancelledOrder),
     receipt: buildReceiptSummary_(normalizedOrder, latestPayment)
   };
+}
+
+function groupBillRecordsByOrderId_(records) {
+  var grouped = {};
+
+  records.forEach(function (record) {
+    var orderId = stringValue_(getValueByAliases_(record, ['order_id'], ''));
+
+    if (!orderId) {
+      return;
+    }
+
+    if (!grouped[orderId]) {
+      grouped[orderId] = [];
+    }
+
+    grouped[orderId].push(record);
+  });
+
+  return grouped;
+}
+
+function isCancelledOrderStatus_(status, paymentStatus) {
+  return stringValue_(status).toUpperCase() === ORDER_STATUS_CANCELLED ||
+    stringValue_(paymentStatus).toUpperCase() === PAYMENT_STATUS_CANCELLED;
+}
+
+function shouldIncludeOrderDetailItem_(item, isCancelledOrder) {
+  var status = stringValue_(getValueByAliases_(item, ['status'], '')).toUpperCase();
+
+  if (isCancelledOrder && status === ORDER_ITEM_STATUS_CANCELLED) {
+    return true;
+  }
+
+  return !isSkippedOrderItem_(item);
+}
+
+function calculateRecentOrderItemCount_(items, includeCancelled) {
+  var itemCount = 0;
+
+  (items || []).forEach(function (item) {
+    var status = stringValue_(getValueByAliases_(item, ['status'], '')).toUpperCase();
+
+    if (status === ORDER_ITEM_STATUS_PENDING_CONFIRM || status === ORDER_ITEM_STATUS_REJECTED) {
+      return;
+    }
+
+    if (!includeCancelled && status === ORDER_ITEM_STATUS_CANCELLED) {
+      return;
+    }
+
+    if (!includeCancelled && isSkippedOrderItem_(item)) {
+      return;
+    }
+
+    itemCount += numberValue_(getValueByAliases_(item, ['quantity', 'qty'], 0));
+  });
+
+  return itemCount;
+}
+
+function buildOrderDetailTotals_(order, sourceItems, isCancelledOrder) {
+  return {
+    subtotal: numberValue_(order.subtotal),
+    discount: numberValue_(order.discount),
+    total: numberValue_(order.total),
+    item_count: calculateRecentOrderItemCount_(sourceItems, isCancelledOrder)
+  };
+}
+
+function getOrderRecentSortValue_(order, latestPayment) {
+  return order.closed_at ||
+    (latestPayment && latestPayment.paid_at ? latestPayment.paid_at : '') ||
+    order.created_at ||
+    '';
+}
+
+function getLatestPaymentByTime_(payments) {
+  if (!payments.length) {
+    return null;
+  }
+
+  return payments.slice().sort(function (a, b) {
+    return getBillTimeValue_(b.paid_at || b.created_at) - getBillTimeValue_(a.paid_at || a.created_at);
+  })[0];
+}
+
+function getBillTimeValue_(value) {
+  if (Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value.getTime())) {
+    return value.getTime();
+  }
+
+  var text = stringValue_(value);
+  var parsed = new Date(text);
+
+  return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
 }
 
 function generateNextOrderNo_() {
@@ -1371,18 +1549,54 @@ function testPayOrderDirectStock() {
   return result;
 }
 
+function testGetRecentOrders() {
+  var result = getRecentOrders_({
+    limit: 20,
+    include_cancelled: false
+  });
+
+  result.verification = {
+    has_orders_array: Array.isArray(result.orders),
+    excludes_cancelled_by_default: result.success && result.orders.every(function (order) {
+      return stringValue_(order.status).toUpperCase() !== ORDER_STATUS_CANCELLED &&
+        stringValue_(order.payment_status).toUpperCase() !== PAYMENT_STATUS_CANCELLED;
+    }),
+    passed: result.success && Array.isArray(result.orders)
+  };
+
+  Logger.log(JSON.stringify(result, null, 2));
+  return result;
+}
+
 function testGetOrderDetail() {
-  var orderId = 'ORD_6e9c837a-453a-4c44-858d-725964c410ab';
+  var recent = getRecentOrders_({
+    limit: 1,
+    include_cancelled: true
+  });
+  var orderId = recent.success && recent.orders && recent.orders[0] ? recent.orders[0].order_id : '';
+
+  if (!orderId) {
+    var checkout = testCheckoutOrderCustomCounterSale();
+    orderId = checkout.success && checkout.order ? checkout.order.order_id : '';
+  }
 
   var result = getOrderDetail_({
     order_id: orderId
   });
 
   result.verification = {
+    has_items_array: result.success && Array.isArray(result.items),
+    has_payments_array: result.success && Array.isArray(result.payments),
+    has_totals: result.success && result.totals && result.totals.total !== undefined,
     receipt_has_promptpay_settings: result.success &&
       result.receipt &&
       result.receipt.promptpay_id !== undefined &&
-      result.receipt.receipt_qr_size_mm !== undefined
+      result.receipt.receipt_qr_size_mm !== undefined,
+    passed: result.success &&
+      Array.isArray(result.items) &&
+      Array.isArray(result.payments) &&
+      result.totals &&
+      result.totals.total !== undefined
   };
 
   Logger.log(JSON.stringify(result, null, 2));

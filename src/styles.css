@@ -49,13 +49,93 @@ textarea {
     inset: 0 auto auto 0;
     width: 58mm;
     margin: 0;
+    box-sizing: border-box;
+    overflow: visible;
+    padding: 3mm;
+    font-size: 12.5px;
+    line-height: 1.35;
     box-shadow: none !important;
+  }
+
+  .receipt-shop-name {
+    font-size: 18px !important;
+    line-height: 1.2;
+    font-weight: 900;
+  }
+
+  .receipt-subtitle,
+  .receipt-meta {
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+
+  .receipt-items {
+    gap: 7px;
+  }
+
+  .receipt-item {
+    padding: 2px 0;
+    break-inside: avoid;
+  }
+
+  .receipt-item-row {
+    align-items: flex-start;
+    gap: 7px;
+  }
+
+  .receipt-item-name,
+  .receipt-item-total {
+    font-size: 13.5px;
+    line-height: 1.32;
+    font-weight: 700;
+  }
+
+  .receipt-item-name {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .receipt-item-total {
+    min-width: 14mm;
+  }
+
+  .receipt-item-detail {
+    margin-top: 1px;
+    font-size: 12.5px !important;
+    line-height: 1.3;
+  }
+
+  .receipt-summary {
+    font-size: 13.5px;
+    line-height: 1.35;
+  }
+
+  .receipt-total-row {
+    margin-top: 2px;
+    font-size: 21px !important;
+    line-height: 1.18;
+    font-weight: 900;
+  }
+
+  .receipt-payment {
+    font-size: 14.5px;
+    line-height: 1.35;
+  }
+
+  .receipt-promptpay {
+    font-size: 12.5px;
+    line-height: 1.3;
   }
 
   .receipt-qr {
     width: 30mm;
     height: 30mm;
     margin: 0 auto;
+  }
+
+  .receipt-footer {
+    font-size: 12px;
+    line-height: 1.3;
   }
 
   .no-print {

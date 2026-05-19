@@ -25,6 +25,7 @@ const READ_ONLY_DEDUPE_ACTIONS = new Set([
   'GET_STOCK',
   'GET_DAILY_REPORT',
   'GET_ADMIN_MENUS',
+  'GET_RECENT_ORDERS',
 ]);
 const NETWORK_SKIP_LOG_ACTIONS = new Set(['GET_MENU', 'GET_SETTINGS', 'GET_TABLES', 'GET_ADMIN_MENUS']);
 const MIN_NETWORK_INTERVAL_MS = {
@@ -359,8 +360,16 @@ export function checkoutOrder(payload) {
   return postAction('CHECKOUT_ORDER', payload);
 }
 
-export function getOrderDetail(order_id) {
-  return postAction('GET_ORDER_DETAIL', { order_id });
+export function getOrderDetail(orderOrRequest) {
+  if (orderOrRequest && typeof orderOrRequest === 'object') {
+    return postAction('GET_ORDER_DETAIL', orderOrRequest);
+  }
+
+  return postAction('GET_ORDER_DETAIL', { order_id: orderOrRequest });
+}
+
+export function getRecentOrders(payload = {}) {
+  return postAction('GET_RECENT_ORDERS', payload);
 }
 
 export function getTables(options = {}) {

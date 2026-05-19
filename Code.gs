@@ -44,6 +44,7 @@ function doPost(e) {
       case 'UPDATE_ORDER':
       case 'CANCEL_ORDER':
       case 'PAY_ORDER':
+      case 'GET_RECENT_ORDERS':
       case 'GET_ORDER_DETAIL':
         return jsonResponse_(handleOrderAction_(action, request));
 

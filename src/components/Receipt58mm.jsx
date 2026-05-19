@@ -72,14 +72,14 @@ export default function Receipt58mm({ detail }) {
 
   return (
     <div className="receipt-print-area mx-auto w-[58mm] bg-white p-[3mm] font-mono text-[11px] leading-tight text-black shadow-panel">
-      <div className="text-center">
-        <h1 className="text-[15px] font-black">{receipt.shop_name || 'ล้านก๋างโต้ง'}</h1>
-        <p className="mt-1">ใบเสร็จรับเงิน</p>
+      <div className="receipt-header text-center">
+        <h1 className="receipt-shop-name text-[15px] font-black">{receipt.shop_name || 'ล้านก๋างโต้ง'}</h1>
+        <p className="receipt-subtitle mt-1">ใบเสร็จรับเงิน</p>
       </div>
 
       <div className="my-2 border-t border-dashed border-black" />
 
-      <div className="space-y-1">
+      <div className="receipt-meta space-y-1">
         <div className="flex justify-between gap-2">
           <span>เลขที่</span>
           <span className="text-right">{receipt.order_no}</span>
@@ -102,14 +102,14 @@ export default function Receipt58mm({ detail }) {
 
       <div className="my-2 border-t border-dashed border-black" />
 
-      <div className="space-y-2">
+      <div className="receipt-items space-y-2">
         {items.map((item) => (
-          <div key={item.item_id || `${item.menu_id}-${item.menu_name_snapshot}`}>
-            <div className="flex justify-between gap-2">
-              <span className="min-w-0 flex-1 break-words">{item.menu_name_snapshot}</span>
-              <span>฿{formatMoney(item.total)}</span>
+          <div className="receipt-item" key={item.item_id || `${item.menu_id}-${item.menu_name_snapshot}`}>
+            <div className="receipt-item-row flex justify-between gap-2">
+              <span className="receipt-item-name min-w-0 flex-1 break-words">{item.menu_name_snapshot}</span>
+              <span className="receipt-item-total shrink-0 text-right">฿{formatMoney(item.total)}</span>
             </div>
-            <div className="text-[10px] text-black/75">
+            <div className="receipt-item-detail text-[10px] text-black/75">
               {item.quantity} x ฿{formatMoney(item.unit_price)}
               {item.note ? `  ${item.note}` : ''}
             </div>
@@ -119,7 +119,7 @@ export default function Receipt58mm({ detail }) {
 
       <div className="my-2 border-t border-dashed border-black" />
 
-      <div className="space-y-1">
+      <div className="receipt-summary space-y-1">
         <div className="flex justify-between">
           <span>Subtotal</span>
           <span>฿{formatMoney(receipt.subtotal)}</span>
@@ -128,7 +128,7 @@ export default function Receipt58mm({ detail }) {
           <span>Discount</span>
           <span>฿{formatMoney(receipt.discount)}</span>
         </div>
-        <div className="flex justify-between text-[13px] font-black">
+        <div className="receipt-total-row flex justify-between text-[13px] font-black">
           <span>Total</span>
           <span>฿{formatMoney(receipt.total)}</span>
         </div>
@@ -136,7 +136,7 @@ export default function Receipt58mm({ detail }) {
 
       <div className="my-2 border-t border-dashed border-black" />
 
-      <div className="space-y-1">
+      <div className="receipt-payment space-y-1">
         <div className="flex justify-between">
           <span>ชำระโดย</span>
           <span>{receipt.payment_method}</span>
@@ -164,7 +164,7 @@ export default function Receipt58mm({ detail }) {
       {qrDataUrl ? (
         <>
           <div className="my-2 border-t border-dashed border-black" />
-          <div className="text-center">
+          <div className="receipt-promptpay text-center">
             <p className="font-bold">สแกนจ่ายพร้อมเพย์</p>
             <img
               src={qrDataUrl}
@@ -182,7 +182,7 @@ export default function Receipt58mm({ detail }) {
 
       <div className="my-2 border-t border-dashed border-black" />
 
-      <p className="text-center">ขอบคุณค่ะ</p>
+      <p className="receipt-footer text-center">ขอบคุณค่ะ</p>
     </div>
   );
 }
