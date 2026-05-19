@@ -86,9 +86,11 @@ function MenuTile({ menu, onAdd }) {
 }
 
 export default function CustomerOrder() {
-  const query = React.useMemo(() => new URLSearchParams(getCurrentRouteSearch()), []);
+  const [routeSearch, setRouteSearch] = React.useState(() => getCurrentRouteSearch());
+  const query = React.useMemo(() => new URLSearchParams(routeSearch), [routeSearch]);
   const tableNo = query.get('table') || '';
   const token = query.get('token') || '';
+  const routeKey = `${tableNo}:${token}`;
   const missingQrData = !tableNo || !token;
   const cachedMenu = React.useMemo(() => (missingQrData ? null : getCachedMenuResponse()), [missingQrData]);
   const cachedSettings = React.useMemo(() => (missingQrData ? null : getCachedSettingsResponse()), [missingQrData]);
@@ -111,6 +113,7 @@ export default function CustomerOrder() {
   const hasMenuRef = React.useRef(Boolean(cachedMenu?.success));
   const isMountedRef = React.useRef(false);
   const menuRequestIdRef = React.useRef(0);
+  const routeKeyRef = React.useRef(routeKey);
 
   React.useEffect(() => {
     isMountedRef.current = true;
@@ -119,6 +122,40 @@ export default function CustomerOrder() {
       isMountedRef.current = false;
     };
   }, []);
+
+  React.useEffect(() => {
+    function syncRouteSearch() {
+      setRouteSearch(getCurrentRouteSearch());
+    }
+
+    window.addEventListener('hashchange', syncRouteSearch);
+    window.addEventListener('popstate', syncRouteSearch);
+
+    return () => {
+      window.removeEventListener('hashchange', syncRouteSearch);
+      window.removeEventListener('popstate', syncRouteSearch);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    routeKeyRef.current = routeKey;
+    menuRequestIdRef.current += 1;
+    setCart([]);
+    setNote('');
+    setCustomerName('');
+    setError('');
+    setSuccess(null);
+    setIsSubmitting(false);
+    setIsRefreshing(false);
+    setActiveCategory('ALL');
+
+    if (missingQrData) {
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(!hasMenuRef.current);
+  }, [missingQrData, routeKey]);
 
   React.useEffect(() => {
     async function loadMenu() {
@@ -174,7 +211,7 @@ export default function CustomerOrder() {
     }
 
     loadMenu();
-  }, [missingQrData]);
+  }, [missingQrData, routeKey]);
 
   const visibleMenus = React.useMemo(() => {
     return menus.filter((menu) => activeCategory === 'ALL' || menu.category_id === activeCategory);
@@ -216,6 +253,7 @@ export default function CustomerOrder() {
   async function handleSubmit() {
     if (isSubmitting || !cart.length || missingQrData) return;
 
+    const submitRouteKey = routeKey;
     setIsSubmitting(true);
     setError('');
 
@@ -232,7 +270,7 @@ export default function CustomerOrder() {
         })),
       });
 
-      if (!isMountedRef.current) {
+      if (!isMountedRef.current || routeKeyRef.current !== submitRouteKey) {
         return;
       }
 
@@ -244,16 +282,19 @@ export default function CustomerOrder() {
         throw new Error(result.message || 'ส่งออเดอร์ไม่สำเร็จ');
       }
 
-      setSuccess(result);
+      setSuccess({
+        ...result,
+        routeKey: submitRouteKey,
+      });
       setCart([]);
     } catch (submitError) {
-      if (!isMountedRef.current) {
+      if (!isMountedRef.current || routeKeyRef.current !== submitRouteKey) {
         return;
       }
 
       setError(submitError.message || 'ส่งออเดอร์ไม่สำเร็จ');
     } finally {
-      if (!isMountedRef.current) {
+      if (!isMountedRef.current || routeKeyRef.current !== submitRouteKey) {
         return;
       }
 
@@ -261,7 +302,9 @@ export default function CustomerOrder() {
     }
   }
 
-  if (success) {
+  const visibleSuccess = success && success.routeKey === routeKey ? success : null;
+
+  if (visibleSuccess) {
     return (
       <main className="min-h-screen bg-[radial-gradient(circle_at_top,#fff8ec_0,#f5efe6_42%,#eee1d2_100%)] px-4 py-6 text-stone-950">
         <section className="mx-auto max-w-md rounded-[32px] border border-emerald-200 bg-white p-6 text-center shadow-2xl shadow-stone-900/10">
@@ -273,15 +316,15 @@ export default function CustomerOrder() {
           <div className="mt-5 grid gap-3 rounded-[24px] border border-[#eadbc9] bg-[#fffaf3] p-4 text-left">
             <div className="flex justify-between gap-3">
               <span className="font-bold text-stone-500">โต๊ะ</span>
-              <span className="font-black">{success.table_no}</span>
+              <span className="font-black">{visibleSuccess.table_no}</span>
             </div>
             <div className="flex justify-between gap-3">
               <span className="font-bold text-stone-500">เลขออเดอร์</span>
-              <span className="font-black">{success.order_no}</span>
+              <span className="font-black">{visibleSuccess.order_no}</span>
             </div>
             <div className="flex justify-between gap-3">
               <span className="font-bold text-stone-500">ยอดรวม</span>
-              <span className="font-black">฿{formatMoney(success.total)}</span>
+              <span className="font-black">฿{formatMoney(visibleSuccess.total)}</span>
             </div>
           </div>
         </section>
