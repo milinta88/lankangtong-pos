@@ -80,7 +80,12 @@ export default function CartPanel({
             <div key={item.cart_id} className="rounded-[22px] border border-[#eadbc9] bg-white p-3 shadow-sm shadow-stone-900/5">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="line-clamp-2 text-sm font-black text-stone-950">{item.menu_name}</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="line-clamp-2 text-sm font-black text-stone-950">{item.menu_name}</p>
+                    {item.item_type === 'CUSTOM_COUNTER' ? (
+                      <Badge tone="coffee" className="shrink-0">ขายหน้าร้าน</Badge>
+                    ) : null}
+                  </div>
                   <p className="mt-1 text-xs font-semibold text-stone-500">฿{formatMoney(item.unit_price)}</p>
                 </div>
                 <button

@@ -2,6 +2,8 @@ var ORDER_STATUS_NEW = 'NEW';
 var ORDER_STATUS_PAID = 'PAID';
 var PAYMENT_STATUS_UNPAID = 'UNPAID';
 var PAYMENT_STATUS_PAID = 'PAID';
+var CUSTOM_COUNTER_MENU_ID = 'CUSTOM_COUNTER';
+var CUSTOM_COUNTER_ITEM_TYPE = 'CUSTOM_COUNTER';
 var TEST_DIRECT_STOCK_MENU_ID = 'MN066';
 var TEST_DIRECT_STOCK_MENU_NAME = 'น้ำเปล่า (เล็ก)';
 var TEST_DIRECT_STOCK_QTY = 30;
@@ -501,14 +503,32 @@ function buildPaidOrderRecordsForCheckout_(
       throw new Error('Invalid order item');
     }
 
+    var isCustomCounterItem = isCustomCounterSaleItem_(item);
     var menu = menuById[menuId];
+    var menuNameSnapshot = '';
+    var unitPrice = 0;
 
-    if (!menu) {
-      throw new Error('Menu not found: ' + menuId);
+    if (isCustomCounterItem) {
+      menuId = CUSTOM_COUNTER_MENU_ID;
+      menuNameSnapshot = getCustomCounterItemName_(item);
+      unitPrice = numberValue_(item.unit_price || item.unitPrice || item.price || 0);
+
+      if (!menuNameSnapshot) {
+        throw new Error('Manual counter sale item name is required');
+      }
+
+      if (unitPrice <= 0) {
+        throw new Error('Manual counter sale item price must be greater than 0');
+      }
+    } else {
+      if (!menu) {
+        throw new Error('Menu not found: ' + menuId);
+      }
+
+      menuNameSnapshot = stringValue_(getValueByAliases_(menu, ['name_th', 'menu_name'], menuId));
+      unitPrice = numberValue_(getValueByAliases_(menu, ['price', 'base_price'], 0));
     }
 
-    var menuNameSnapshot = stringValue_(getValueByAliases_(menu, ['name_th', 'menu_name'], menuId));
-    var unitPrice = numberValue_(getValueByAliases_(menu, ['price', 'base_price'], 0));
     var itemDiscount = numberValue_(item.discount || 0);
     var lineSubtotal = quantity * unitPrice;
     var lineTotal = Math.max(0, lineSubtotal - itemDiscount);
@@ -562,6 +582,24 @@ function buildPaidOrderRecordsForCheckout_(
   };
 }
 
+function isCustomCounterSaleItem_(item) {
+  var itemType = stringValue_(item.item_type || item.itemType).toUpperCase();
+  var menuId = stringValue_(item.menu_id || item.menuId).toUpperCase();
+
+  return itemType === CUSTOM_COUNTER_ITEM_TYPE || menuId === CUSTOM_COUNTER_MENU_ID;
+}
+
+function getCustomCounterItemName_(item) {
+  return stringValue_(
+    item.menu_name_snapshot ||
+    item.menuNameSnapshot ||
+    item.menu_name ||
+    item.menuName ||
+    item.name ||
+    ''
+  );
+}
+
 function buildCheckoutPaymentRecord_(orderId, orderTotal, paymentRequest, createdBy, timestamp) {
   var amount = numberValue_(paymentRequest.amount || orderTotal);
   var received = numberValue_(paymentRequest.received || paymentRequest.received_amount || amount);
@@ -593,6 +631,10 @@ function buildDirectStockPlan_(orderItems, menus) {
   var plan = [];
 
   orderItems.forEach(function (item) {
+    if (isCustomCounterSaleItem_(item)) {
+      return;
+    }
+
     var menuId = stringValue_(getValueByAliases_(item, ['menu_id'], ''));
     var quantity = numberValue_(getValueByAliases_(item, ['quantity', 'qty'], 0));
     var menu = menuById[menuId];
@@ -1191,6 +1233,52 @@ function testCheckoutOrderDirectStock() {
       result.receipt &&
       result.receipt.promptpay_id !== undefined &&
       result.receipt.receipt_qr_size_mm !== undefined
+  };
+
+  Logger.log(JSON.stringify(result, null, 2));
+  return result;
+}
+
+function testCheckoutOrderCustomCounterSale() {
+  var amount = 10;
+  var result = checkoutOrder_({
+    order_type: 'TAKEAWAY',
+    items: [
+      {
+        menu_id: CUSTOM_COUNTER_MENU_ID,
+        item_type: CUSTOM_COUNTER_ITEM_TYPE,
+        menu_name: '\u0e44\u0e1f\u0e41\u0e0a\u0e47\u0e01',
+        menu_name_snapshot: '\u0e44\u0e1f\u0e41\u0e0a\u0e47\u0e01',
+        quantity: 1,
+        unit_price: amount,
+        note: 'CUSTOM_COUNTER checkout test'
+      }
+    ],
+    note: 'CUSTOM_COUNTER checkout test',
+    created_by: 'TEST',
+    payment: {
+      method: 'CASH',
+      amount: amount,
+      received: amount,
+      reference: 'TEST-CUSTOM-COUNTER'
+    }
+  });
+  var stockLogs = result.success ? getStockLogsForOrderTest_(result.order.order_id) : [];
+
+  result.verification = {
+    item_menu_id: result.items && result.items[0] ? result.items[0].menu_id : '',
+    item_name: result.items && result.items[0] ? result.items[0].menu_name_snapshot : '',
+    item_total: result.items && result.items[0] ? result.items[0].total : 0,
+    deducted_stock_count: result.deductedStock ? result.deductedStock.length : 0,
+    stock_log_count_for_order: stockLogs.length,
+    passed: result.success &&
+      result.items &&
+      result.items.length === 1 &&
+      result.items[0].menu_id === CUSTOM_COUNTER_MENU_ID &&
+      result.items[0].total === amount &&
+      result.deductedStock &&
+      result.deductedStock.length === 0 &&
+      stockLogs.length === 0
   };
 
   Logger.log(JSON.stringify(result, null, 2));

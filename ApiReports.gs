@@ -74,10 +74,17 @@ function getDailyReport_(request) {
       var menuName = stringValue_(getValueByAliases_(item, ['menu_name_snapshot', 'menu_name'], menuId));
       var quantity = numberValue_(getValueByAliases_(item, ['quantity', 'qty'], 0));
       var itemTotal = numberValue_(getValueByAliases_(item, ['total'], 0));
+      var itemType = stringValue_(getValueByAliases_(item, ['item_type', 'itemType'], '')).toUpperCase();
       var itemKey = menuId || menuName;
 
       if (!itemKey || quantity <= 0) {
         return;
+      }
+
+      if (itemType === 'CUSTOM_COUNTER' || menuId === 'CUSTOM_COUNTER') {
+        menuId = 'CUSTOM_COUNTER';
+        menuName = '\u0e02\u0e32\u0e22\u0e2b\u0e19\u0e49\u0e32\u0e23\u0e49\u0e32\u0e19';
+        itemKey = 'CUSTOM_COUNTER';
       }
 
       summary.item_count += quantity;

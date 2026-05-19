@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, RefreshCw, Search } from 'lucide-react';
+import { AlertTriangle, Plus, RefreshCw, Search, X } from 'lucide-react';
 import {
   checkoutOrder,
   getCachedMenuResponse,
@@ -36,11 +36,124 @@ function makeCartItem(menu) {
   };
 }
 
+function makeManualCartItem(form) {
+  const cartId = `CUSTOM_COUNTER-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  const quantity = toNumber(form.quantity);
+  const unitPrice = toNumber(form.price);
+  const name = form.name.trim();
+
+  return {
+    cart_id: cartId,
+    menu_id: 'CUSTOM_COUNTER',
+    menu_name: name,
+    menu_name_snapshot: name,
+    item_type: 'CUSTOM_COUNTER',
+    quantity,
+    unit_price: unitPrice,
+    note: form.note.trim(),
+    total: quantity * unitPrice,
+  };
+}
+
 function formatMoney(value) {
   return new Intl.NumberFormat('th-TH', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(value || 0);
+}
+
+function ManualCounterSaleModal({
+  form,
+  error,
+  onChange,
+  onCancel,
+  onSubmit,
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-stone-950/40 px-4 py-5 backdrop-blur-sm sm:items-center">
+      <form
+        onSubmit={onSubmit}
+        className="w-full max-w-md overflow-hidden rounded-[28px] border border-[#eadbc9] bg-white shadow-2xl shadow-stone-950/20"
+      >
+        <div className="flex items-start justify-between gap-4 border-b border-[#eadbc9] bg-[#fffaf3] p-5">
+          <div>
+            <h2 className="text-xl font-black text-stone-950">ขายหน้าร้าน</h2>
+            <p className="mt-1 text-sm font-semibold text-stone-500">เพิ่มสินค้าทั่วไปเข้าบิลนี้</p>
+          </div>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-stone-500 ring-1 ring-[#eadbc9] transition hover:bg-stone-50 hover:text-stone-950"
+            aria-label="Close manual sale form"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="space-y-4 p-5">
+          <label className="block text-xs font-bold uppercase tracking-wide text-stone-500">
+            ชื่อสินค้า
+            <input
+              value={form.name}
+              onChange={(event) => onChange('name', event.target.value)}
+              autoFocus
+              className="mt-1 h-12 w-full rounded-2xl border border-[#eadbc9] bg-white px-3 text-sm font-semibold text-stone-950 outline-none ring-[#6f4e37] transition placeholder:text-stone-400 focus:ring-2"
+              placeholder="เช่น ไฟแช็ก"
+            />
+          </label>
+
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block text-xs font-bold uppercase tracking-wide text-stone-500">
+              ราคา
+              <input
+                value={form.price}
+                onChange={(event) => onChange('price', event.target.value)}
+                inputMode="decimal"
+                className="mt-1 h-12 w-full rounded-2xl border border-[#eadbc9] bg-white px-3 text-sm font-semibold text-stone-950 outline-none ring-[#6f4e37] transition placeholder:text-stone-400 focus:ring-2"
+                placeholder="0"
+              />
+            </label>
+            <label className="block text-xs font-bold uppercase tracking-wide text-stone-500">
+              จำนวน
+              <input
+                value={form.quantity}
+                onChange={(event) => onChange('quantity', event.target.value)}
+                inputMode="decimal"
+                className="mt-1 h-12 w-full rounded-2xl border border-[#eadbc9] bg-white px-3 text-sm font-semibold text-stone-950 outline-none ring-[#6f4e37] transition placeholder:text-stone-400 focus:ring-2"
+                placeholder="1"
+              />
+            </label>
+          </div>
+
+          <label className="block text-xs font-bold uppercase tracking-wide text-stone-500">
+            หมายเหตุ
+            <textarea
+              value={form.note}
+              onChange={(event) => onChange('note', event.target.value)}
+              rows={2}
+              className="mt-1 w-full resize-none rounded-2xl border border-[#eadbc9] bg-white px-3 py-2 text-sm font-semibold text-stone-950 outline-none ring-[#6f4e37] transition placeholder:text-stone-400 focus:ring-2"
+              placeholder="Optional"
+            />
+          </label>
+
+          {error ? (
+            <div className="rounded-2xl border border-rose-200 bg-rose-50 p-3 text-sm font-bold text-rose-700">
+              {error}
+            </div>
+          ) : null}
+        </div>
+
+        <div className="flex gap-3 border-t border-[#eadbc9] bg-[#fffaf3] p-5">
+          <Button type="button" variant="subtle" size="lg" className="flex-1 rounded-2xl" onClick={onCancel}>
+            ยกเลิก
+          </Button>
+          <Button type="submit" variant="dark" size="lg" className="flex-1 rounded-2xl">
+            เพิ่มเข้าตะกร้า
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 const defaultSettings = {
@@ -67,6 +180,14 @@ export default function POS() {
   const [discount, setDiscount] = React.useState('0');
   const [paymentMethod, setPaymentMethod] = React.useState('CASH');
   const [received, setReceived] = React.useState('');
+  const [isManualSaleOpen, setIsManualSaleOpen] = React.useState(false);
+  const [manualSaleForm, setManualSaleForm] = React.useState({
+    name: '',
+    price: '',
+    quantity: '1',
+    note: '',
+  });
+  const [manualSaleError, setManualSaleError] = React.useState('');
   const [settings, setSettings] = React.useState(() => ({
     ...defaultSettings,
     ...(cachedSettings?.settings || {}),
@@ -271,6 +392,57 @@ export default function POS() {
     );
   }
 
+  function openManualSale() {
+    setOrderType('TAKEAWAY');
+    setManualSaleForm({
+      name: '',
+      price: '',
+      quantity: '1',
+      note: '',
+    });
+    setManualSaleError('');
+    setIsManualSaleOpen(true);
+  }
+
+  function updateManualSaleForm(field, value) {
+    setManualSaleForm((current) => ({
+      ...current,
+      [field]: value,
+    }));
+    setManualSaleError('');
+  }
+
+  function closeManualSale() {
+    setIsManualSaleOpen(false);
+    setManualSaleError('');
+  }
+
+  function handleManualSaleSubmit(event) {
+    event.preventDefault();
+
+    const name = manualSaleForm.name.trim();
+    const price = toNumber(manualSaleForm.price);
+    const quantity = toNumber(manualSaleForm.quantity);
+
+    if (!name) {
+      setManualSaleError('กรุณากรอกชื่อสินค้า');
+      return;
+    }
+
+    if (price <= 0) {
+      setManualSaleError('ราคาต้องมากกว่า 0');
+      return;
+    }
+
+    if (quantity <= 0) {
+      setManualSaleError('จำนวนต้องมากกว่า 0');
+      return;
+    }
+
+    setCart((current) => [...current, makeManualCartItem(manualSaleForm)]);
+    closeManualSale();
+  }
+
   function handlePaymentMethodChange(nextMethod) {
     setPaymentMethod(nextMethod);
 
@@ -296,9 +468,14 @@ export default function POS() {
         created_by: 'CASHIER',
         items: cart.map((item) => ({
           menu_id: item.menu_id,
+          menu_name: item.item_type === 'CUSTOM_COUNTER' ? item.menu_name : undefined,
+          menu_name_snapshot: item.item_type === 'CUSTOM_COUNTER' ? item.menu_name_snapshot || item.menu_name : undefined,
           quantity: item.quantity,
+          unit_price: item.item_type === 'CUSTOM_COUNTER' ? item.unit_price : undefined,
           note: item.note,
           discount: 0,
+          total: item.item_type === 'CUSTOM_COUNTER' ? item.total : undefined,
+          item_type: item.item_type,
         })),
         payment: {
           method: paymentMethod,
@@ -361,14 +538,20 @@ export default function POS() {
               <h2 className="text-xl font-black text-stone-950">เมนู</h2>
               <p className="text-sm font-semibold text-stone-500">ยอดในบิล ฿{formatMoney(totals.total)}</p>
             </div>
-            <div className="relative w-full lg:w-[380px]">
-              <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search menu"
-                className="h-12 w-full rounded-2xl border border-[#eadbc9] bg-white pl-10 pr-3 text-sm font-semibold outline-none ring-[#6f4e37] transition placeholder:text-stone-400 focus:ring-2"
-              />
+            <div className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto">
+              <Button onClick={openManualSale} variant="dark" size="lg" className="rounded-2xl px-5">
+                <Plus size={18} />
+                + ขายหน้าร้าน
+              </Button>
+              <div className="relative w-full lg:w-[380px]">
+                <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
+                <input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Search menu"
+                  className="h-12 w-full rounded-2xl border border-[#eadbc9] bg-white pl-10 pr-3 text-sm font-semibold outline-none ring-[#6f4e37] transition placeholder:text-stone-400 focus:ring-2"
+                />
+              </div>
             </div>
           </div>
 
@@ -435,6 +618,16 @@ export default function POS() {
           />
         </aside>
       </div>
+
+      {isManualSaleOpen ? (
+        <ManualCounterSaleModal
+          form={manualSaleForm}
+          error={manualSaleError}
+          onChange={updateManualSaleForm}
+          onCancel={closeManualSale}
+          onSubmit={handleManualSaleSubmit}
+        />
+      ) : null}
     </AppShell>
   );
 }
