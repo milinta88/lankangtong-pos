@@ -30,11 +30,20 @@ import {
   hasFreshTablesClientCache,
   openTable,
   payTableOrder,
+  TABLES_UPDATED_EVENT,
   updateTablesClientCache,
 } from '../services/api.js';
 import { saveReceiptDetail } from '../services/receiptCache.js';
 import { navigateTo } from '../App.jsx';
 import { getCurrentRoutePath, PRODUCTION_ORDER_URL } from '../services/router.js';
+import {
+  consumePendingTableFocus,
+  peekPendingTableFocus,
+  readQrPendingSoundEnabled,
+  readSeenPendingCount,
+  writeQrPendingSoundEnabled,
+  writeSeenPendingCount,
+} from '../services/qrPendingState.js';
 import AppShell from '../components/AppShell.jsx';
 import Button from '../components/Button.jsx';
 import CategoryTabs from '../components/CategoryTabs.jsx';
@@ -210,25 +219,6 @@ function markTableOrderActive(tables, detail) {
   });
 }
 
-const PENDING_SEEN_STORAGE_KEY = 'langangtong.tables.pendingSeenCounts';
-const QR_PENDING_WATCH_INTERVAL_MS = 15000;
-
-function readSeenPendingCounts() {
-  try {
-    return JSON.parse(sessionStorage.getItem(PENDING_SEEN_STORAGE_KEY) || '{}') || {};
-  } catch (error) {
-    return {};
-  }
-}
-
-function writeSeenPendingCounts(counts) {
-  try {
-    sessionStorage.setItem(PENDING_SEEN_STORAGE_KEY, JSON.stringify(counts || {}));
-  } catch (error) {
-    // Ignore session storage failures; alerts still work for the current render.
-  }
-}
-
 function getTablePendingCount(table) {
   return toNumber(table?.order?.pending_item_count || 0);
 }
@@ -283,14 +273,13 @@ export default function Tables() {
   const [qrCards, setQrCards] = React.useState([]);
   const [showQrCards, setShowQrCards] = React.useState(false);
   const [pendingToast, setPendingToast] = React.useState(null);
-  const [soundEnabled, setSoundEnabled] = React.useState(false);
+  const [soundEnabled, setSoundEnabled] = React.useState(readQrPendingSoundEnabled);
   const [isClearModalOpen, setIsClearModalOpen] = React.useState(false);
   const [clearReason, setClearReason] = React.useState('');
   const [clearConfirm, setClearConfirm] = React.useState('');
   const [clearSuccess, setClearSuccess] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(() => !cachedTables?.success);
   const [isRefreshingTables, setIsRefreshingTables] = React.useState(false);
-  const [isCheckingQrPending, setIsCheckingQrPending] = React.useState(false);
   const [isWorking, setIsWorking] = React.useState(false);
   const [isPayingTable, setIsPayingTable] = React.useState(false);
   const [isClearingTable, setIsClearingTable] = React.useState(false);
@@ -303,12 +292,11 @@ export default function Tables() {
   const autoRefreshStateRef = React.useRef({
     isBusy: false,
     isPanelOpen: false,
-    isQrWatcherBlocked: false,
   });
   const isMountedRef = React.useRef(false);
   const tablesRef = React.useRef(tables);
   const pendingSectionRef = React.useRef(null);
-  const seenPendingCountsRef = React.useRef(readSeenPendingCounts());
+  const seenPendingCountsRef = React.useRef({});
   const tablePaymentMessages = React.useMemo(
     () => [
       'กำลังปิดบิลโต๊ะ...',
@@ -341,7 +329,7 @@ export default function Tables() {
   }, [tables]);
 
   const loadTables = React.useCallback(
-    async ({ showLoading = true, force = false, silentError = false, checkingQrPending = false } = {}) => {
+    async ({ showLoading = true, force = false, silentError = false } = {}) => {
     if (getCurrentRoutePath() !== '/tables') {
       return null;
     }
@@ -365,8 +353,6 @@ export default function Tables() {
 
     if (showFullLoading) {
       setIsLoading(true);
-    } else if (checkingQrPending) {
-      setIsCheckingQrPending(true);
     } else {
       setIsRefreshingTables(true);
     }
@@ -406,8 +392,6 @@ export default function Tables() {
 
         if (showFullLoading) {
           setIsLoading(false);
-        } else if (checkingQrPending) {
-          setIsCheckingQrPending(false);
         } else {
           setIsRefreshingTables(false);
         }
@@ -430,7 +414,6 @@ export default function Tables() {
       latestId: tablesRequestRef.current.latestId + 1,
     };
     setIsRefreshingTables(false);
-    setIsCheckingQrPending(false);
 
     const nextTables = typeof updater === 'function' ? updater(tablesRef.current) : updater;
 
@@ -477,10 +460,32 @@ export default function Tables() {
     loadData();
   }, [loadData]);
 
+  React.useEffect(() => {
+    const handleTablesUpdated = (event) => {
+      if (!isMountedRef.current || getCurrentRoutePath() !== '/tables') {
+        return;
+      }
+
+      const nextTables = event.detail?.tables;
+
+      if (!Array.isArray(nextTables)) {
+        return;
+      }
+
+      tablesRef.current = nextTables;
+      setTables(nextTables);
+      hasLoadedTablesRef.current = true;
+      setIsLoading(false);
+      setIsRefreshingTables(false);
+    };
+
+    window.addEventListener(TABLES_UPDATED_EVENT, handleTablesUpdated);
+    return () => window.removeEventListener(TABLES_UPDATED_EVENT, handleTablesUpdated);
+  }, []);
+
   autoRefreshStateRef.current = {
     isBusy: isWorking || isPayingTable || isClearingTable,
     isPanelOpen: Boolean(selectedDetail?.order) || showQrCards || isClearModalOpen,
-    isQrWatcherBlocked: isWorking || isPayingTable || isClearingTable || showQrCards || isClearModalOpen,
   };
 
   React.useEffect(() => {
@@ -520,45 +525,6 @@ export default function Tables() {
 
       loadTables({ showLoading: false, force: true });
     }, 60000);
-
-    return () => window.clearInterval(timer);
-  }, [loadTables]);
-
-  React.useEffect(() => {
-    const timer = window.setInterval(() => {
-      if (getCurrentRoutePath() !== '/tables') {
-        return;
-      }
-
-      if (document.visibilityState !== 'visible') {
-        return;
-      }
-
-      if (autoRefreshStateRef.current.isQrWatcherBlocked) {
-        if (import.meta.env.DEV) {
-          console.log('[Tables] QR pending watcher skipped: busy');
-        }
-        return;
-      }
-
-      if (tablesRequestRef.current.inFlight) {
-        if (import.meta.env.DEV) {
-          console.log('[Tables] QR pending watcher skipped: in flight');
-        }
-        return;
-      }
-
-      if (import.meta.env.DEV) {
-        console.log('[Tables] QR pending watcher started');
-      }
-
-      loadTables({
-        showLoading: false,
-        force: true,
-        silentError: true,
-        checkingQrPending: true,
-      });
-    }, QR_PENDING_WATCH_INTERVAL_MS);
 
     return () => window.clearInterval(timer);
   }, [loadTables]);
@@ -646,7 +612,10 @@ export default function Tables() {
     tables.forEach((table) => {
       const tableNo = table.table_no;
       const pendingCount = getTablePendingCount(table);
-      const previousCount = toNumber(seenPendingCountsRef.current[tableNo] || 0);
+      const previousCount =
+        tableNo in seenPendingCountsRef.current
+          ? toNumber(seenPendingCountsRef.current[tableNo])
+          : readSeenPendingCount(tableNo);
 
       if (pendingCount > previousCount) {
         newAlerts.push({
@@ -661,7 +630,9 @@ export default function Tables() {
     });
 
     seenPendingCountsRef.current = nextSeenCounts;
-    writeSeenPendingCounts(nextSeenCounts);
+    Object.entries(nextSeenCounts).forEach(([tableNo, count]) => {
+      writeSeenPendingCount(tableNo, count);
+    });
 
     if (newAlerts.length) {
       const newestAlert =
@@ -692,7 +663,7 @@ export default function Tables() {
     };
 
     seenPendingCountsRef.current = nextSeenCounts;
-    writeSeenPendingCounts(nextSeenCounts);
+    writeSeenPendingCount(tableNo, nextSeenCounts[tableNo]);
   }
 
   function handleOpenPendingTable(tableNo) {
@@ -702,6 +673,11 @@ export default function Tables() {
 
     setPendingToast(null);
     void handleSelectTable(table, { focusPending: true });
+  }
+
+  function handleSoundEnabledChange(isEnabled) {
+    setSoundEnabled(isEnabled);
+    writeQrPendingSoundEnabled(isEnabled);
   }
 
   async function handleSelectTable(table, options = {}) {
@@ -744,6 +720,28 @@ export default function Tables() {
       }
     }
   }
+
+  React.useEffect(() => {
+    if (!tables.length || isWorking || isPayingTable || isClearingTable) {
+      return;
+    }
+
+    const tableNo = peekPendingTableFocus();
+
+    if (!tableNo) {
+      return;
+    }
+
+    const table = tablesRef.current.find((row) => row.table_no === tableNo);
+
+    if (!table) {
+      return;
+    }
+
+    consumePendingTableFocus();
+    setPendingToast(null);
+    void handleSelectTable(table, { focusPending: true });
+  }, [isClearingTable, isPayingTable, isWorking, tables]);
 
   function addToCart(menu) {
     setCart((current) => {
@@ -1040,12 +1038,9 @@ export default function Tables() {
               }
               forceRefreshTables({ showLoading: false });
             }}
-            disabled={isLoading || isRefreshingTables || isCheckingQrPending}
+            disabled={isLoading || isRefreshingTables}
           >
-            <RefreshCw
-              size={18}
-              className={isLoading || isRefreshingTables || isCheckingQrPending ? 'animate-spin' : ''}
-            />
+            <RefreshCw size={18} className={isLoading || isRefreshingTables ? 'animate-spin' : ''} />
             Refresh
           </Button>
         </>
@@ -1095,7 +1090,7 @@ export default function Tables() {
               <input
                 type="checkbox"
                 checked={soundEnabled}
-                onChange={(event) => setSoundEnabled(event.target.checked)}
+                onChange={(event) => handleSoundEnabledChange(event.target.checked)}
                 className="h-4 w-4 accent-amber-600"
               />
               <Volume2 size={15} />
@@ -1260,9 +1255,6 @@ export default function Tables() {
                 <p className="text-sm font-semibold text-stone-500">คลิกโต๊ะเพื่อเปิดบิลหรือดูออเดอร์</p>
                 {isRefreshingTables ? (
                   <p className="mt-1 text-xs font-bold text-stone-500">กำลังอัปเดตข้อมูล...</p>
-                ) : null}
-                {!isRefreshingTables && isCheckingQrPending ? (
-                  <p className="mt-1 text-xs font-bold text-amber-700">กำลังเช็กออเดอร์ใหม่...</p>
                 ) : null}
               </div>
               <StatusBadge tone="coffee">{tables.length} tables</StatusBadge>

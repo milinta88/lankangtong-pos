@@ -8,6 +8,7 @@ import Admin from './pages/Admin.jsx';
 import Report from './pages/Report.jsx';
 import Tables from './pages/Tables.jsx';
 import TableQr from './pages/TableQr.jsx';
+import QrPendingGlobalWatcher from './components/QrPendingGlobalWatcher.jsx';
 import { getCurrentRoutePath, navigateTo } from './services/router.js';
 
 const routes = {
@@ -55,5 +56,10 @@ export default function App() {
     };
   }, []);
 
-  return <Component {...params} />;
+  return (
+    <>
+      <QrPendingGlobalWatcher />
+      <Component {...params} />
+    </>
+  );
 }

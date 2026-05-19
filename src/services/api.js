@@ -35,6 +35,8 @@ const inFlightReadRequests = new Map();
 const lastNetworkFetchAtByAction = new Map();
 let tablesCacheGeneration = 0;
 
+export const TABLES_UPDATED_EVENT = 'langangtong:tables-updated';
+
 function nowMs() {
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
     return performance.now();
@@ -100,6 +102,20 @@ function sanitizeRequestKeyValue(value) {
 
 function makeRequestKey(action, payload = {}) {
   return `${action}:${JSON.stringify(sanitizeRequestKeyValue(payload || {}))}`;
+}
+
+function dispatchTablesUpdated(tables) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.dispatchEvent(
+    new CustomEvent(TABLES_UPDATED_EVENT, {
+      detail: {
+        tables: Array.isArray(tables) ? tables : [],
+      },
+    }),
+  );
 }
 
 async function executePostAction(action, payload = {}) {
@@ -204,6 +220,10 @@ async function postCachedAction(action, payload, cacheKey, ttlMs, options = {}) 
     }
 
     setClientCache(cacheKey, result, ttlMs);
+
+    if (action === 'GET_TABLES') {
+      dispatchTablesUpdated(result.tables || []);
+    }
   }
 
   return result;
@@ -260,7 +280,7 @@ export function clearTablesClientCache() {
 
 export function updateTablesClientCache(tables) {
   tablesCacheGeneration += 1;
-  return setClientCache(
+  const result = setClientCache(
     TABLES_CACHE_KEY,
     {
       success: true,
@@ -268,6 +288,13 @@ export function updateTablesClientCache(tables) {
     },
     TABLES_CACHE_TTL_MS,
   );
+
+  dispatchTablesUpdated(tables);
+  return result;
+}
+
+export function isGetTablesRequestInFlight() {
+  return inFlightReadRequests.has(makeRequestKey('GET_TABLES', {}));
 }
 
 export function clearStockClientCache() {
