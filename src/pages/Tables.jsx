@@ -211,6 +211,7 @@ function markTableOrderActive(tables, detail) {
 }
 
 const PENDING_SEEN_STORAGE_KEY = 'langangtong.tables.pendingSeenCounts';
+const QR_PENDING_WATCH_INTERVAL_MS = 15000;
 
 function readSeenPendingCounts() {
   try {
@@ -289,6 +290,7 @@ export default function Tables() {
   const [clearSuccess, setClearSuccess] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(() => !cachedTables?.success);
   const [isRefreshingTables, setIsRefreshingTables] = React.useState(false);
+  const [isCheckingQrPending, setIsCheckingQrPending] = React.useState(false);
   const [isWorking, setIsWorking] = React.useState(false);
   const [isPayingTable, setIsPayingTable] = React.useState(false);
   const [isClearingTable, setIsClearingTable] = React.useState(false);
@@ -301,6 +303,7 @@ export default function Tables() {
   const autoRefreshStateRef = React.useRef({
     isBusy: false,
     isPanelOpen: false,
+    isQrWatcherBlocked: false,
   });
   const isMountedRef = React.useRef(false);
   const tablesRef = React.useRef(tables);
@@ -337,7 +340,8 @@ export default function Tables() {
     tablesRef.current = tables;
   }, [tables]);
 
-  const loadTables = React.useCallback(async ({ showLoading = true, force = false, silentError = false } = {}) => {
+  const loadTables = React.useCallback(
+    async ({ showLoading = true, force = false, silentError = false, checkingQrPending = false } = {}) => {
     if (getCurrentRoutePath() !== '/tables') {
       return null;
     }
@@ -361,6 +365,8 @@ export default function Tables() {
 
     if (showFullLoading) {
       setIsLoading(true);
+    } else if (checkingQrPending) {
+      setIsCheckingQrPending(true);
     } else {
       setIsRefreshingTables(true);
     }
@@ -400,12 +406,16 @@ export default function Tables() {
 
         if (showFullLoading) {
           setIsLoading(false);
+        } else if (checkingQrPending) {
+          setIsCheckingQrPending(false);
         } else {
           setIsRefreshingTables(false);
         }
       }
     }
-  }, []);
+    },
+    [],
+  );
 
   const forceRefreshTables = React.useCallback(
     async ({ showLoading = false, silentError = false } = {}) => {
@@ -419,6 +429,8 @@ export default function Tables() {
       inFlight: false,
       latestId: tablesRequestRef.current.latestId + 1,
     };
+    setIsRefreshingTables(false);
+    setIsCheckingQrPending(false);
 
     const nextTables = typeof updater === 'function' ? updater(tablesRef.current) : updater;
 
@@ -468,6 +480,7 @@ export default function Tables() {
   autoRefreshStateRef.current = {
     isBusy: isWorking || isPayingTable || isClearingTable,
     isPanelOpen: Boolean(selectedDetail?.order) || showQrCards || isClearModalOpen,
+    isQrWatcherBlocked: isWorking || isPayingTable || isClearingTable || showQrCards || isClearModalOpen,
   };
 
   React.useEffect(() => {
@@ -507,6 +520,45 @@ export default function Tables() {
 
       loadTables({ showLoading: false, force: true });
     }, 60000);
+
+    return () => window.clearInterval(timer);
+  }, [loadTables]);
+
+  React.useEffect(() => {
+    const timer = window.setInterval(() => {
+      if (getCurrentRoutePath() !== '/tables') {
+        return;
+      }
+
+      if (document.visibilityState !== 'visible') {
+        return;
+      }
+
+      if (autoRefreshStateRef.current.isQrWatcherBlocked) {
+        if (import.meta.env.DEV) {
+          console.log('[Tables] QR pending watcher skipped: busy');
+        }
+        return;
+      }
+
+      if (tablesRequestRef.current.inFlight) {
+        if (import.meta.env.DEV) {
+          console.log('[Tables] QR pending watcher skipped: in flight');
+        }
+        return;
+      }
+
+      if (import.meta.env.DEV) {
+        console.log('[Tables] QR pending watcher started');
+      }
+
+      loadTables({
+        showLoading: false,
+        force: true,
+        silentError: true,
+        checkingQrPending: true,
+      });
+    }, QR_PENDING_WATCH_INTERVAL_MS);
 
     return () => window.clearInterval(timer);
   }, [loadTables]);
@@ -589,7 +641,7 @@ export default function Tables() {
     if (!tables.length) return;
 
     const nextSeenCounts = { ...seenPendingCountsRef.current };
-    let newestAlert = null;
+    const newAlerts = [];
 
     tables.forEach((table) => {
       const tableNo = table.table_no;
@@ -597,12 +649,12 @@ export default function Tables() {
       const previousCount = toNumber(seenPendingCountsRef.current[tableNo] || 0);
 
       if (pendingCount > previousCount) {
-        newestAlert = {
+        newAlerts.push({
           table_no: tableNo,
           table_name: table.table_name,
           pending_item_count: pendingCount,
           pending_total: getTablePendingTotal(table),
-        };
+        });
       }
 
       nextSeenCounts[tableNo] = pendingCount;
@@ -611,7 +663,18 @@ export default function Tables() {
     seenPendingCountsRef.current = nextSeenCounts;
     writeSeenPendingCounts(nextSeenCounts);
 
-    if (newestAlert) {
+    if (newAlerts.length) {
+      const newestAlert =
+        newAlerts.length === 1
+          ? newAlerts[0]
+          : {
+              table_no: newAlerts[0].table_no,
+              table_name: newAlerts[0].table_name,
+              table_count: newAlerts.length,
+              pending_item_count: newAlerts.reduce((sum, alert) => sum + toNumber(alert.pending_item_count), 0),
+              pending_total: newAlerts.reduce((sum, alert) => sum + toNumber(alert.pending_total), 0),
+            };
+
       setPendingToast(newestAlert);
 
       if (soundEnabled) {
@@ -977,9 +1040,12 @@ export default function Tables() {
               }
               forceRefreshTables({ showLoading: false });
             }}
-            disabled={isLoading || isRefreshingTables}
+            disabled={isLoading || isRefreshingTables || isCheckingQrPending}
           >
-            <RefreshCw size={18} className={isLoading || isRefreshingTables ? 'animate-spin' : ''} />
+            <RefreshCw
+              size={18}
+              className={isLoading || isRefreshingTables || isCheckingQrPending ? 'animate-spin' : ''}
+            />
             Refresh
           </Button>
         </>
@@ -1059,14 +1125,16 @@ export default function Tables() {
             </span>
             <div className="min-w-0 flex-1">
               <p className="font-black text-stone-950">
-                โต๊ะ {pendingToast.table_no} มีรายการใหม่จาก QR {formatMoney(pendingToast.pending_item_count)} รายการ
+                {pendingToast.table_count
+                  ? `มีรายการใหม่จาก QR ${formatMoney(pendingToast.table_count)} โต๊ะ`
+                  : `โต๊ะ ${pendingToast.table_no} มีรายการใหม่จาก QR ${formatMoney(pendingToast.pending_item_count)} รายการ`}
               </p>
               <p className="mt-1 text-sm font-semibold text-stone-500">
                 ยอดรอยืนยัน ฿{formatMoney(pendingToast.pending_total)}
               </p>
               <div className="mt-3 flex gap-2">
                 <Button size="sm" variant="dark" onClick={() => handleOpenPendingTable(pendingToast.table_no)}>
-                  เปิดดู
+                  {pendingToast.table_count ? 'เปิดโต๊ะแรก' : 'เปิดดู'}
                 </Button>
                 <Button size="sm" variant="ghost" onClick={() => setPendingToast(null)}>
                   ปิด
@@ -1192,6 +1260,9 @@ export default function Tables() {
                 <p className="text-sm font-semibold text-stone-500">คลิกโต๊ะเพื่อเปิดบิลหรือดูออเดอร์</p>
                 {isRefreshingTables ? (
                   <p className="mt-1 text-xs font-bold text-stone-500">กำลังอัปเดตข้อมูล...</p>
+                ) : null}
+                {!isRefreshingTables && isCheckingQrPending ? (
+                  <p className="mt-1 text-xs font-bold text-amber-700">กำลังเช็กออเดอร์ใหม่...</p>
                 ) : null}
               </div>
               <StatusBadge tone="coffee">{tables.length} tables</StatusBadge>
