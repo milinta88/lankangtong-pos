@@ -1,0 +1,1065 @@
+[2m9:26:53 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (434:6)
+
+[0m [90m 432 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 433 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 434 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 435 |[31m     [33m<[31m[33m/[31m[33mmain[31m[33m>[31m
+ [90m 436 |[31m   )[33m;[31m
+ [90m 437 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:434:6
+[33m  432 |            </div>
+  433 |          </section>
+  434 |        </div>
+      |        ^
+  435 |      </main>
+  436 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:26:53 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (434:6)
+
+[0m [90m 432 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 433 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 434 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 435 |[31m     [33m<[31m[33m/[31m[33mmain[31m[33m>[31m
+ [90m 436 |[31m   )[33m;[31m
+ [90m 437 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:434:6
+[33m  432 |            </div>
+  433 |          </section>
+  434 |        </div>
+      |        ^
+  435 |      </main>
+  436 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:27:03 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (434:6)
+
+[0m [90m 432 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 433 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 434 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 435 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 436 |[31m   )[33m;[31m
+ [90m 437 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:434:6
+[33m  432 |            </div>
+  433 |          </section>
+  434 |        </div>
+      |        ^
+  435 |      </AppShell>
+  436 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:27:03 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (434:6)
+
+[0m [90m 432 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 433 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 434 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 435 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 436 |[31m   )[33m;[31m
+ [90m 437 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:434:6
+[33m  432 |            </div>
+  433 |          </section>
+  434 |        </div>
+      |        ^
+  435 |      </AppShell>
+  436 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:27:39 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (416:6)
+
+[0m [90m 414 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 415 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 416 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 417 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 418 |[31m   )[33m;[31m
+ [90m 419 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:416:6
+[33m  414 |            </div>
+  415 |          </section>
+  416 |        </div>
+      |        ^
+  417 |      </AppShell>
+  418 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:27:39 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (416:6)
+
+[0m [90m 414 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 415 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 416 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 417 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 418 |[31m   )[33m;[31m
+ [90m 419 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:416:6
+[33m  414 |            </div>
+  415 |          </section>
+  416 |        </div>
+      |        ^
+  417 |      </AppShell>
+  418 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:28:03 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (416:6)
+
+[0m [90m 414 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 415 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 416 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 417 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 418 |[31m   )[33m;[31m
+ [90m 419 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:416:6
+[33m  414 |            </div>
+  415 |          </section>
+  416 |        </div>
+      |        ^
+  417 |      </AppShell>
+  418 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:28:03 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (416:6)
+
+[0m [90m 414 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 415 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 416 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 417 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 418 |[31m   )[33m;[31m
+ [90m 419 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:416:6
+[33m  414 |            </div>
+  415 |          </section>
+  416 |        </div>
+      |        ^
+  417 |      </AppShell>
+  418 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:28:25 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (416:6)
+
+[0m [90m 414 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 415 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 416 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 417 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 418 |[31m   )[33m;[31m
+ [90m 419 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:416:6
+[33m  414 |            </div>
+  415 |          </section>
+  416 |        </div>
+      |        ^
+  417 |      </AppShell>
+  418 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:28:25 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (416:6)
+
+[0m [90m 414 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 415 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 416 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 417 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 418 |[31m   )[33m;[31m
+ [90m 419 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:416:6
+[33m  414 |            </div>
+  415 |          </section>
+  416 |        </div>
+      |        ^
+  417 |      </AppShell>
+  418 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:28:42 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (416:6)
+
+[0m [90m 414 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 415 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 416 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 417 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 418 |[31m   )[33m;[31m
+ [90m 419 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:416:6
+[33m  414 |            </div>
+  415 |          </section>
+  416 |        </div>
+      |        ^
+  417 |      </AppShell>
+  418 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:28:42 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (416:6)
+
+[0m [90m 414 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 415 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 416 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 417 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 418 |[31m   )[33m;[31m
+ [90m 419 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:416:6
+[33m  414 |            </div>
+  415 |          </section>
+  416 |        </div>
+      |        ^
+  417 |      </AppShell>
+  418 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:29:28 PM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (416:6)
+
+[0m [90m 414 |[39m           [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m 415 |[39m         [33m<[39m[33m/[39m[33msection[39m[33m>[39m
+[31m[1m>[22m[39m[90m 416 |[39m       [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m     |[39m       [31m[1m^[22m[39m
+ [90m 417 |[39m     [33m<[39m[33m/[39m[33mAppShell[39m[33m>[39m
+ [90m 418 |[39m   )[33m;[39m
+ [90m 419 |[39m }[0m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:416:6
+[33m  414 |            </div>
+  415 |          </section>
+  416 |        </div>
+      |        ^
+  417 |      </AppShell>
+  418 |    );[39m
+[2m9:29:28 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (416:6)
+
+[0m [90m 414 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 415 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 416 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 417 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 418 |[31m   )[33m;[31m
+ [90m 419 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:416:6
+[33m  414 |            </div>
+  415 |          </section>
+  416 |        </div>
+      |        ^
+  417 |      </AppShell>
+  418 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m9:29:30 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\src\pages\Admin.jsx: Expected corresponding JSX closing tag for <AppShell>. (416:6)
+
+[0m [90m 414 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 415 |[31m         [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 416 |[31m       [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 417 |[31m     [33m<[31m[33m/[31m[33mAppShell[31m[33m>[31m
+ [90m 418 |[31m   )[33m;[31m
+ [90m 419 |[31m }[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/pages/Admin.jsx[39m:416:6
+[33m  414 |            </div>
+  415 |          </section>
+  416 |        </div>
+      |        ^
+  417 |      </AppShell>
+  418 |    );[39m
+      at constructor (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4739:16)
+      at JSXParserMixin.jsxParseElement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12420:14)
+      at JSXParserMixin.parseFunction (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13461:10)
+      at JSXParserMixin.parseExportDefaultExpression (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13924:19)
+      at JSXParserMixin.parseExport (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13845:25)
+      at JSXParserMixin.parseStatementContent (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12895:27)
+      at JSXParserMixin.parseStatementLike (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseModuleItem (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12761:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13333:36)
+      at JSXParserMixin.parseBlockBody (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseProgram (C:\Users\Miliin\Documents\Codex\2026-05-11\create-a-google-apps-script-backend\node_modules\@babel\parser\lib\index.js:12639:10)
+[2m10:07:26 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: Failed to resolve import "./pages/Tables.jsx" from "src/App.jsx". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/App.jsx[39m:9:19
+[33m  9  |  import Admin from "./pages/Admin.jsx";
+  10 |  import Report from "./pages/Report.jsx";
+  11 |  import Tables from "./pages/Tables.jsx";
+     |                      ^
+  12 |  const routes = {
+  13 |    "/pos": POS,[39m
+      at TransformPluginContext._formatLog (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:29019:43)
+      at TransformPluginContext.error (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:29016:14)
+      at normalizeUrl (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27139:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27197:32
+      at async Promise.all (index 9)
+      at async TransformPluginContext.transform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27165:4)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:28817:14)
+      at async loadAndTransform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:22686:26)
+[2m10:07:26 PM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to resolve import "./pages/Tables.jsx" from "src/App.jsx". Does the file exist?
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/App.jsx[39m:9:19
+[33m  9  |  import Admin from "./pages/Admin.jsx";
+  10 |  import Report from "./pages/Report.jsx";
+  11 |  import Tables from "./pages/Tables.jsx";
+     |                      ^
+  12 |  const routes = {
+  13 |    "/pos": POS,[39m
+[2m10:07:26 PM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to resolve import "./pages/Tables.jsx" from "src/App.jsx". Does the file exist?
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/App.jsx[39m:9:19
+[33m  9  |  import Admin from "./pages/Admin.jsx";
+  10 |  import Report from "./pages/Report.jsx";
+  11 |  import Tables from "./pages/Tables.jsx";
+     |                      ^
+  12 |  const routes = {
+  13 |    "/pos": POS,[39m
+[2m10:07:26 PM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to resolve import "./pages/Tables.jsx" from "src/App.jsx". Does the file exist?
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/App.jsx[39m:9:19
+[33m  9  |  import Admin from "./pages/Admin.jsx";
+  10 |  import Report from "./pages/Report.jsx";
+  11 |  import Tables from "./pages/Tables.jsx";
+     |                      ^
+  12 |  const routes = {
+  13 |    "/pos": POS,[39m
+[2m10:07:26 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: Failed to resolve import "./pages/Tables.jsx" from "src/App.jsx". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/App.jsx[39m:9:19
+[33m  9  |  import Admin from "./pages/Admin.jsx";
+  10 |  import Report from "./pages/Report.jsx";
+  11 |  import Tables from "./pages/Tables.jsx";
+     |                      ^
+  12 |  const routes = {
+  13 |    "/pos": POS,[39m
+      at TransformPluginContext._formatLog (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:29019:43)
+      at TransformPluginContext.error (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:29016:14)
+      at normalizeUrl (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27139:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27197:32
+      at async Promise.all (index 9)
+      at async TransformPluginContext.transform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27165:4)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:28817:14)
+      at async loadAndTransform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:22686:26)
+[2m10:07:26 PM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to resolve import "./pages/Tables.jsx" from "src/App.jsx". Does the file exist?
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/App.jsx[39m:9:19
+[33m  9  |  import Admin from "./pages/Admin.jsx";
+  10 |  import Report from "./pages/Report.jsx";
+  11 |  import Tables from "./pages/Tables.jsx";
+     |                      ^
+  12 |  const routes = {
+  13 |    "/pos": POS,[39m
+[2m10:07:27 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: Failed to resolve import "./pages/Tables.jsx" from "src/App.jsx". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/App.jsx[39m:9:19
+[33m  9  |  import Admin from "./pages/Admin.jsx";
+  10 |  import Report from "./pages/Report.jsx";
+  11 |  import Tables from "./pages/Tables.jsx";
+     |                      ^
+  12 |  const routes = {
+  13 |    "/pos": POS,[39m
+      at TransformPluginContext._formatLog (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:29019:43)
+      at TransformPluginContext.error (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:29016:14)
+      at normalizeUrl (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27139:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27197:32
+      at async Promise.all (index 9)
+      at async TransformPluginContext.transform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27165:4)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:28817:14)
+      at async loadAndTransform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:22686:26)
+      at async viteTransformMiddleware (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:24562:20)
+[2m10:07:27 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: Failed to resolve import "./pages/Tables.jsx" from "src/App.jsx". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/src/App.jsx[39m:9:19
+[33m  9  |  import Admin from "./pages/Admin.jsx";
+  10 |  import Report from "./pages/Report.jsx";
+  11 |  import Tables from "./pages/Tables.jsx";
+     |                      ^
+  12 |  const routes = {
+  13 |    "/pos": POS,[39m
+      at TransformPluginContext._formatLog (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:29019:43)
+      at TransformPluginContext.error (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:29016:14)
+      at normalizeUrl (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27139:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27197:32
+      at async Promise.all (index 9)
+      at async TransformPluginContext.transform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:27165:4)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:28817:14)
+      at async loadAndTransform (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:22686:26)
+      at async viteTransformMiddleware (file:///C:/Users/Miliin/Documents/Codex/2026-05-11/create-a-google-apps-script-backend/node_modules/vite/dist/node/chunks/config.js:24562:20)

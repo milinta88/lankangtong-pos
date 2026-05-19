@@ -1,0 +1,52 @@
+
+  [32m[1mVITE[22m v7.3.3[39m  [2mready in [0m[1m321[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5174[22m/[39m
+[2m8:26:17 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/POS.jsx, /src/styles.css[22m
+[2m8:49:53 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Stock.jsx, /src/styles.css[22m
+[2m9:03:36 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Receipt.jsx, /src/pages/Stock.jsx, /src/pages/POS.jsx[22m
+[2m9:04:47 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Report.jsx, /src/styles.css[22m
+[2m2:33:32 PM[22m [36m[1m[vite][22m[39m [32m.env.local changed, restarting server...[39m
+[2m2:33:32 PM[22m [36m[1m[vite][22m[39m server restarted.
+[2m2:41:27 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Receipt.jsx, /src/pages/POS.jsx, /src/pages/Report.jsx, /src/pages/Stock.jsx[22m
+[2m2:44:28 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Admin.jsx[22m
+[2m2:51:36 PM[22m [36m[1m[vite][22m[39m [32m.env.local changed, restarting server...[39m
+[2m2:51:36 PM[22m [36m[1m[vite][22m[39m server restarted.
+[2m3:47:22 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Receipt.jsx, /src/pages/POS.jsx, /src/pages/Report.jsx, /src/pages/Admin.jsx, /src/pages/Stock.jsx[22m
+[2m3:49:12 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/components/PaymentPanel.jsx[22m
+[2m3:49:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ new dependencies optimized: [33mpromptpay-qr, qrcode[32m[39m
+[2m3:49:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ optimized dependencies changed. reloading[39m
+[2m3:49:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/POS.jsx[22m
+[2m3:51:08 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/components/Receipt58mm.jsx[22m
+[2m3:51:18 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m3:53:28 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Report.jsx[22m
+[2m9:03:42 PM[22m [36m[1m[vite][22m[39m [32m.env.local changed, restarting server...[39m
+[2m9:03:42 PM[22m [36m[1m[vite][22m[39m server restarted.
+[2m9:12:49 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/components/StatusBadge.jsx[22m
+[2m9:15:07 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/components/CategoryTabs.jsx[22m
+[2m9:15:54 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/components/MenuCard.jsx[22m
+[2m9:17:06 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/components/CartPanel.jsx[22m
+[2m9:17:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/components/CartPanel.jsx[22m
+[2m9:18:24 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/components/PaymentPanel.jsx[22m
+[2m9:20:39 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/POS.jsx[22m
+[2m9:23:16 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Stock.jsx[22m
+[2m9:25:28 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Report.jsx[22m
+[2m9:26:15 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Admin.jsx[22m
+[2m9:26:30 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Admin.jsx[22m
+[2m9:26:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Admin.jsx[22m
+[2m9:27:03 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Admin.jsx[22m
+[2m9:27:39 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Admin.jsx[22m
+[2m9:28:03 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Admin.jsx[22m
+[2m9:28:25 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Admin.jsx[22m
+[2m9:28:42 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Admin.jsx[22m
+[2m9:29:28 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Receipt.jsx[22m
+[2m9:30:23 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/Admin.jsx[22m
+[2m10:06:56 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/POS.jsx, /src/pages/Receipt.jsx, /src/pages/Stock.jsx, /src/pages/Report.jsx, /src/pages/Admin.jsx[22m
+[2m10:07:18 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/components/AppShell.jsx[22m
+[2m10:07:26 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/styles.css[22m
+[2m10:11:28 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/Tables.jsx[22m
+[2m10:11:44 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/pages/CustomerOrder.jsx[22m
+[2m10:14:07 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/CustomerOrder.jsx[22m
+[2m10:18:08 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Tables.jsx, /src/styles.css[22m
+[2m10:41:53 PM[22m [36m[1m[vite][22m[39m [32m.env.local changed, restarting server...[39m
+[2m10:41:53 PM[22m [36m[1m[vite][22m[39m server restarted.
