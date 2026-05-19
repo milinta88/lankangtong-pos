@@ -45,6 +45,7 @@ import CategoryTabs from '../components/CategoryTabs.jsx';
 import Input from '../components/Input.jsx';
 import PaymentPanel from '../components/PaymentPanel.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
+import { getTableDisplayName } from '../utils/tableDisplay.js';
 
 const defaultSettings = {
   shop_name: 'ล้านก๋างโต้ง',
@@ -220,6 +221,10 @@ function getTablePendingCount(table) {
 
 function getTablePendingTotal(table) {
   return toNumber(table?.order?.pending_total || 0);
+}
+
+function getTableLabel(table) {
+  return getTableDisplayName(table?.table_no, table?.table_name || table?.table_no || '');
 }
 
 export default function Tables() {
@@ -907,6 +912,10 @@ export default function Tables() {
       if (!result.success) throw new Error(result.message || 'CLEAR_TABLE_ORDER failed');
 
       const clearedTableNo = result.table?.table_no || tableNo;
+      const clearedTableName = getTableDisplayName(
+        clearedTableNo,
+        result.table?.table_name || selectedDetail?.table?.table_name || clearedTableNo,
+      );
 
       markTablePendingSeen(clearedTableNo, 0);
       commitTablesOptimistically((currentTables) =>
@@ -918,7 +927,7 @@ export default function Tables() {
       setIsClearModalOpen(false);
       setClearReason('');
       setClearConfirm('');
-      setClearSuccess(`เคลียร์โต๊ะ ${clearedTableNo} แล้ว`);
+      setClearSuccess(`เคลียร์โต๊ะ ${clearedTableName} แล้ว`);
       void forceRefreshTables({ showLoading: false, silentError: true });
     } catch (clearError) {
       if (isMountedRef.current) {
@@ -1047,7 +1056,7 @@ export default function Tables() {
                 onClick={() => handleOpenPendingTable(table.table_no)}
                 className="rounded-2xl bg-white px-3 py-2 text-sm font-black text-rose-700 shadow-sm ring-1 ring-rose-200 transition hover:bg-rose-50"
               >
-                {table.table_no}: {formatMoney(getTablePendingCount(table))} รายการ
+                {getTableLabel(table)}: {formatMoney(getTablePendingCount(table))} รายการ
               </button>
             ))}
           </div>
@@ -1064,7 +1073,7 @@ export default function Tables() {
               <p className="font-black text-stone-950">
                 {pendingToast.table_count
                   ? `มีรายการใหม่จาก QR ${formatMoney(pendingToast.table_count)} โต๊ะ`
-                  : `โต๊ะ ${pendingToast.table_no} มีรายการใหม่จาก QR ${formatMoney(pendingToast.pending_item_count)} รายการ`}
+                  : `${getTableDisplayName(pendingToast.table_no, pendingToast.table_name || pendingToast.table_no || '')} มีรายการใหม่จาก QR ${formatMoney(pendingToast.pending_item_count)} รายการ`}
               </p>
               <p className="mt-1 text-sm font-semibold text-stone-500">
                 ยอดรอยืนยัน ฿{formatMoney(pendingToast.pending_total)}
@@ -1103,7 +1112,7 @@ export default function Tables() {
                 </span>
                 <div>
                   <h2 className="text-xl font-black text-stone-950">
-                    เคลียร์โต๊ะ {selectedDetail?.table?.table_no}?
+                    เคลียร์โต๊ะ {getTableDisplayName(selectedDetail?.table?.table_no, selectedDetail?.table?.table_name || selectedDetail?.table?.table_no || '')}?
                   </h2>
                   <p className="mt-1 text-sm font-bold text-rose-700">
                     รายการทั้งหมดในโต๊ะนี้จะถูกยกเลิก โต๊ะจะกลับเป็นว่าง และจะไม่บันทึกเป็นยอดขาย
@@ -1205,8 +1214,10 @@ export default function Tables() {
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p className="text-xl font-black text-stone-950">{table.table_name}</p>
-                          <p className="text-xs font-bold text-stone-500">{table.table_no}</p>
+                          <p className="text-xl font-black text-stone-950">{getTableLabel(table)}</p>
+                          {String(table.table_no || '').toUpperCase() === 'T10' ? null : (
+                            <p className="text-xs font-bold text-stone-500">{table.table_no}</p>
+                          )}
                         </div>
                         <StatusBadge tone={statusTone(table.status)}>{statusLabel(table.status)}</StatusBadge>
                       </div>
@@ -1290,7 +1301,12 @@ export default function Tables() {
               <>
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm font-bold text-stone-500">{selectedDetail.table?.table_name}</p>
+                    <p className="text-sm font-bold text-stone-500">
+                      {getTableDisplayName(
+                        selectedDetail.table?.table_no,
+                        selectedDetail.table?.table_name || selectedDetail.table?.table_no || '',
+                      )}
+                    </p>
                     <h2 className="text-xl font-black text-stone-950">{selectedDetail.order.order_no}</h2>
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-2">

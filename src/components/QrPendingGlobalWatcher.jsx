@@ -11,6 +11,7 @@ import {
   requestPendingTableFocus,
   writeSeenPendingCount,
 } from '../services/qrPendingState.js';
+import { getTableDisplayName } from '../utils/tableDisplay.js';
 
 const QR_PENDING_WATCH_INTERVAL_MS = 15000;
 
@@ -165,6 +166,7 @@ export default function QrPendingGlobalWatcher() {
     setToast(null);
     openTablesForToast(toast);
   };
+  const toastTableDisplayName = getTableDisplayName(toast.table_no, toast.table_name || toast.table_no || '');
 
   return (
     <div className="fixed right-4 top-4 z-[80] w-[min(360px,calc(100vw-32px))] rounded-[26px] border border-amber-300 bg-white p-4 shadow-2xl shadow-stone-950/20">
@@ -176,7 +178,7 @@ export default function QrPendingGlobalWatcher() {
           <p className="font-black text-stone-950">
             {toast.table_count
               ? `มีรายการใหม่จาก QR ${formatNumber(toast.table_count)} โต๊ะ`
-              : `โต๊ะ ${toast.table_no} มีรายการใหม่จาก QR ${formatNumber(toast.pending_item_count)} รายการ`}
+              : `${toastTableDisplayName} มีรายการใหม่จาก QR ${formatNumber(toast.pending_item_count)} รายการ`}
           </p>
           <p className="mt-1 text-sm font-semibold text-stone-500">
             ยอดรอยืนยัน ฿{formatNumber(toast.pending_total)}

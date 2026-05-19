@@ -1,5 +1,6 @@
 import React from 'react';
 import { generatePromptPayQrDataUrl } from '../utils/promptpayQr.js';
+import { getTableDisplayName } from '../utils/tableDisplay.js';
 
 function formatMoney(value) {
   return new Intl.NumberFormat('th-TH', {
@@ -35,6 +36,10 @@ export default function Receipt58mm({ detail }) {
   const items = detail?.items || [];
   const receipt = detail?.receipt || {};
   const [qrDataUrl, setQrDataUrl] = React.useState('');
+  const tableDisplayName = getTableDisplayName(
+    order.table_no || order.table_id || receipt.table_no || receipt.table_id,
+    order.table_name || order.tableName || receipt.table_name || receipt.tableName || order.table_no || receipt.table_no || '',
+  );
 
   React.useEffect(() => {
     let isActive = true;
@@ -92,10 +97,10 @@ export default function Receipt58mm({ detail }) {
           <span>ประเภท</span>
           <span>{order.order_type}</span>
         </div>
-        {order.table_no ? (
+        {tableDisplayName ? (
           <div className="flex justify-between gap-2">
             <span>โต๊ะ</span>
-            <span>{order.table_no}</span>
+            <span>{tableDisplayName}</span>
           </div>
         ) : null}
       </div>

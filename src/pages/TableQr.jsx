@@ -16,6 +16,7 @@ import AppShell from '../components/AppShell.jsx';
 import Button from '../components/Button.jsx';
 import Input from '../components/Input.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
+import { getTableDisplayName } from '../utils/tableDisplay.js';
 
 const ADMIN_TOKEN_KEY = 'LGT_ADMIN_TOKEN';
 
@@ -245,16 +246,22 @@ export default function TableQr() {
 
         {qrCards.length ? (
           <div className="table-qr-grid grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {qrCards.map((card) => (
+            {qrCards.map((card) => {
+              const tableDisplayName = getTableDisplayName(card.table_no, card.table_name || card.table_no);
+              const shouldShowTableCode = String(card.table_no || '').toUpperCase() !== 'T10';
+
+              return (
               <article
                 key={card.table_no}
                 className="table-qr-card rounded-[28px] border border-[#eadbc9] bg-white p-5 text-center shadow-xl shadow-stone-900/5"
               >
                 <p className="text-sm font-black uppercase tracking-[0.18em] text-[#8a6a4f]">ล้านก๋างโต้ง</p>
-                <h3 className="mt-2 text-4xl font-black text-stone-950">{card.table_no}</h3>
-                <p className="mt-1 text-lg font-black text-[#4b3020]">{card.table_name}</p>
+                <h3 className="mt-2 text-4xl font-black text-stone-950">{tableDisplayName}</h3>
+                {shouldShowTableCode ? (
+                  <p className="mt-1 text-sm font-bold text-stone-500">{card.table_no}</p>
+                ) : null}
                 <div className="mx-auto mt-4 w-fit rounded-[24px] bg-white p-3 shadow-sm ring-1 ring-[#eadbc9]">
-                  <img src={card.qr_image} alt={`${card.table_name} QR`} className="h-48 w-48" />
+                  <img src={card.qr_image} alt={`${tableDisplayName} QR`} className="h-48 w-48" />
                 </div>
                 <p className="mt-4 text-lg font-black text-stone-950">สแกนเพื่อสั่งอาหาร</p>
                 <p className="mt-1 text-xs font-semibold text-stone-500">Scan with your phone camera</p>
@@ -268,7 +275,8 @@ export default function TableQr() {
                   <ExternalLink size={13} />
                 </a>
               </article>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="flex h-56 flex-col items-center justify-center rounded-[24px] border border-dashed border-[#d8c2a9] bg-[#fffaf3] text-center text-sm font-bold text-stone-400">

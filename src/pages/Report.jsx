@@ -8,6 +8,7 @@ import Button from '../components/Button.jsx';
 import Input from '../components/Input.jsx';
 import StatCard from '../components/StatCard.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
+import { getTableDisplayName } from '../utils/tableDisplay.js';
 
 function toNumber(value) {
   const number = Number(value);
@@ -90,7 +91,9 @@ function orderTypeLabel(order) {
   const orderType = String(order?.order_type || '').toUpperCase();
 
   if (orderType === 'DINE_IN') {
-    return order?.table_no ? `ทานที่ร้าน / ${order.table_no}` : 'ทานที่ร้าน';
+    return order?.table_no
+      ? `ทานที่ร้าน / ${getTableDisplayName(order.table_no, order.table_name || order.table_no)}`
+      : 'ทานที่ร้าน';
   }
 
   if (orderType === 'TAKEAWAY') return 'กลับบ้าน';

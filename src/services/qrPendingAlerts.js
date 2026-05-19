@@ -1,3 +1,5 @@
+import { getTableDisplayName } from '../utils/tableDisplay.js';
+
 function toNumber(value) {
   const number = Number(value);
   return Number.isFinite(number) ? number : 0;
@@ -174,7 +176,7 @@ export function getQrPendingNotificationText(toast) {
 
   return {
     title: 'มีออเดอร์ใหม่จาก QR',
-    body: `โต๊ะ ${toast?.table_no || ''} มีรายการใหม่ ${formatNumber(toast?.pending_item_count)} รายการ`,
+    body: `${getTableDisplayName(toast?.table_no, toast?.table_name || toast?.table_no || '')} มีรายการใหม่ ${formatNumber(toast?.pending_item_count)} รายการ`,
   };
 }
 
