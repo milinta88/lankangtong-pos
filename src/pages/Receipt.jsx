@@ -4,6 +4,7 @@ import { getOrderDetail } from '../services/api.js';
 import { getReceiptDetail, saveReceiptDetail } from '../services/receiptCache.js';
 import { navigateTo } from '../App.jsx';
 import Button from '../components/Button.jsx';
+import QrNotificationControls from '../components/QrNotificationControls.jsx';
 import Receipt58mm from '../components/Receipt58mm.jsx';
 
 export default function Receipt({ orderId }) {
@@ -55,7 +56,8 @@ export default function Receipt({ orderId }) {
           <h1 className="mt-1 text-2xl font-black">Receipt 58mm</h1>
           <p className="text-sm font-semibold text-stone-500">พรีวิวใบเสร็จก่อนพิมพ์</p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <QrNotificationControls />
           <Button onClick={() => navigateTo('/pos')}>
             <ArrowLeft size={17} />
             POS

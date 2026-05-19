@@ -10,27 +10,84 @@ function formatNumber(value) {
   }).format(toNumber(value));
 }
 
-export function playQrPendingBeep() {
+export const QR_ALERT_BEEP_FREQUENCY = 1600;
+export const QR_ALERT_BEEP_GAIN = 0.62;
+export const QR_ALERT_BEEP_DURATION_MS = 250;
+export const QR_ALERT_BEEP_PAUSE_MS = 150;
+export const QR_ALERT_BEEP_COUNT = 3;
+
+let isQrAlertSoundPlaying = false;
+
+function getNotificationIconUrl() {
+  if (typeof window === 'undefined') return '';
+
+  const basePath = import.meta.env?.BASE_URL || '/';
+  return new URL(`${basePath}favicon.svg`, window.location.origin).toString();
+}
+
+function getNotificationOptions(options = {}) {
+  const iconUrl = getNotificationIconUrl();
+
+  return {
+    icon: iconUrl,
+    badge: iconUrl,
+    tag: 'qr-pending-order',
+    renotify: true,
+    requireInteraction: true,
+    silent: false,
+    ...options,
+  };
+}
+
+export async function playQrPendingBeep() {
+  if (isQrAlertSoundPlaying) return;
+
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
 
     if (!AudioContext) return;
 
-    const context = new AudioContext();
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
+    isQrAlertSoundPlaying = true;
 
-    oscillator.type = 'sine';
-    oscillator.frequency.value = 880;
-    gain.gain.setValueAtTime(0.0001, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.22, context.currentTime + 0.03);
-    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.38);
-    oscillator.connect(gain);
-    gain.connect(context.destination);
-    oscillator.start();
-    oscillator.stop(context.currentTime + 0.42);
-    window.setTimeout(() => context.close().catch(() => {}), 700);
+    const context = new AudioContext();
+
+    if (context.state === 'suspended') {
+      await context.resume();
+    }
+
+    const startTime = context.currentTime;
+    const durationSeconds = QR_ALERT_BEEP_DURATION_MS / 1000;
+    const gapSeconds = (QR_ALERT_BEEP_DURATION_MS + QR_ALERT_BEEP_PAUSE_MS) / 1000;
+
+    for (let index = 0; index < QR_ALERT_BEEP_COUNT; index += 1) {
+      const beepStart = startTime + index * gapSeconds;
+      const beepEnd = beepStart + durationSeconds;
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+
+      oscillator.type = 'square';
+      oscillator.frequency.setValueAtTime(QR_ALERT_BEEP_FREQUENCY, beepStart);
+      gain.gain.setValueAtTime(0.0001, beepStart);
+      gain.gain.linearRampToValueAtTime(QR_ALERT_BEEP_GAIN, beepStart + 0.02);
+      gain.gain.setValueAtTime(QR_ALERT_BEEP_GAIN, Math.max(beepStart + 0.02, beepEnd - 0.04));
+      gain.gain.exponentialRampToValueAtTime(0.0001, beepEnd);
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+      oscillator.start(beepStart);
+      oscillator.stop(beepEnd + 0.02);
+    }
+
+    const totalMs =
+      QR_ALERT_BEEP_COUNT * QR_ALERT_BEEP_DURATION_MS +
+      (QR_ALERT_BEEP_COUNT - 1) * QR_ALERT_BEEP_PAUSE_MS +
+      250;
+
+    window.setTimeout(() => {
+      context.close().catch(() => {});
+      isQrAlertSoundPlaying = false;
+    }, totalMs);
   } catch (error) {
+    isQrAlertSoundPlaying = false;
     // Browsers may block audio until a user interaction. Visual/browser alerts still cover the workflow.
   }
 }
@@ -70,11 +127,9 @@ export function showQrPendingBrowserNotification(toast, onClick) {
   }
 
   const { title, body } = getQrPendingNotificationText(toast);
-  const notification = new window.Notification(title, {
+  const notification = new window.Notification(title, getNotificationOptions({
     body,
-    tag: toast?.table_count ? 'qr-pending-multiple' : `qr-pending-${toast?.table_no || 'table'}`,
-    renotify: true,
-  });
+  }));
 
   notification.onclick = () => {
     try {
@@ -83,6 +138,32 @@ export function showQrPendingBrowserNotification(toast, onClick) {
       notification.close();
     } catch (error) {
       // Ignore notification click failures; the in-app toast remains available.
+    }
+  };
+
+  return notification;
+}
+
+export function showQrPendingTestNotification(onClick) {
+  if (!canUseBrowserNotifications() || window.Notification.permission !== 'granted') {
+    return null;
+  }
+
+  const notification = new window.Notification(
+    'ทดสอบแจ้งเตือน QR',
+    getNotificationOptions({
+      body: 'ถ้าเห็นข้อความนี้ แสดงว่า Desktop Notification ใช้งานได้',
+      tag: 'qr-pending-test',
+    }),
+  );
+
+  notification.onclick = () => {
+    try {
+      window.focus();
+      onClick?.();
+      notification.close();
+    } catch (error) {
+      // Ignore notification click failures.
     }
   };
 

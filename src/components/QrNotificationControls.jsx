@@ -6,6 +6,7 @@ import {
   getBrowserNotificationPermission,
   playQrPendingBeep,
   requestBrowserNotificationPermission,
+  showQrPendingTestNotification,
 } from '../services/qrPendingAlerts.js';
 import {
   readQrBrowserNotificationEnabled,
@@ -28,6 +29,13 @@ export default function QrNotificationControls() {
       writeQrBrowserNotificationEnabled(false);
     }
   }, [browserNotificationEnabled, permission]);
+
+  const permissionLabel = {
+    granted: 'อนุญาตแล้ว',
+    default: 'ยังไม่ได้อนุญาต',
+    denied: 'ถูกบล็อก',
+    unsupported: 'ไม่รองรับ',
+  }[permission] || 'ยังไม่ได้อนุญาต';
 
   const handleSoundToggle = (event) => {
     const isEnabled = event.target.checked;
@@ -62,7 +70,7 @@ export default function QrNotificationControls() {
     if (nextPermission !== 'granted') {
       setBrowserNotificationEnabled(false);
       writeQrBrowserNotificationEnabled(false);
-      setMessage('Browser ไม่อนุญาตการแจ้งเตือน');
+      setMessage('Browser ไม่อนุญาตการแจ้งเตือน กรุณาเปิดสิทธิ์แจ้งเตือนใน Chrome/Edge settings');
       return;
     }
 
@@ -74,6 +82,40 @@ export default function QrNotificationControls() {
   const handleTestSound = () => {
     playQrPendingBeep();
     setMessage('ทดสอบเสียงแล้ว');
+  };
+
+  const handleTestNotification = async () => {
+    setMessage('');
+
+    if (!canUseBrowserNotifications()) {
+      setPermission('unsupported');
+      setMessage('Browser ไม่รองรับการแจ้งเตือน');
+      return;
+    }
+
+    const nextPermission =
+      getBrowserNotificationPermission() === 'granted'
+        ? 'granted'
+        : await requestBrowserNotificationPermission();
+
+    setPermission(nextPermission);
+
+    if (nextPermission !== 'granted') {
+      setBrowserNotificationEnabled(false);
+      writeQrBrowserNotificationEnabled(false);
+      setMessage('Browser ไม่อนุญาตการแจ้งเตือน กรุณาเปิดสิทธิ์แจ้งเตือนใน Chrome/Edge settings');
+      return;
+    }
+
+    setBrowserNotificationEnabled(true);
+    writeQrBrowserNotificationEnabled(true);
+    showQrPendingTestNotification();
+
+    if (soundEnabled) {
+      playQrPendingBeep();
+    }
+
+    setMessage('ส่งทดสอบแจ้งเตือนแล้ว');
   };
 
   return (
@@ -98,9 +140,18 @@ export default function QrNotificationControls() {
       <Button size="sm" variant="ghost" onClick={handleTestSound}>
         ทดสอบเสียง
       </Button>
+      <Button size="sm" variant="ghost" onClick={handleTestNotification}>
+        ทดสอบแจ้งเตือน
+      </Button>
+      <span className={permission === 'denied' ? 'text-rose-700' : 'text-amber-800'}>
+        {permissionLabel}
+      </span>
       {message ? (
         <span className={permission === 'denied' ? 'text-rose-700' : 'text-amber-800'}>{message}</span>
       ) : null}
+      <span className="basis-full text-[11px] font-bold leading-snug text-amber-800/80">
+        แจ้งเตือนจะทำงานเมื่อเปิดเว็บแอพค้างไว้ แม้พับหน้าต่างหรืออยู่แท็บอื่น แต่ถ้าปิด Browser/Tab แล้วจะไม่แจ้งเตือน
+      </span>
     </div>
   );
 }
