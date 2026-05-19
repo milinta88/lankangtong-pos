@@ -1181,7 +1181,7 @@ function findRecordByValue_(records, aliases, value) {
 function isSkippedOrderItem_(item) {
   var status = stringValue_(getValueByAliases_(item, ['status'], '')).toUpperCase();
 
-  return status === 'CANCELLED' ||
+  return status === ORDER_ITEM_STATUS_CANCELLED ||
     status === 'CANCELED' ||
     status === 'VOID' ||
     status === ORDER_ITEM_STATUS_REJECTED;

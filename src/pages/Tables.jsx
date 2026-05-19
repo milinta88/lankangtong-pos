@@ -13,9 +13,11 @@ import {
   ShoppingBag,
   Utensils,
   Volume2,
+  XCircle,
 } from 'lucide-react';
 import {
   addItemsToTableOrder,
+  clearTableOrder,
   confirmTablePendingItems,
   getCachedMenuResponse,
   getCachedSettingsResponse,
@@ -139,6 +141,10 @@ function markPaidTableAvailable(tables, detail, paidOrder, orderId) {
       current_order_id: '',
     };
   });
+}
+
+function markClearedTableAvailable(tables, detail, clearedOrder, orderId) {
+  return markPaidTableAvailable(tables, detail, clearedOrder, orderId);
 }
 
 function buildTableOrderSummary(detail) {
@@ -277,10 +283,15 @@ export default function Tables() {
   const [showQrCards, setShowQrCards] = React.useState(false);
   const [pendingToast, setPendingToast] = React.useState(null);
   const [soundEnabled, setSoundEnabled] = React.useState(false);
+  const [isClearModalOpen, setIsClearModalOpen] = React.useState(false);
+  const [clearReason, setClearReason] = React.useState('');
+  const [clearConfirm, setClearConfirm] = React.useState('');
+  const [clearSuccess, setClearSuccess] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(() => !cachedTables?.success);
   const [isRefreshingTables, setIsRefreshingTables] = React.useState(false);
   const [isWorking, setIsWorking] = React.useState(false);
   const [isPayingTable, setIsPayingTable] = React.useState(false);
+  const [isClearingTable, setIsClearingTable] = React.useState(false);
   const [tablePaymentStep, setTablePaymentStep] = React.useState(0);
   const [isSlowTablePayment, setIsSlowTablePayment] = React.useState(false);
   const [error, setError] = React.useState('');
@@ -455,8 +466,8 @@ export default function Tables() {
   }, [loadData]);
 
   autoRefreshStateRef.current = {
-    isBusy: isWorking || isPayingTable,
-    isPanelOpen: Boolean(selectedDetail?.order) || showQrCards,
+    isBusy: isWorking || isPayingTable || isClearingTable,
+    isPanelOpen: Boolean(selectedDetail?.order) || showQrCards || isClearModalOpen,
   };
 
   React.useEffect(() => {
@@ -568,6 +579,11 @@ export default function Tables() {
     [selectedDetail],
   );
   const selectedPendingCount = selectedPendingItems.reduce((sum, item) => sum + toNumber(item.quantity), 0);
+  const selectedPaymentStatus = String(selectedDetail?.order?.payment_status || '').toUpperCase();
+  const canClearSelectedTable =
+    selectedDetail?.order &&
+    selectedDetail?.table?.status === 'OCCUPIED' &&
+    selectedPaymentStatus === 'UNPAID';
 
   React.useEffect(() => {
     if (!tables.length) return;
@@ -767,6 +783,79 @@ export default function Tables() {
       }
     } finally {
       if (isMountedRef.current) {
+        setIsWorking(false);
+      }
+    }
+  }
+
+  function openClearTableModal() {
+    if (!canClearSelectedTable) return;
+
+    setClearReason('');
+    setClearConfirm('');
+    setError('');
+    setIsClearModalOpen(true);
+  }
+
+  function closeClearTableModal() {
+    if (isClearingTable) return;
+
+    setIsClearModalOpen(false);
+    setClearReason('');
+    setClearConfirm('');
+  }
+
+  async function handleClearTable() {
+    const orderId = selectedDetail?.order?.order_id;
+    const tableNo = selectedDetail?.table?.table_no;
+
+    if (!orderId || !tableNo || !canClearSelectedTable || isClearingTable) return;
+
+    if (clearConfirm.trim().toUpperCase() !== 'CLEAR') {
+      setError('กรุณาพิมพ์ CLEAR เพื่อยืนยันการเคลียร์โต๊ะ');
+      return;
+    }
+
+    setIsClearingTable(true);
+    setIsWorking(true);
+    setError('');
+    setRefreshWarning('');
+
+    try {
+      const result = await clearTableOrder({
+        table_no: tableNo,
+        order_id: orderId,
+        reason: clearReason,
+        cleared_by: 'STAFF',
+      });
+
+      if (!isMountedRef.current || getCurrentRoutePath() !== '/tables') {
+        return;
+      }
+
+      if (!result.success) throw new Error(result.message || 'CLEAR_TABLE_ORDER failed');
+
+      const clearedTableNo = result.table?.table_no || tableNo;
+
+      markTablePendingSeen(clearedTableNo, 0);
+      commitTablesOptimistically((currentTables) =>
+        markClearedTableAvailable(currentTables, selectedDetail, result.order, orderId),
+      );
+      setSelectedDetail(null);
+      setCart([]);
+      setPendingToast(null);
+      setIsClearModalOpen(false);
+      setClearReason('');
+      setClearConfirm('');
+      setClearSuccess(`เคลียร์โต๊ะ ${clearedTableNo} แล้ว`);
+      void forceRefreshTables({ showLoading: false, silentError: true });
+    } catch (clearError) {
+      if (isMountedRef.current) {
+        setError(clearError.message || 'Cannot clear table');
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setIsClearingTable(false);
         setIsWorking(false);
       }
     }
@@ -988,6 +1077,83 @@ export default function Tables() {
         </div>
       ) : null}
 
+      {clearSuccess ? (
+        <div className="fixed right-4 top-4 z-50 w-[min(340px,calc(100vw-32px))] rounded-[24px] border border-emerald-200 bg-white p-4 text-sm font-black text-emerald-700 shadow-2xl shadow-stone-950/20">
+          <div className="flex items-center justify-between gap-3">
+            <span>{clearSuccess}</span>
+            <button type="button" onClick={() => setClearSuccess('')} className="text-stone-400 hover:text-stone-950">
+              ปิด
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {isClearModalOpen ? (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-stone-950/50 px-4 py-5 backdrop-blur-sm sm:items-center">
+          <section className="w-full max-w-md overflow-hidden rounded-[28px] border border-rose-200 bg-white shadow-2xl shadow-stone-950/25">
+            <div className="border-b border-rose-100 bg-rose-50 p-5">
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-rose-600 text-white">
+                  <AlertTriangle size={20} />
+                </span>
+                <div>
+                  <h2 className="text-xl font-black text-stone-950">
+                    เคลียร์โต๊ะ {selectedDetail?.table?.table_no}?
+                  </h2>
+                  <p className="mt-1 text-sm font-bold text-rose-700">
+                    รายการทั้งหมดในโต๊ะนี้จะถูกยกเลิก โต๊ะจะกลับเป็นว่าง และจะไม่บันทึกเป็นยอดขาย
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4 p-5">
+              <label className="block text-xs font-bold uppercase tracking-wide text-stone-500">
+                Reason
+                <Input
+                  as="textarea"
+                  value={clearReason}
+                  onChange={(event) => setClearReason(event.target.value)}
+                  rows={2}
+                  placeholder="optional reason"
+                  className="mt-1 w-full resize-none rounded-2xl border-[#eadbc9]"
+                  disabled={isClearingTable}
+                />
+              </label>
+              <label className="block text-xs font-bold uppercase tracking-wide text-stone-500">
+                Type CLEAR to confirm
+                <Input
+                  value={clearConfirm}
+                  onChange={(event) => setClearConfirm(event.target.value)}
+                  placeholder="CLEAR"
+                  className="mt-1 w-full rounded-2xl border-rose-200"
+                  disabled={isClearingTable}
+                />
+              </label>
+            </div>
+            <div className="flex gap-3 border-t border-rose-100 bg-[#fffaf3] p-5">
+              <Button
+                onClick={closeClearTableModal}
+                disabled={isClearingTable}
+                variant="subtle"
+                size="lg"
+                className="flex-1 rounded-2xl"
+              >
+                ยกเลิก
+              </Button>
+              <Button
+                onClick={handleClearTable}
+                disabled={isClearingTable || clearConfirm.trim().toUpperCase() !== 'CLEAR'}
+                variant="danger"
+                size="lg"
+                className="flex-1 rounded-2xl"
+              >
+                {isClearingTable ? 'กำลังเคลียร์...' : 'ยืนยันเคลียร์โต๊ะ'}
+              </Button>
+            </div>
+          </section>
+        </div>
+      ) : null}
+
       {showQrCards ? (
         <section className="table-qr-print mb-5 rounded-[30px] border border-[#eadbc9] bg-white/90 p-4 shadow-xl shadow-stone-900/5">
           <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -1151,7 +1317,20 @@ export default function Tables() {
                     <p className="text-sm font-bold text-stone-500">{selectedDetail.table?.table_name}</p>
                     <h2 className="text-xl font-black text-stone-950">{selectedDetail.order.order_no}</h2>
                   </div>
-                  <StatusBadge tone="coffee">UNPAID</StatusBadge>
+                  <div className="flex shrink-0 flex-col items-end gap-2">
+                    <StatusBadge tone="coffee">UNPAID</StatusBadge>
+                    {canClearSelectedTable ? (
+                      <Button
+                        onClick={openClearTableModal}
+                        disabled={isWorking || isPayingTable || isClearingTable}
+                        variant="danger"
+                        className="rounded-2xl"
+                      >
+                        <XCircle size={16} />
+                        เคลียร์โต๊ะ
+                      </Button>
+                    ) : null}
+                  </div>
                 </div>
 
                 {selectedPendingItems.length ? (

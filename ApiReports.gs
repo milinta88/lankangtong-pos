@@ -82,7 +82,12 @@ function getDailyReport_(request) {
       var itemStatus = stringValue_(getValueByAliases_(item, ['status'], '')).toUpperCase();
       var itemKey = menuId || menuName;
 
-      if (itemStatus === ORDER_ITEM_STATUS_PENDING_CONFIRM || !itemKey || quantity <= 0) {
+      if (
+        itemStatus === ORDER_ITEM_STATUS_PENDING_CONFIRM ||
+        itemStatus === ORDER_ITEM_STATUS_CANCELLED ||
+        !itemKey ||
+        quantity <= 0
+      ) {
         return;
       }
 
@@ -245,8 +250,14 @@ function getReportTimeValue_(value) {
 }
 
 function isReportPaidOrder_(order) {
-  return stringValue_(getValueByAliases_(order, ['status'], '')).toUpperCase() === 'PAID' ||
-    stringValue_(getValueByAliases_(order, ['payment_status'], '')).toUpperCase() === 'PAID';
+  var status = stringValue_(getValueByAliases_(order, ['status'], '')).toUpperCase();
+  var paymentStatus = stringValue_(getValueByAliases_(order, ['payment_status'], '')).toUpperCase();
+
+  if (status === ORDER_STATUS_CANCELLED || paymentStatus === PAYMENT_STATUS_CANCELLED) {
+    return false;
+  }
+
+  return status === 'PAID' || paymentStatus === 'PAID';
 }
 
 function groupRecordsByOrderId_(records) {

@@ -364,6 +364,10 @@ export function payTableOrder(payload) {
   return postAction('PAY_TABLE_ORDER', payload);
 }
 
+export function clearTableOrder(payload) {
+  return postAction('CLEAR_TABLE_ORDER', payload);
+}
+
 export function getTableQrLinks(base_url) {
   return postAction('GET_TABLE_QR_LINKS', { base_url });
 }

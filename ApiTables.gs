@@ -25,6 +25,9 @@ function handleTableAction_(action, request) {
     case 'REJECT_TABLE_PENDING_ITEMS':
       return rejectTablePendingItems_(request || {});
 
+    case 'CLEAR_TABLE_ORDER':
+      return clearTableOrder_(request || {});
+
     case 'PAY_TABLE_ORDER':
       return payTableOrder_(request || {});
 
@@ -551,6 +554,134 @@ function updateTablePendingItemStatuses_(request, nextStatus, message) {
   }
 }
 
+function clearTableOrder_(request) {
+  var tableNo = stringValue_(request.table_no || request.tableNo || request.table);
+  var requestedOrderId = stringValue_(request.order_id || request.orderId);
+
+  if (!tableNo && !requestedOrderId) {
+    return {
+      success: false,
+      error: 'MISSING_TABLE_OR_ORDER',
+      message: 'Missing table_no or order_id'
+    };
+  }
+
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+
+  try {
+    ensureTableDatabaseReady_();
+
+    var timestamp = nowIso_();
+    var tablesTable = getSheetTable_('tables');
+    var table = tableNo
+      ? findTableFromRequest_(tablesTable.records, { table_no: tableNo })
+      : findTableByOrderId_(tablesTable.records, requestedOrderId);
+
+    if (!table || !isTruthy_(getValueByAliases_(table, ['is_active'], false))) {
+      return {
+        success: false,
+        error: 'TABLE_NOT_FOUND',
+        message: 'Table not found'
+      };
+    }
+
+    var currentOrderId = stringValue_(getValueByAliases_(table, ['current_order_id'], ''));
+
+    if (!currentOrderId) {
+      return {
+        success: false,
+        error: 'NO_ACTIVE_TABLE_ORDER',
+        message: 'Table has no active order'
+      };
+    }
+
+    if (requestedOrderId && requestedOrderId !== currentOrderId) {
+      return {
+        success: false,
+        error: 'TABLE_ORDER_MISMATCH',
+        message: 'table_no and order_id do not match'
+      };
+    }
+
+    var orderId = requestedOrderId || currentOrderId;
+    var ordersTable = getSheetTable_('orders');
+    var order = findRecordByValue_(ordersTable.records, ['order_id'], orderId);
+
+    if (!order) {
+      return {
+        success: false,
+        error: 'ORDER_NOT_FOUND',
+        message: 'Order not found'
+      };
+    }
+
+    if (isOrderPaid_(order)) {
+      return {
+        success: false,
+        error: 'ORDER_ALREADY_PAID',
+        message: 'Paid orders cannot be cleared'
+      };
+    }
+
+    var paymentStatus = stringValue_(getValueByAliases_(order, ['payment_status'], '')).toUpperCase();
+
+    if (paymentStatus !== PAYMENT_STATUS_UNPAID) {
+      return {
+        success: false,
+        error: 'ORDER_NOT_UNPAID',
+        message: 'Only unpaid orders can be cleared'
+      };
+    }
+
+    var reason = stringValue_(request.reason || '');
+    var existingNote = stringValue_(getValueByAliases_(order, ['note'], ''));
+    var note = existingNote;
+
+    if (reason) {
+      note = existingNote
+        ? existingNote + '\nClear reason: ' + reason
+        : 'Clear reason: ' + reason;
+    }
+
+    updateOrderRecordFields_(ordersTable, order, {
+      status: ORDER_STATUS_CANCELLED,
+      payment_status: PAYMENT_STATUS_CANCELLED,
+      note: note,
+      closed_at: timestamp,
+      updated_at: timestamp
+    });
+
+    var orderItemsTable = getSheetTable_('order_items');
+    var orderItems = orderItemsTable.records.filter(function (item) {
+      return stringValue_(getValueByAliases_(item, ['order_id'], '')) === orderId;
+    });
+    updateOrderItemStatusRows_(orderItemsTable, orderItems, ORDER_ITEM_STATUS_CANCELLED, timestamp);
+
+    updateTableRecordFields_(tablesTable, table, {
+      status: TABLE_STATUS_AVAILABLE,
+      current_order_id: ''
+    }, timestamp);
+    table.status = TABLE_STATUS_AVAILABLE;
+    table.current_order_id = '';
+
+    return {
+      success: true,
+      message: 'Table cleared',
+      table: normalizeTableRecord_(table),
+      order: normalizeOrderRecord_(order),
+      cancelled_item_count: orderItems.length
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err && err.message ? err.message : String(err)
+    };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
 function payTableOrder_(request) {
   var totalStart = perfStart_();
   var orderId = stringValue_(request.order_id || request.orderId);
@@ -1065,6 +1196,17 @@ function updateOrderTotals_(ordersTable, order, totals, timestamp) {
     }
 
     order[field] = updates[field];
+  });
+}
+
+function updateOrderRecordFields_(ordersTable, order, updates) {
+  Object.keys(updates || {}).forEach(function (field) {
+    var column = getHeaderColumn_(ordersTable.headers, [field]);
+
+    if (column) {
+      ordersTable.sheet.getRange(order._rowNumber, column).setValue(updates[field]);
+      order[field] = updates[field];
+    }
   });
 }
 
@@ -1667,6 +1809,94 @@ function testConfirmTablePendingItems() {
     passed: result.success && pendingBefore > 0 && pendingAfter === 0 &&
       result.items &&
       result.items.length > 0
+  };
+
+  Logger.log(JSON.stringify(result, null, 2));
+  return result;
+}
+
+function testClearTableOrder() {
+  ensureDirectStockTestMenu_();
+
+  var tableNo = getStoredTestTableNo_();
+  var openResult = openTable_({
+    table_no: tableNo,
+    created_by: 'TEST'
+  });
+
+  if (!openResult.success || !openResult.order) {
+    Logger.log(JSON.stringify(openResult, null, 2));
+    return openResult;
+  }
+
+  storeTestTableOrder_(openResult.table ? openResult.table.table_no : tableNo, openResult.order.order_id);
+
+  var orderId = openResult.order.order_id;
+  var staffAddResult = addItemsToTableOrder_({
+    order_id: orderId,
+    created_by: 'TEST',
+    items: [
+      {
+        menu_id: TEST_DIRECT_STOCK_MENU_ID,
+        quantity: 1
+      }
+    ]
+  });
+
+  if (!staffAddResult.success) {
+    Logger.log(JSON.stringify(staffAddResult, null, 2));
+    return staffAddResult;
+  }
+
+  var qrSubmitResult = submitQrTableOrderForTest_(openResult.table ? openResult.table.table_no : tableNo);
+  var stockBefore = getMenuStockQtyForTest_(TEST_DIRECT_STOCK_MENU_ID);
+  var result = clearTableOrder_({
+    table_no: openResult.table ? openResult.table.table_no : tableNo,
+    order_id: orderId,
+    reason: 'Automated clear table test',
+    cleared_by: 'TEST'
+  });
+  var stockAfter = getMenuStockQtyForTest_(TEST_DIRECT_STOCK_MENU_ID);
+  var clearedOrder = findRecordByValue_(readSheetRecordsByHeaders_('orders'), ['order_id'], orderId) || {};
+  var clearedItems = readSheetRecordsByHeaders_('order_items').filter(function (item) {
+    return stringValue_(getValueByAliases_(item, ['order_id'], '')) === orderId;
+  });
+  var payments = readSheetRecordsByHeaders_('payments').filter(function (payment) {
+    return stringValue_(getValueByAliases_(payment, ['order_id'], '')) === orderId;
+  });
+  var stockLogs = getStockLogsForOrderTest_(orderId);
+  var tableAfter = findTableFromRequest_(getSheetTable_('tables').records, {
+    table_no: openResult.table ? openResult.table.table_no : tableNo
+  });
+  var allItemsCancelled = clearedItems.length > 0 && clearedItems.every(function (item) {
+    return stringValue_(getValueByAliases_(item, ['status'], '')).toUpperCase() === ORDER_ITEM_STATUS_CANCELLED;
+  });
+
+  result.verification = {
+    table_no: openResult.table ? openResult.table.table_no : tableNo,
+    order_id: orderId,
+    qr_submit_success: qrSubmitResult.success,
+    table_status: tableAfter ? normalizeTableStatus_(getValueByAliases_(tableAfter, ['status'], '')) : '',
+    current_order_id: tableAfter ? stringValue_(getValueByAliases_(tableAfter, ['current_order_id'], '')) : '',
+    order_status: stringValue_(getValueByAliases_(clearedOrder, ['status'], '')),
+    payment_status: stringValue_(getValueByAliases_(clearedOrder, ['payment_status'], '')),
+    cancelled_item_count: result.cancelled_item_count || 0,
+    all_items_cancelled: allItemsCancelled,
+    payment_count: payments.length,
+    stock_log_count: stockLogs.length,
+    stock_before: stockBefore,
+    stock_after: stockAfter,
+    stock_unchanged: stockBefore === stockAfter,
+    passed: result.success &&
+      tableAfter &&
+      normalizeTableStatus_(getValueByAliases_(tableAfter, ['status'], '')) === TABLE_STATUS_AVAILABLE &&
+      !stringValue_(getValueByAliases_(tableAfter, ['current_order_id'], '')) &&
+      stringValue_(getValueByAliases_(clearedOrder, ['status'], '')).toUpperCase() === ORDER_STATUS_CANCELLED &&
+      stringValue_(getValueByAliases_(clearedOrder, ['payment_status'], '')).toUpperCase() === PAYMENT_STATUS_CANCELLED &&
+      allItemsCancelled &&
+      payments.length === 0 &&
+      stockLogs.length === 0 &&
+      stockBefore === stockAfter
   };
 
   Logger.log(JSON.stringify(result, null, 2));
