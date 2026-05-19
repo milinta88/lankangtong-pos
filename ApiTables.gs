@@ -1,6 +1,7 @@
 var TABLE_STATUS_AVAILABLE = 'AVAILABLE';
 var TABLE_STATUS_OCCUPIED = 'OCCUPIED';
 var TABLE_STATUS_READY_TO_PAY = 'READY_TO_PAY';
+var CLOSED_TABLE_ORDER_STATUSES = ['CANCELED', 'CANCELLED', 'CLOSED', 'PAID', 'COMPLETED'];
 var TEST_TABLE_NO_PROPERTY = 'TEST_TABLE_NO';
 var TEST_TABLE_ORDER_ID_PROPERTY = 'TEST_TABLE_ORDER_ID';
 var TEST_TABLE_DEFAULT_NO = 'T01';
@@ -160,6 +161,23 @@ function normalizeTableDisplayName_(tableNo, tableName) {
   return stringValue_(tableName || tableNo);
 }
 
+function isClosedTableOrderStatus_(status) {
+  var normalized = stringValue_(status).toUpperCase();
+
+  return CLOSED_TABLE_ORDER_STATUSES.indexOf(normalized) >= 0;
+}
+
+function isActiveTableOrder_(order) {
+  if (!order) {
+    return false;
+  }
+
+  var status = getValueByAliases_(order, ['status'], '');
+  var paymentStatus = getValueByAliases_(order, ['payment_status'], '');
+
+  return !isClosedTableOrderStatus_(status) && !isClosedTableOrderStatus_(paymentStatus);
+}
+
 function makeTableQrToken_() {
   return Utilities.getUuid().replace(/-/g, '').slice(0, 20);
 }
@@ -229,6 +247,7 @@ function getTables_(request) {
       var normalized = normalizeTableRecord_(table);
       var orderId = normalized.current_order_id;
       var order = orderId ? orderById[orderId] : null;
+      var hasActiveOrder = isActiveTableOrder_(order);
       var orderItemSummary = orderItemSummaryByOrderId[orderId] || {
         totals: {
           total: 0,
@@ -240,9 +259,17 @@ function getTables_(request) {
         }
       };
 
-      if (order) {
+      if (!hasActiveOrder) {
+        normalized.status = TABLE_STATUS_AVAILABLE;
+        normalized.current_order_id = '';
+      } else {
+        normalized.status = normalized.status === TABLE_STATUS_READY_TO_PAY
+          ? TABLE_STATUS_READY_TO_PAY
+          : TABLE_STATUS_OCCUPIED;
         normalized.order = {
           order_no: stringValue_(getValueByAliases_(order, ['order_no'], '')),
+          status: stringValue_(getValueByAliases_(order, ['status'], '')),
+          payment_status: stringValue_(getValueByAliases_(order, ['payment_status'], '')),
           total: orderItemSummary.totals.total,
           item_count: orderItemSummary.totals.item_count,
           pending_item_count: orderItemSummary.pending_totals.item_count,
@@ -284,11 +311,24 @@ function openTable_(request) {
     var currentOrderId = stringValue_(getValueByAliases_(table, ['current_order_id'], ''));
     var status = normalizeTableStatus_(getValueByAliases_(table, ['status'], TABLE_STATUS_AVAILABLE));
 
-    if (currentOrderId && status !== TABLE_STATUS_AVAILABLE) {
-      return buildTableOrderResponse_(table, currentOrderId, 'Table already open');
+    var ordersTable = getSheetTable_('orders');
+    var currentOrder = currentOrderId ? findRecordByValue_(ordersTable.records, ['order_id'], currentOrderId) : null;
+
+    if (currentOrderId && status !== TABLE_STATUS_AVAILABLE && isActiveTableOrder_(currentOrder)) {
+      return buildTableOrderResponse_(table, currentOrderId, 'Table already open', {
+        order: currentOrder
+      });
     }
 
-    var ordersTable = getSheetTable_('orders');
+    if (currentOrderId && !isActiveTableOrder_(currentOrder)) {
+      updateTableRecordFields_(tablesTable, table, {
+        status: TABLE_STATUS_AVAILABLE,
+        current_order_id: ''
+      }, timestamp);
+      table.status = TABLE_STATUS_AVAILABLE;
+      table.current_order_id = '';
+    }
+
     var createdBy = stringValue_(request.created_by || request.user_id || request.userId || 'STAFF');
     var order = createEmptyTableOrder_(ordersTable, table, request, createdBy, timestamp);
 
@@ -378,6 +418,16 @@ function getTableOrder_(request) {
     table = findTableByOrder_(tables, order);
   }
 
+  if (!isActiveTableOrder_(order)) {
+    var closedResponse = buildEmptyTableOrderResponse_(table || findTableByOrder_(tables, order));
+
+    closedResponse.message = 'Table has no active order';
+    perfLog_('GET_TABLE_ORDER skipped closed order', stepStart);
+    perfLog_('GET_TABLE_ORDER total', totalStart);
+
+    return closedResponse;
+  }
+
   stepStart = perfStart_();
   var orderItems = getOrderItemsFromRecords_(getSheetTable_('order_items').records, orderId);
   perfLog_('GET_TABLE_ORDER read items', stepStart);
@@ -445,11 +495,11 @@ function addItemsToTableOrder_(request) {
       };
     }
 
-    if (isOrderPaid_(order)) {
+    if (!isActiveTableOrder_(order)) {
       return {
         success: false,
-        error: 'ORDER_ALREADY_PAID',
-        message: 'Order is already paid'
+        error: 'ORDER_NOT_ACTIVE',
+        message: 'Order is not active'
       };
     }
 
@@ -524,11 +574,11 @@ function updateTableOrderItem_(request) {
       };
     }
 
-    if (isOrderPaid_(order)) {
+    if (!isActiveTableOrder_(order)) {
       return {
         success: false,
-        error: 'ORDER_ALREADY_PAID',
-        message: 'Paid orders cannot be edited'
+        error: 'ORDER_NOT_ACTIVE',
+        message: 'Order is not active'
       };
     }
 
@@ -642,11 +692,11 @@ function updateTablePendingItemStatuses_(request, nextStatus, message) {
       };
     }
 
-    if (isOrderPaid_(order)) {
+    if (!isActiveTableOrder_(order)) {
       return {
         success: false,
-        error: 'ORDER_ALREADY_PAID',
-        message: 'Order is already paid'
+        error: 'ORDER_NOT_ACTIVE',
+        message: 'Order is not active'
       };
     }
 
@@ -871,11 +921,11 @@ function payTableOrder_(request) {
       return notFoundResponse;
     }
 
-    if (isOrderPaid_(order)) {
+    if (!isActiveTableOrder_(order)) {
       var paidResponse = {
         success: false,
-        error: 'ORDER_ALREADY_PAID',
-        message: 'Order is already PAID'
+        error: isOrderPaid_(order) ? 'ORDER_ALREADY_PAID' : 'ORDER_NOT_ACTIVE',
+        message: isOrderPaid_(order) ? 'Order is already PAID' : 'Order is not active'
       };
 
       perfLog_('PAY_TABLE_ORDER total', totalStart);
@@ -1184,7 +1234,7 @@ function submitQrTableOrder_(request) {
     var orderId = stringValue_(getValueByAliases_(table, ['current_order_id'], ''));
     var order = orderId ? findRecordByValue_(ordersTable.records, ['order_id'], orderId) : null;
 
-    if (!order || isOrderPaid_(order)) {
+    if (!isActiveTableOrder_(order)) {
       var note = buildQrOrderNote_(request);
       order = createEmptyTableOrder_(ordersTable, table, {
         note: note,
@@ -1448,9 +1498,16 @@ function buildTableOrderResponse_(table, orderId, message, preloaded) {
 }
 
 function buildEmptyTableOrderResponse_(table) {
+  var normalizedTable = table ? normalizeTableRecord_(table) : {};
+
+  if (normalizedTable.table_no || normalizedTable.table_id) {
+    normalizedTable.status = TABLE_STATUS_AVAILABLE;
+    normalizedTable.current_order_id = '';
+  }
+
   return {
     success: true,
-    table: normalizeTableRecord_(table),
+    table: normalizedTable,
     order: null,
     items: [],
     pending_items: [],
@@ -2068,6 +2125,29 @@ function testClearTableOrder() {
 
   Logger.log(JSON.stringify(result, null, 2));
   return result;
+}
+
+function testClearTableOrderT10() {
+  var properties = PropertiesService.getScriptProperties();
+  var previousTableNo = properties.getProperty(TEST_TABLE_NO_PROPERTY);
+  var previousOrderId = properties.getProperty(TEST_TABLE_ORDER_ID_PROPERTY);
+
+  try {
+    storeTestTableOrder_('T10', '');
+    return testClearTableOrder();
+  } finally {
+    if (previousTableNo) {
+      properties.setProperty(TEST_TABLE_NO_PROPERTY, previousTableNo);
+    } else {
+      properties.deleteProperty(TEST_TABLE_NO_PROPERTY);
+    }
+
+    if (previousOrderId) {
+      properties.setProperty(TEST_TABLE_ORDER_ID_PROPERTY, previousOrderId);
+    } else {
+      properties.deleteProperty(TEST_TABLE_ORDER_ID_PROPERTY);
+    }
+  }
 }
 
 function testPayTableOrder() {

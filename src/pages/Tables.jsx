@@ -113,6 +113,52 @@ function tableCardClass(status, isSelected) {
   return `${base} ${selected} border-amber-200 bg-gradient-to-br from-white to-amber-50 hover:border-amber-300`;
 }
 
+const CLOSED_TABLE_ORDER_STATUSES = new Set(['CANCELED', 'CANCELLED', 'CLOSED', 'PAID', 'COMPLETED']);
+
+function normalizeStatus(value) {
+  return String(value || '').toUpperCase();
+}
+
+function isClosedOrderLike(order) {
+  if (!order) return false;
+
+  return CLOSED_TABLE_ORDER_STATUSES.has(normalizeStatus(order.status)) ||
+    CLOSED_TABLE_ORDER_STATUSES.has(normalizeStatus(order.payment_status));
+}
+
+function hasActiveTableOrder(table) {
+  return Boolean(table?.current_order_id && table?.order) && !isClosedOrderLike(table.order);
+}
+
+function getEffectiveTableStatus(table) {
+  if (!hasActiveTableOrder(table)) return 'AVAILABLE';
+
+  return normalizeStatus(table?.status) === 'READY_TO_PAY' ? 'READY_TO_PAY' : 'OCCUPIED';
+}
+
+function normalizeTableForUi(table) {
+  const effectiveStatus = getEffectiveTableStatus(table);
+
+  if (effectiveStatus === 'AVAILABLE') {
+    const nextTable = { ...table, status: 'AVAILABLE', current_order_id: '' };
+    delete nextTable.order;
+    return nextTable;
+  }
+
+  return {
+    ...table,
+    status: effectiveStatus,
+  };
+}
+
+function normalizeTablesForUi(tables) {
+  return (Array.isArray(tables) ? tables : []).map(normalizeTableForUi);
+}
+
+function isActiveTableDetail(detail) {
+  return Boolean(detail?.order?.order_id) && !isClosedOrderLike(detail.order);
+}
+
 function formatShortTime(value) {
   if (!value) return '';
 
@@ -167,6 +213,8 @@ function buildTableOrderSummary(detail) {
 
   return {
     order_no: order.order_no || '',
+    status: order.status || '',
+    payment_status: order.payment_status || '',
     total: toNumber(totals.total === undefined ? order.total : totals.total),
     item_count: itemCount,
     pending_item_count: pendingItemCount,
@@ -177,6 +225,10 @@ function buildTableOrderSummary(detail) {
 }
 
 function markTableOrderActive(tables, detail) {
+  if (!isActiveTableDetail(detail)) {
+    return markPaidTableAvailable(tables, detail, detail?.order, detail?.order?.order_id);
+  }
+
   const sourceTable = detail?.table || {};
   const order = detail?.order || {};
   const tableNo = sourceTable.table_no || order.table_no || order.table_id || '';
@@ -231,7 +283,7 @@ export default function Tables() {
   const cachedMenu = React.useMemo(() => getCachedMenuResponse(), []);
   const cachedSettings = React.useMemo(() => getCachedSettingsResponse(), []);
   const cachedTables = React.useMemo(() => getCachedTablesResponse(), []);
-  const [tables, setTables] = React.useState(() => cachedTables?.tables || []);
+  const [tables, setTables] = React.useState(() => normalizeTablesForUi(cachedTables?.tables || []));
   const [categories, setCategories] = React.useState(() => cachedMenu?.categories || []);
   const [menus, setMenus] = React.useState(() => cachedMenu?.menus || []);
   const [settings, setSettings] = React.useState(() => ({
@@ -344,8 +396,10 @@ export default function Tables() {
 
       if (!tablesResult.success) throw new Error(tablesResult.message || 'GET_TABLES failed');
 
-      setTables(tablesResult.tables || []);
-      tablesRef.current = tablesResult.tables || [];
+      const nextTables = normalizeTablesForUi(tablesResult.tables || []);
+
+      setTables(nextTables);
+      tablesRef.current = nextTables;
       hasLoadedTablesRef.current = true;
       return tablesResult;
     } catch (loadError) {
@@ -387,7 +441,7 @@ export default function Tables() {
     };
     setIsRefreshingTables(false);
 
-    const nextTables = typeof updater === 'function' ? updater(tablesRef.current) : updater;
+    const nextTables = normalizeTablesForUi(typeof updater === 'function' ? updater(tablesRef.current) : updater);
 
     tablesRef.current = nextTables;
     setTables(nextTables);
@@ -438,11 +492,13 @@ export default function Tables() {
         return;
       }
 
-      const nextTables = event.detail?.tables;
+      const rawTables = event.detail?.tables;
 
-      if (!Array.isArray(nextTables)) {
+      if (!Array.isArray(rawTables)) {
         return;
       }
+
+      const nextTables = normalizeTablesForUi(rawTables);
 
       tablesRef.current = nextTables;
       setTables(nextTables);
@@ -554,9 +610,9 @@ export default function Tables() {
 
   const tableSummary = React.useMemo(
     () => ({
-      available: tables.filter((table) => table.status === 'AVAILABLE').length,
-      occupied: tables.filter((table) => table.status === 'OCCUPIED').length,
-      readyToPay: tables.filter((table) => table.status === 'READY_TO_PAY').length,
+      available: tables.filter((table) => getEffectiveTableStatus(table) === 'AVAILABLE').length,
+      occupied: tables.filter((table) => getEffectiveTableStatus(table) === 'OCCUPIED').length,
+      readyToPay: tables.filter((table) => getEffectiveTableStatus(table) === 'READY_TO_PAY').length,
     }),
     [tables],
   );
@@ -570,9 +626,10 @@ export default function Tables() {
   );
   const selectedPendingCount = selectedPendingItems.reduce((sum, item) => sum + toNumber(item.quantity), 0);
   const selectedPaymentStatus = String(selectedDetail?.order?.payment_status || '').toUpperCase();
+  const selectedTableStatus = normalizeStatus(selectedDetail?.table?.status);
   const canClearSelectedTable =
-    selectedDetail?.order &&
-    selectedDetail?.table?.status === 'OCCUPIED' &&
+    isActiveTableDetail(selectedDetail) &&
+    selectedTableStatus !== 'AVAILABLE' &&
     selectedPaymentStatus === 'UNPAID';
 
   React.useEffect(() => {
@@ -651,8 +708,9 @@ export default function Tables() {
     setCart([]);
 
     try {
+      const effectiveStatus = getEffectiveTableStatus(table);
       const result =
-        table.status === 'AVAILABLE'
+        effectiveStatus === 'AVAILABLE'
           ? await openTable({ table_no: table.table_no, created_by: 'STAFF' })
           : await getTableOrder({ table_no: table.table_no });
 
@@ -662,12 +720,18 @@ export default function Tables() {
         return;
       }
 
+      if (!isActiveTableDetail(result)) {
+        setSelectedDetail(null);
+        markTablePendingSeen(table.table_no, 0);
+        commitTablesOptimistically((currentTables) =>
+          markPaidTableAvailable(currentTables, result, result.order, table.current_order_id),
+        );
+        return;
+      }
+
       setSelectedDetail(result);
       markTablePendingSeen(table.table_no, result.pending_totals?.item_count || 0);
-
-      if (table.status === 'AVAILABLE' && result.order) {
-        commitTablesOptimistically((currentTables) => markTableOrderActive(currentTables, result));
-      }
+      commitTablesOptimistically((currentTables) => markTableOrderActive(currentTables, result));
 
       if (options.focusPending) {
         window.setTimeout(() => {
@@ -1202,13 +1266,16 @@ export default function Tables() {
                 ? Array.from({ length: 10 }).map((_, index) => (
                     <div key={index} className="h-44 animate-pulse rounded-[26px] bg-stone-100" />
                   ))
-                : tables.map((table) => (
+                : tables.map((table) => {
+                    const effectiveStatus = getEffectiveTableStatus(table);
+
+                    return (
                     <button
                       key={table.table_id || table.table_no}
                       type="button"
                       onClick={() => handleSelectTable(table)}
                       className={tableCardClass(
-                        table.status,
+                        effectiveStatus,
                         selectedDetail?.table?.table_no === table.table_no,
                       )}
                     >
@@ -1219,7 +1286,7 @@ export default function Tables() {
                             <p className="text-xs font-bold text-stone-500">{table.table_no}</p>
                           )}
                         </div>
-                        <StatusBadge tone={statusTone(table.status)}>{statusLabel(table.status)}</StatusBadge>
+                        <StatusBadge tone={statusTone(effectiveStatus)}>{statusLabel(effectiveStatus)}</StatusBadge>
                       </div>
                       {getTablePendingCount(table) > 0 ? (
                         <div className="mt-3 inline-flex rounded-full bg-rose-600 px-3 py-1 text-xs font-black text-white shadow-md shadow-rose-900/20">
@@ -1248,7 +1315,8 @@ export default function Tables() {
                         </div>
                       )}
                     </button>
-                  ))}
+                    );
+                  })}
             </div>
           </div>
 
