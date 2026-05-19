@@ -10,6 +10,9 @@ function handleMenuAction_(action, request) {
     case 'UPDATE_MENU_BASIC':
       return updateMenuBasic_(request || {});
 
+    case 'UPLOAD_MENU_IMAGE':
+      return uploadMenuImage_(request || {});
+
     default:
       return {
         success: false,
@@ -17,6 +20,13 @@ function handleMenuAction_(action, request) {
       };
   }
 }
+
+var MENU_IMAGE_UPLOAD_MAX_BASE64_CHARS = 2000000;
+var MENU_IMAGE_UPLOAD_MIME_EXTENSIONS = {
+  'image/jpeg': '.jpg',
+  'image/png': '.png',
+  'image/webp': '.webp'
+};
 
 function getMenu_() {
   var cached = getCachedJson_(CACHE_KEY_GET_MENU);
@@ -222,6 +232,141 @@ function updateMenuBasic_(request) {
   };
 }
 
+function uploadMenuImage_(request) {
+  var folderId = stringValue_(
+    PropertiesService
+      .getScriptProperties()
+      .getProperty(SCRIPT_PROPERTY_KEYS.MENU_IMAGE_FOLDER_ID)
+  );
+  var menuId = stringValue_(request.menu_id || request.menuId);
+  var mimeType = stringValue_(request.mime_type || request.mimeType).toLowerCase();
+  var base64 = stringValue_(request.base64 || request.data || '');
+  var shouldUpdateMenu = request.update_menu === undefined ? true : isTruthy_(request.update_menu);
+
+  if (!folderId) {
+    return {
+      success: false,
+      error: 'MISSING_MENU_IMAGE_FOLDER_ID',
+      message: 'MENU_IMAGE_FOLDER_ID Script Property is missing'
+    };
+  }
+
+  if (!menuId) {
+    return {
+      success: false,
+      error: 'MISSING_MENU_ID',
+      message: 'menu_id is required'
+    };
+  }
+
+  if (!MENU_IMAGE_UPLOAD_MIME_EXTENSIONS[mimeType]) {
+    return {
+      success: false,
+      error: 'UNSUPPORTED_IMAGE_TYPE',
+      message: 'Only JPEG, PNG, or WebP images are supported'
+    };
+  }
+
+  if (!base64) {
+    return {
+      success: false,
+      error: 'MISSING_IMAGE_DATA',
+      message: 'Image data is required'
+    };
+  }
+
+  if (base64.indexOf(',') !== -1) {
+    base64 = base64.split(',').pop();
+  }
+
+  base64 = base64.replace(/\s/g, '');
+
+  if (base64.length > MENU_IMAGE_UPLOAD_MAX_BASE64_CHARS) {
+    return {
+      success: false,
+      error: 'IMAGE_TOO_LARGE',
+      message: 'Image payload is too large'
+    };
+  }
+
+  var table = getSheetRecordsWithRowNumbers_('menus');
+  var menu = findRecordByValue_(table.records, ['menu_id'], menuId);
+
+  if (!menu) {
+    return {
+      success: false,
+      error: 'MENU_NOT_FOUND',
+      message: 'Menu not found: ' + menuId
+    };
+  }
+
+  try {
+    var bytes = Utilities.base64Decode(base64);
+    var extension = MENU_IMAGE_UPLOAD_MIME_EXTENSIONS[mimeType];
+    var timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMdd-HHmmss');
+    var safeFileName = sanitizeDriveFileName_(menuId + '-' + timestamp + extension);
+    var folder = DriveApp.getFolderById(folderId);
+    var blob = Utilities.newBlob(bytes, mimeType, safeFileName);
+    var file = folder.createFile(blob);
+
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+    var fileId = file.getId();
+    var imageUrl = 'https://lh3.googleusercontent.com/d/' + encodeURIComponent(fileId);
+    var viewUrl = 'https://drive.google.com/file/d/' + encodeURIComponent(fileId) + '/view';
+    var updatedMenu = null;
+
+    if (shouldUpdateMenu) {
+      updatedMenu = updateMenuImageUrl_(table, menu, imageUrl);
+    }
+
+    clearMenuCache_();
+
+    return {
+      success: true,
+      menu_id: menuId,
+      file_id: fileId,
+      image_url: imageUrl,
+      view_url: viewUrl,
+      menu: updatedMenu ? normalizeAdminMenuRecord_(updatedMenu) : normalizeAdminMenuRecord_(menu)
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: 'UPLOAD_FAILED',
+      message: err && err.message ? err.message : String(err)
+    };
+  }
+}
+
+function updateMenuImageUrl_(table, menu, imageUrl) {
+  var imageUrlColumn = getHeaderColumn_(table.headers, ['image_url']);
+
+  if (!imageUrlColumn) {
+    throw new Error('menus sheet is missing image_url header');
+  }
+
+  var timestamp = nowIso_();
+  var updatedAtColumn = getHeaderColumn_(table.headers, ['updated_at']);
+
+  table.sheet.getRange(menu._rowNumber, imageUrlColumn).setValue(imageUrl);
+  menu.image_url = imageUrl;
+
+  if (updatedAtColumn) {
+    table.sheet.getRange(menu._rowNumber, updatedAtColumn).setValue(timestamp);
+    menu.updated_at = timestamp;
+  }
+
+  return menu;
+}
+
+function sanitizeDriveFileName_(filename) {
+  return stringValue_(filename)
+    .replace(/[\\/:*?"<>|#%{}~&]/g, '-')
+    .replace(/\s+/g, '-')
+    .slice(0, 140);
+}
+
 function normalizeAdminMenuRecord_(row) {
   return {
     menu_id: stringValue_(getValueByAliases_(row, ['menu_id'], '')),
@@ -257,6 +402,29 @@ function normalizeLookupKey_(value) {
 
 function testGetMenu() {
   var result = getMenu_();
+  Logger.log(JSON.stringify(result, null, 2));
+  return result;
+}
+
+function testUploadMenuImage() {
+  var result = uploadMenuImage_({
+    menu_id: 'MN066',
+    filename: 'tiny.png',
+    mime_type: 'image/png',
+    base64: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=',
+    update_menu: false
+  });
+
+  result.verification = {
+    has_file_id: result.success && !!result.file_id,
+    has_image_url: result.success && result.image_url && result.image_url.indexOf('lh3.googleusercontent.com/d/') !== -1,
+    menu_not_updated: result.success && result.menu && result.menu.image_url !== result.image_url,
+    passed: result.success &&
+      !!result.file_id &&
+      result.image_url &&
+      result.image_url.indexOf('lh3.googleusercontent.com/d/') !== -1
+  };
+
   Logger.log(JSON.stringify(result, null, 2));
   return result;
 }

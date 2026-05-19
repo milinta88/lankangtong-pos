@@ -348,6 +348,17 @@ export async function updateMenuBasic(menu_id, fields) {
   return result;
 }
 
+export async function uploadMenuImage(payload) {
+  const result = await postAction('UPLOAD_MENU_IMAGE', payload);
+
+  if (result && result.success) {
+    clearAdminMenusClientCache();
+    clearMenuClientCache();
+  }
+
+  return result;
+}
+
 export function createOrder(payload) {
   return postAction('CREATE_ORDER', payload);
 }

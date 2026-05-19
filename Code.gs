@@ -35,6 +35,7 @@ function doPost(e) {
       case 'CREATE_MENU':
       case 'UPDATE_MENU':
       case 'UPDATE_MENU_BASIC':
+      case 'UPLOAD_MENU_IMAGE':
       case 'DELETE_MENU':
         return jsonResponse_(handleMenuAction_(action, request));
 
