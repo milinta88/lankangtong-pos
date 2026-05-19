@@ -1,13 +1,10 @@
 import React from 'react';
-import QRCode from 'qrcode';
 import {
   AlertTriangle,
   BellRing,
   CheckCircle2,
   Minus,
   Plus,
-  Printer,
-  QrCode,
   RefreshCw,
   Search,
   ShoppingBag,
@@ -24,17 +21,17 @@ import {
   getMenu,
   getSettings,
   getTableOrder,
-  getTableQrLinks,
   getTables,
   hasFreshTablesClientCache,
   openTable,
   payTableOrder,
   TABLES_UPDATED_EVENT,
+  updateTableOrderItem,
   updateTablesClientCache,
 } from '../services/api.js';
 import { saveReceiptDetail } from '../services/receiptCache.js';
 import { navigateTo } from '../App.jsx';
-import { getCurrentRoutePath, PRODUCTION_ORDER_URL } from '../services/router.js';
+import { getCurrentRoutePath } from '../services/router.js';
 import {
   consumePendingTableFocus,
   peekPendingTableFocus,
@@ -243,8 +240,6 @@ export default function Tables() {
   const [cart, setCart] = React.useState([]);
   const [paymentMethod, setPaymentMethod] = React.useState('CASH');
   const [received, setReceived] = React.useState('');
-  const [qrCards, setQrCards] = React.useState([]);
-  const [showQrCards, setShowQrCards] = React.useState(false);
   const [pendingToast, setPendingToast] = React.useState(null);
   const [isClearModalOpen, setIsClearModalOpen] = React.useState(false);
   const [clearReason, setClearReason] = React.useState('');
@@ -457,7 +452,7 @@ export default function Tables() {
 
   autoRefreshStateRef.current = {
     isBusy: isWorking || isPayingTable || isClearingTable,
-    isPanelOpen: Boolean(selectedDetail?.order) || showQrCards || isClearModalOpen,
+    isPanelOpen: Boolean(selectedDetail?.order) || isClearModalOpen,
   };
 
   React.useEffect(() => {
@@ -789,6 +784,44 @@ export default function Tables() {
     }
   }
 
+  async function handleUpdateBillItem(item, nextQuantity) {
+    const orderId = selectedDetail?.order?.order_id;
+    const itemId = item?.item_id;
+    const quantity = Math.max(0, toNumber(nextQuantity));
+
+    if (!orderId || !itemId || isWorking || isPayingTable) return;
+
+    setIsWorking(true);
+    setError('');
+    setRefreshWarning('');
+
+    try {
+      const result = await updateTableOrderItem({
+        order_id: orderId,
+        item_id: itemId,
+        quantity,
+        updated_by: 'STAFF',
+      });
+
+      if (!result.success) throw new Error(result.message || 'UPDATE_TABLE_ORDER_ITEM failed');
+
+      if (!isMountedRef.current || getCurrentRoutePath() !== '/tables') {
+        return;
+      }
+
+      setSelectedDetail(result);
+      commitTablesOptimistically((currentTables) => markTableOrderActive(currentTables, result));
+    } catch (updateError) {
+      if (isMountedRef.current) {
+        setError(updateError.message || 'Cannot update bill item');
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setIsWorking(false);
+      }
+    }
+  }
+
   async function handleConfirmPendingItems(itemIds) {
     const orderId = selectedDetail?.order?.order_id;
 
@@ -956,83 +989,25 @@ export default function Tables() {
     }
   }
 
-  async function handleGenerateQrLinks() {
-    setIsWorking(true);
-    setError('');
-
-    try {
-      const baseUrl = PRODUCTION_ORDER_URL;
-      const result = await getTableQrLinks(baseUrl);
-
-      if (!result.success) throw new Error(result.message || 'GET_TABLE_QR_LINKS failed');
-
-      if (!isMountedRef.current || getCurrentRoutePath() !== '/tables') {
-        return;
-      }
-
-      const cards = await Promise.all(
-        (result.qr_links || []).map(async (link) => ({
-          ...link,
-          qr_image: await QRCode.toDataURL(link.qr_url, {
-            width: 220,
-            margin: 1,
-            errorCorrectionLevel: 'M',
-          }),
-        })),
-      );
-
-      if (!isMountedRef.current || getCurrentRoutePath() !== '/tables') {
-        return;
-      }
-
-      setQrCards(cards);
-      setShowQrCards(true);
-    } catch (qrError) {
-      if (isMountedRef.current) {
-        setError(qrError.message || 'Cannot generate table QR');
-      }
-    } finally {
-      if (isMountedRef.current) {
-        setIsWorking(false);
-      }
-    }
-  }
-
   return (
     <AppShell
       title="Tables"
       subtitle="จัดการโต๊ะและออเดอร์หน้าร้าน"
       actions={
-        <>
-          <Button onClick={handleGenerateQrLinks} disabled={isWorking}>
-            <QrCode size={18} />
-            Generate table QR
-          </Button>
-          <Button
-            onClick={() => {
-              if (import.meta.env.DEV) {
-                console.log('[Tables] manual refresh started');
-              }
-              forceRefreshTables({ showLoading: false });
-            }}
-            disabled={isLoading || isRefreshingTables}
-          >
-            <RefreshCw size={18} className={isLoading || isRefreshingTables ? 'animate-spin' : ''} />
-            Refresh
-          </Button>
-        </>
+        <Button
+          onClick={() => {
+            if (import.meta.env.DEV) {
+              console.log('[Tables] manual refresh started');
+            }
+            forceRefreshTables({ showLoading: false });
+          }}
+          disabled={isLoading || isRefreshingTables}
+        >
+          <RefreshCw size={18} className={isLoading || isRefreshingTables ? 'animate-spin' : ''} />
+          Refresh
+        </Button>
       }
     >
-      <style>
-        {`
-          @media print {
-            body * { visibility: hidden; }
-            .table-qr-print, .table-qr-print * { visibility: visible; }
-            .table-qr-print { position: absolute; inset: 0; background: white; padding: 16px; }
-          }
-        `}
-      </style>
-
       {error ? (
         <div className="mb-4 flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-bold text-rose-700 shadow-sm">
           <AlertTriangle className="mt-0.5 shrink-0" size={18} />
@@ -1182,35 +1157,6 @@ export default function Tables() {
             </div>
           </section>
         </div>
-      ) : null}
-
-      {showQrCards ? (
-        <section className="table-qr-print mb-5 rounded-[30px] border border-[#eadbc9] bg-white/90 p-4 shadow-xl shadow-stone-900/5">
-          <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="text-xl font-black text-stone-950">Table QR codes</h2>
-              <p className="text-sm font-semibold text-stone-500">พิมพ์ QR สำหรับติดบนโต๊ะ หลัง deploy ให้ใช้ URL GitHub Pages จริง</p>
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={() => window.print()}>
-                <Printer size={18} />
-                Print
-              </Button>
-              <Button onClick={() => setShowQrCards(false)} variant="ghost">
-                Close
-              </Button>
-            </div>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {qrCards.map((card) => (
-              <div key={card.table_no} className="break-inside-avoid rounded-[24px] border border-[#eadbc9] bg-white p-4 text-center shadow-sm">
-                <img src={card.qr_image} alt={`${card.table_name} QR`} className="mx-auto h-40 w-40" />
-                <p className="mt-3 text-lg font-black text-stone-950">{card.table_name}</p>
-                <p className="mt-1 break-all text-[10px] font-semibold text-stone-500">{card.qr_url}</p>
-              </div>
-            ))}
-          </div>
-        </section>
       ) : null}
 
       <div className="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_520px]">
@@ -1410,13 +1356,45 @@ export default function Tables() {
                 <div className="mt-4 max-h-[320px] space-y-2 overflow-y-auto pr-1">
                   {(selectedDetail.items || []).length ? (
                     selectedDetail.items.map((item) => (
-                      <div key={item.item_id} className="flex items-start justify-between gap-3 rounded-2xl border border-[#eadbc9] bg-[#fffaf3] p-3">
-                        <div className="min-w-0">
-                          <p className="font-black text-stone-950">{item.menu_name_snapshot}</p>
-                          <p className="text-xs font-semibold text-stone-500">x{item.quantity} · ฿{formatMoney(item.unit_price)}</p>
-                          {item.note ? <p className="mt-1 text-xs font-semibold text-amber-700">{item.note}</p> : null}
+                      <div key={item.item_id} className="rounded-2xl border border-[#eadbc9] bg-[#fffaf3] p-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="font-black text-stone-950">{item.menu_name_snapshot}</p>
+                            <p className="text-xs font-semibold text-stone-500">x{item.quantity} · ฿{formatMoney(item.unit_price)}</p>
+                            {item.note ? <p className="mt-1 text-xs font-semibold text-amber-700">{item.note}</p> : null}
+                          </div>
+                          <p className="font-black">฿{formatMoney(item.total)}</p>
                         </div>
-                        <p className="font-black">฿{formatMoney(item.total)}</p>
+                        <div className="mt-3 flex items-center justify-between gap-2">
+                          <div className="flex items-center rounded-2xl bg-[#f4ede6] p-1">
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateBillItem(item, item.quantity - 1)}
+                              disabled={isWorking || isPayingTable || item.quantity <= 1}
+                              className="h-10 w-10 rounded-xl transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+                            >
+                              <Minus className="mx-auto" size={16} />
+                            </button>
+                            <span className="w-10 text-center font-black">{item.quantity}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateBillItem(item, item.quantity + 1)}
+                              disabled={isWorking || isPayingTable}
+                              className="h-10 w-10 rounded-xl transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+                            >
+                              <Plus className="mx-auto" size={16} />
+                            </button>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateBillItem(item, 0)}
+                            disabled={isWorking || isPayingTable}
+                            className="inline-flex h-10 items-center gap-1.5 rounded-xl px-3 text-xs font-black text-rose-700 transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            <XCircle size={15} />
+                            ลบ
+                          </button>
+                        </div>
                       </div>
                     ))
                   ) : (

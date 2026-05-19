@@ -399,6 +399,10 @@ export function addItemsToTableOrder(payload) {
   return postAction('ADD_ITEMS_TO_TABLE_ORDER', payload);
 }
 
+export function updateTableOrderItem(payload) {
+  return postAction('UPDATE_TABLE_ORDER_ITEM', payload);
+}
+
 export function confirmTablePendingItems(payload) {
   return postAction('CONFIRM_TABLE_PENDING_ITEMS', payload);
 }

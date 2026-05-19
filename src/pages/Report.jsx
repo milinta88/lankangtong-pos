@@ -540,7 +540,7 @@ export default function Report() {
         <StatCard icon={ReceiptText} label="จำนวนบิล" value={formatNumber(summary.order_count)} />
         <StatCard icon={ShoppingBag} label="จำนวนรายการขาย" value={formatNumber(summary.item_count)} />
         <StatCard icon={WalletCards} label="เงินสด" value={formatMoney(summary.cash_sales)} prefix="฿" tone="coffee" />
-        <StatCard icon={CreditCard} label="โอน/QR/Card" value={formatMoney(nonCashSales)} prefix="฿" tone="warning" />
+        <StatCard icon={CreditCard} label="โอน/QR" value={formatMoney(nonCashSales)} prefix="฿" tone="warning" />
       </section>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
@@ -554,9 +554,9 @@ export default function Report() {
           </div>
 
           <div className="mt-4 overflow-hidden rounded-[24px] border border-[#eadbc9] bg-white shadow-sm">
-            <div className="overflow-x-auto">
+            <div className="max-h-[330px] overflow-auto">
               <table className="w-full min-w-[520px] text-left text-sm">
-                <thead className="bg-[#f6efe7] text-xs uppercase text-[#7a5b43]">
+                <thead className="sticky top-0 z-10 bg-[#f6efe7] text-xs uppercase text-[#7a5b43]">
                   <tr>
                     <th className="px-4 py-3">สินค้า</th>
                     <th className="px-4 py-3 text-right">จำนวน</th>

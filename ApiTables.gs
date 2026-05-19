@@ -19,6 +19,9 @@ function handleTableAction_(action, request) {
     case 'ADD_ITEMS_TO_TABLE_ORDER':
       return addItemsToTableOrder_(request || {});
 
+    case 'UPDATE_TABLE_ORDER_ITEM':
+      return updateTableOrderItem_(request || {});
+
     case 'CONFIRM_TABLE_PENDING_ITEMS':
       return confirmTablePendingItems_(request || {});
 
@@ -446,6 +449,131 @@ function addItemsToTableOrder_(request) {
       order: order,
       items: addResult.allItems,
       payments: payments
+    });
+  } catch (err) {
+    return {
+      success: false,
+      message: err && err.message ? err.message : String(err)
+    };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function updateTableOrderItem_(request) {
+  var orderId = stringValue_(request.order_id || request.orderId);
+  var itemId = stringValue_(request.item_id || request.itemId);
+  var rawQuantity = typeof request.quantity !== 'undefined' ? request.quantity : request.qty;
+  var quantity = numberValue_(rawQuantity);
+
+  if (!orderId) {
+    return {
+      success: false,
+      error: 'MISSING_ORDER_ID',
+      message: 'Missing order_id'
+    };
+  }
+
+  if (!itemId) {
+    return {
+      success: false,
+      error: 'MISSING_ITEM_ID',
+      message: 'Missing item_id'
+    };
+  }
+
+  if (typeof rawQuantity === 'undefined' || rawQuantity === '' || quantity < 0) {
+    return {
+      success: false,
+      error: 'INVALID_QUANTITY',
+      message: 'Quantity must be zero or greater'
+    };
+  }
+
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+
+  try {
+    ensureTableDatabaseReady_();
+
+    var timestamp = nowIso_();
+    var ordersTable = getSheetTable_('orders');
+    var order = findRecordByValue_(ordersTable.records, ['order_id'], orderId);
+
+    if (!order) {
+      return {
+        success: false,
+        error: 'ORDER_NOT_FOUND',
+        message: 'Order not found'
+      };
+    }
+
+    if (isOrderPaid_(order)) {
+      return {
+        success: false,
+        error: 'ORDER_ALREADY_PAID',
+        message: 'Paid orders cannot be edited'
+      };
+    }
+
+    var paymentStatus = stringValue_(getValueByAliases_(order, ['payment_status'], '')).toUpperCase();
+
+    if (paymentStatus !== PAYMENT_STATUS_UNPAID) {
+      return {
+        success: false,
+        error: 'ORDER_NOT_UNPAID',
+        message: 'Only unpaid orders can be edited'
+      };
+    }
+
+    var orderItemsTable = getSheetTable_('order_items');
+    var allOrderItems = getOrderItemsFromRecords_(orderItemsTable.records, orderId);
+    var item = allOrderItems.filter(function (record) {
+      return stringValue_(getValueByAliases_(record, ['item_id'], '')) === itemId;
+    })[0] || null;
+
+    if (!item) {
+      return {
+        success: false,
+        error: 'ITEM_NOT_FOUND',
+        message: 'Order item not found'
+      };
+    }
+
+    if (!getConfirmedBillOrderItems_([item]).length) {
+      return {
+        success: false,
+        error: 'ITEM_NOT_EDITABLE',
+        message: 'Only confirmed bill items can be edited'
+      };
+    }
+
+    if (quantity <= 0) {
+      updateOrderItemRecordFields_(orderItemsTable, item, {
+        status: ORDER_ITEM_STATUS_CANCELLED
+      }, timestamp);
+    } else {
+      var unitPrice = numberValue_(getValueByAliases_(item, ['unit_price'], 0));
+      var discount = numberValue_(getValueByAliases_(item, ['discount'], 0));
+      var total = Math.max(0, quantity * unitPrice - discount);
+
+      updateOrderItemRecordFields_(orderItemsTable, item, {
+        quantity: quantity,
+        total: total,
+        status: ORDER_ITEM_STATUS_NEW
+      }, timestamp);
+    }
+
+    var totals = calculateConfirmedOrderItemTotals_(allOrderItems);
+    updateOrderTotals_(ordersTable, order, totals, timestamp);
+
+    var tablesTable = getSheetTable_('tables');
+    var table = findTableByOrderId_(tablesTable.records, orderId) || findTableByOrder_(tablesTable.records, order);
+
+    return buildTableOrderResponse_(table, orderId, 'Table order item updated', {
+      order: order,
+      items: allOrderItems,
+      payments: []
     });
   } catch (err) {
     return {
@@ -1555,6 +1683,24 @@ function updateOrderItemStatusRows_(orderItemsTable, items, nextStatus, timestam
       item.updated_at = timestamp;
     }
   });
+}
+
+function updateOrderItemRecordFields_(orderItemsTable, item, updates, timestamp) {
+  Object.keys(updates || {}).forEach(function (field) {
+    var column = getHeaderColumn_(orderItemsTable.headers, [field]);
+
+    if (column) {
+      orderItemsTable.sheet.getRange(item._rowNumber, column).setValue(updates[field]);
+      item[field] = updates[field];
+    }
+  });
+
+  var updatedAtColumn = getHeaderColumn_(orderItemsTable.headers, ['updated_at']);
+
+  if (updatedAtColumn) {
+    orderItemsTable.sheet.getRange(item._rowNumber, updatedAtColumn).setValue(timestamp);
+    item.updated_at = timestamp;
+  }
 }
 
 function buildQrOrderNote_(request) {

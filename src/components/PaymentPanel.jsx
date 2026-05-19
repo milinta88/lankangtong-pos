@@ -14,7 +14,6 @@ const paymentMethods = [
   ['CASH', Wallet],
   ['QR', QrCode],
   ['TRANSFER', CreditCard],
-  ['CARD', CreditCard],
 ];
 
 export default function PaymentPanel({

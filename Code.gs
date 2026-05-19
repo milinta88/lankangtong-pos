@@ -53,6 +53,7 @@ function doPost(e) {
       case 'OPEN_TABLE':
       case 'GET_TABLE_ORDER':
       case 'ADD_ITEMS_TO_TABLE_ORDER':
+      case 'UPDATE_TABLE_ORDER_ITEM':
       case 'CONFIRM_TABLE_PENDING_ITEMS':
       case 'REJECT_TABLE_PENDING_ITEMS':
       case 'CLEAR_TABLE_ORDER':

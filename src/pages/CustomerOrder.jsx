@@ -39,10 +39,11 @@ function makeCartItem(menu) {
   };
 }
 
-function MenuTile({ menu, onAdd }) {
+function MenuTile({ menu, selectedQuantity = 0, onAdd }) {
   const [imageFailed, setImageFailed] = React.useState(false);
   const imageUrl = typeof menu.image_url === 'string' ? menu.image_url.trim() : '';
   const shouldShowImage = imageUrl.startsWith('https://') && !imageFailed;
+  const hasSelectedQuantity = selectedQuantity > 0;
 
   React.useEffect(() => {
     setImageFailed(false);
@@ -54,7 +55,7 @@ function MenuTile({ menu, onAdd }) {
       onClick={() => onAdd(menu)}
       className="flex gap-3 rounded-[24px] border border-[#eadbc9] bg-white p-3 text-left shadow-sm shadow-stone-900/5 transition active:scale-[0.99] hover:border-[#d4b99d]"
     >
-      <div className="h-24 w-24 shrink-0 overflow-hidden rounded-[20px] bg-[#efe5da]">
+      <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[20px] bg-[#efe5da]">
         {shouldShowImage ? (
           <img
             src={imageUrl}
@@ -70,14 +71,24 @@ function MenuTile({ menu, onAdd }) {
             <ImageOff size={24} />
           </div>
         )}
+        {hasSelectedQuantity ? (
+          <span className="absolute right-1.5 top-1.5 inline-flex min-w-8 items-center justify-center rounded-full bg-emerald-600 px-2 py-1 text-xs font-black text-white shadow-lg shadow-emerald-900/20">
+            x{selectedQuantity}
+          </span>
+        ) : null}
       </div>
       <div className="min-w-0 flex-1 py-0.5">
         <p className="line-clamp-2 font-black leading-snug text-stone-950">{menu.menu_name}</p>
         {menu.description ? <p className="mt-1 line-clamp-2 text-xs font-semibold text-stone-500">{menu.description}</p> : null}
         <div className="mt-3 flex items-center justify-between gap-2">
           <span className="text-lg font-black text-[#6f4e37]">฿{formatMoney(menu.base_price)}</span>
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0f0b08] text-white shadow-md shadow-stone-950/15">
+          <span
+            className={`inline-flex h-10 items-center justify-center gap-1.5 rounded-2xl text-white shadow-md shadow-stone-950/15 ${
+              hasSelectedQuantity ? 'min-w-16 bg-emerald-600 px-3' : 'w-10 bg-[#0f0b08]'
+            }`}
+          >
             <Plus size={18} />
+            {hasSelectedQuantity ? <span className="text-sm font-black">{selectedQuantity}</span> : null}
           </span>
         </div>
       </div>
@@ -221,6 +232,14 @@ export default function CustomerOrder() {
     const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
     return { subtotal, total: subtotal };
   }, [cart]);
+  const cartQuantityByMenuId = React.useMemo(
+    () =>
+      cart.reduce((quantities, item) => {
+        quantities[item.menu_id] = (quantities[item.menu_id] || 0) + item.quantity;
+        return quantities;
+      }, {}),
+    [cart],
+  );
 
   function addToCart(menu) {
     setCart((current) => {
@@ -380,7 +399,14 @@ export default function CustomerOrder() {
                 ? Array.from({ length: 6 }).map((_, index) => (
                     <div key={index} className="h-32 animate-pulse rounded-[24px] bg-white ring-1 ring-[#eadbc9]" />
                   ))
-                : visibleMenus.map((menu) => <MenuTile key={menu.menu_id} menu={menu} onAdd={addToCart} />)}
+                : visibleMenus.map((menu) => (
+                    <MenuTile
+                      key={menu.menu_id}
+                      menu={menu}
+                      selectedQuantity={cartQuantityByMenuId[menu.menu_id] || 0}
+                      onAdd={addToCart}
+                    />
+                  ))}
             </section>
           </>
         ) : null}
