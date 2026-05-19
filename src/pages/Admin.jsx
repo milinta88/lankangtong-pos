@@ -5,6 +5,7 @@ import { navigateTo } from '../App.jsx';
 import AppShell from '../components/AppShell.jsx';
 import Button from '../components/Button.jsx';
 import Input from '../components/Input.jsx';
+import QrNotificationControls from '../components/QrNotificationControls.jsx';
 import StatCard from '../components/StatCard.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
 
@@ -297,6 +298,18 @@ export default function Admin() {
             <span>{error}</span>
           </div>
         ) : null}
+
+        <section className="mb-5 rounded-[30px] border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-4 shadow-xl shadow-amber-900/5">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <h2 className="text-xl font-black text-stone-950">ตั้งค่าแจ้งเตือน QR</h2>
+              <p className="mt-1 max-w-3xl text-sm font-semibold text-amber-800">
+                แจ้งเตือนจะทำงานเมื่อเปิดเว็บแอพค้างไว้ แม้พับหน้าต่างหรืออยู่แท็บอื่น แต่ถ้าปิด Browser/Tab แล้วจะไม่แจ้งเตือน
+              </p>
+            </div>
+            <QrNotificationControls />
+          </div>
+        </section>
 
         <section className="grid gap-4 md:grid-cols-3">
           <StatCard icon={Settings} label="เมนูทั้งหมด" value={menus.length} tone="coffee" />

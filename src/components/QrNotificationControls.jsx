@@ -119,8 +119,8 @@ export default function QrNotificationControls() {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50/80 px-3 py-2 text-xs font-black text-amber-950 shadow-sm">
-      <span className="inline-flex items-center gap-1.5">
+    <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-amber-200 bg-white/80 px-3 py-2 text-xs font-black text-amber-950 shadow-sm">
+      <span className="inline-flex items-center gap-1.5 rounded-xl bg-amber-100 px-2 py-1">
         <BellRing size={15} />
         แจ้งเตือน QR
       </span>
@@ -149,9 +149,6 @@ export default function QrNotificationControls() {
       {message ? (
         <span className={permission === 'denied' ? 'text-rose-700' : 'text-amber-800'}>{message}</span>
       ) : null}
-      <span className="basis-full text-[11px] font-bold leading-snug text-amber-800/80">
-        แจ้งเตือนจะทำงานเมื่อเปิดเว็บแอพค้างไว้ แม้พับหน้าต่างหรืออยู่แท็บอื่น แต่ถ้าปิด Browser/Tab แล้วจะไม่แจ้งเตือน
-      </span>
     </div>
   );
 }

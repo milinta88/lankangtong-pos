@@ -15,6 +15,8 @@ export const QR_ALERT_BEEP_GAIN = 0.62;
 export const QR_ALERT_BEEP_DURATION_MS = 250;
 export const QR_ALERT_BEEP_PAUSE_MS = 150;
 export const QR_ALERT_BEEP_COUNT = 3;
+export const QR_ALERT_SOUND_PATH = 'sounds/qr-alert.mp3';
+export const QR_ALERT_SOUND_VOLUME = 1.0;
 
 let isQrAlertSoundPlaying = false;
 
@@ -39,15 +41,20 @@ function getNotificationOptions(options = {}) {
   };
 }
 
-export async function playQrPendingBeep() {
-  if (isQrAlertSoundPlaying) return;
+function getPublicAssetUrl(path) {
+  if (typeof window === 'undefined') return path;
 
+  const basePath = import.meta.env?.BASE_URL || '/';
+  const cleanBasePath = basePath.endsWith('/') ? basePath : `${basePath}/`;
+  const cleanPath = String(path || '').replace(/^\/+/, '');
+  return new URL(`${cleanBasePath}${cleanPath}`, window.location.origin).toString();
+}
+
+async function playFallbackBeep() {
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
 
     if (!AudioContext) return;
-
-    isQrAlertSoundPlaying = true;
 
     const context = new AudioContext();
 
@@ -87,8 +94,58 @@ export async function playQrPendingBeep() {
       isQrAlertSoundPlaying = false;
     }, totalMs);
   } catch (error) {
-    isQrAlertSoundPlaying = false;
     // Browsers may block audio until a user interaction. Visual/browser alerts still cover the workflow.
+  }
+}
+
+export async function playQrPendingBeep() {
+  if (isQrAlertSoundPlaying) return;
+
+  isQrAlertSoundPlaying = true;
+
+  try {
+    if (typeof window === 'undefined' || typeof window.Audio !== 'function') {
+      await playFallbackBeep();
+      return;
+    }
+
+    const audio = new window.Audio(getPublicAssetUrl(QR_ALERT_SOUND_PATH));
+    audio.preload = 'auto';
+    audio.volume = QR_ALERT_SOUND_VOLUME;
+    let didFinish = false;
+
+    const releaseSoundLock = () => {
+      if (didFinish) return;
+      didFinish = true;
+      isQrAlertSoundPlaying = false;
+      audio.removeEventListener('ended', releaseSoundLock);
+      audio.removeEventListener('error', handleAudioError);
+    };
+
+    const handleAudioError = () => {
+      if (didFinish) return;
+      didFinish = true;
+      audio.removeEventListener('ended', releaseSoundLock);
+      audio.removeEventListener('error', handleAudioError);
+
+      void playFallbackBeep().finally(() => {
+        isQrAlertSoundPlaying = false;
+      });
+    };
+
+    audio.addEventListener('ended', releaseSoundLock, { once: true });
+    audio.addEventListener('error', handleAudioError, { once: true });
+
+    try {
+      await audio.play();
+    } catch (error) {
+      releaseSoundLock();
+      isQrAlertSoundPlaying = true;
+      await playFallbackBeep();
+      isQrAlertSoundPlaying = false;
+    }
+  } catch (error) {
+    isQrAlertSoundPlaying = false;
   }
 }
 

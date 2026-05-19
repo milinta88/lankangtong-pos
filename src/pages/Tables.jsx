@@ -12,7 +12,6 @@ import {
   Search,
   ShoppingBag,
   Utensils,
-  Volume2,
   XCircle,
 } from 'lucide-react';
 import {
@@ -36,14 +35,11 @@ import {
 import { saveReceiptDetail } from '../services/receiptCache.js';
 import { navigateTo } from '../App.jsx';
 import { getCurrentRoutePath, PRODUCTION_ORDER_URL } from '../services/router.js';
-import { playQrPendingBeep } from '../services/qrPendingAlerts.js';
 import {
   consumePendingTableFocus,
   peekPendingTableFocus,
   QR_PENDING_FOCUS_EVENT,
-  readQrPendingSoundEnabled,
   readSeenPendingCount,
-  writeQrPendingSoundEnabled,
   writeSeenPendingCount,
 } from '../services/qrPendingState.js';
 import AppShell from '../components/AppShell.jsx';
@@ -250,7 +246,6 @@ export default function Tables() {
   const [qrCards, setQrCards] = React.useState([]);
   const [showQrCards, setShowQrCards] = React.useState(false);
   const [pendingToast, setPendingToast] = React.useState(null);
-  const [soundEnabled, setSoundEnabled] = React.useState(readQrPendingSoundEnabled);
   const [isClearModalOpen, setIsClearModalOpen] = React.useState(false);
   const [clearReason, setClearReason] = React.useState('');
   const [clearConfirm, setClearConfirm] = React.useState('');
@@ -625,11 +620,8 @@ export default function Tables() {
 
       setPendingToast(newestAlert);
 
-      if (soundEnabled) {
-        playQrPendingBeep();
-      }
     }
-  }, [soundEnabled, tables]);
+  }, [tables]);
 
   function markTablePendingSeen(tableNo, count = 0) {
     if (!tableNo) return;
@@ -650,11 +642,6 @@ export default function Tables() {
 
     setPendingToast(null);
     void handleSelectTable(table, { focusPending: true });
-  }
-
-  function handleSoundEnabledChange(isEnabled) {
-    setSoundEnabled(isEnabled);
-    writeQrPendingSoundEnabled(isEnabled);
   }
 
   async function handleSelectTable(table, options = {}) {
@@ -1076,16 +1063,6 @@ export default function Tables() {
                 </p>
               </div>
             </div>
-            <label className="inline-flex items-center gap-2 rounded-2xl border border-amber-200 bg-white/80 px-3 py-2 text-xs font-black text-amber-800">
-              <input
-                type="checkbox"
-                checked={soundEnabled}
-                onChange={(event) => handleSoundEnabledChange(event.target.checked)}
-                className="h-4 w-4 accent-amber-600"
-              />
-              <Volume2 size={15} />
-              เปิดเสียงแจ้งเตือน
-            </label>
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
             {pendingTables.map((table) => (
