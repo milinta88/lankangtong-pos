@@ -56,6 +56,7 @@ const defaultSettings = {
   receipt_qr_enabled: false,
   receipt_qr_size_mm: 30,
 };
+const CUSTOM_COUNTER_MENU_ID = 'CUSTOM_COUNTER';
 
 function toNumber(value) {
   const number = Number(value);
@@ -279,6 +280,15 @@ function getTableLabel(table) {
   return getTableDisplayName(table?.table_no, table?.table_name || table?.table_no || '');
 }
 
+function makeEmptyCustomItemDraft() {
+  return {
+    name: '',
+    price: '',
+    quantity: 1,
+    note: '',
+  };
+}
+
 export default function Tables() {
   const cachedMenu = React.useMemo(() => getCachedMenuResponse(), []);
   const cachedSettings = React.useMemo(() => getCachedSettingsResponse(), []);
@@ -302,6 +312,9 @@ export default function Tables() {
   const [clearReason, setClearReason] = React.useState('');
   const [clearConfirm, setClearConfirm] = React.useState('');
   const [clearSuccess, setClearSuccess] = React.useState('');
+  const [isCustomItemOpen, setIsCustomItemOpen] = React.useState(false);
+  const [customItemDraft, setCustomItemDraft] = React.useState(() => makeEmptyCustomItemDraft());
+  const [customItemError, setCustomItemError] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(() => !cachedTables?.success);
   const [isRefreshingTables, setIsRefreshingTables] = React.useState(false);
   const [isWorking, setIsWorking] = React.useState(false);
@@ -706,6 +719,9 @@ export default function Tables() {
     setError('');
     setRefreshWarning('');
     setCart([]);
+    setIsCustomItemOpen(false);
+    setCustomItemDraft(makeEmptyCustomItemDraft());
+    setCustomItemError('');
 
     try {
       const effectiveStatus = getEffectiveTableStatus(table);
@@ -845,6 +861,78 @@ export default function Tables() {
     } catch (addError) {
       if (isMountedRef.current) {
         setError(addError.message || 'Cannot add items');
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setIsWorking(false);
+      }
+    }
+  }
+
+  function updateCustomItemDraft(field, value) {
+    setCustomItemDraft((current) => ({ ...current, [field]: value }));
+    setCustomItemError('');
+  }
+
+  async function handleAddCustomItem() {
+    const orderId = selectedDetail?.order?.order_id;
+    const name = customItemDraft.name.trim();
+    const price = toNumber(customItemDraft.price);
+    const quantity = toNumber(customItemDraft.quantity);
+
+    if (!orderId || isWorking || isPayingTable) return;
+
+    if (!name) {
+      setCustomItemError('กรุณากรอกชื่อรายการ');
+      return;
+    }
+
+    if (price <= 0) {
+      setCustomItemError('ราคาต้องมากกว่า 0');
+      return;
+    }
+
+    if (quantity <= 0) {
+      setCustomItemError('จำนวนต้องมากกว่า 0');
+      return;
+    }
+
+    setIsWorking(true);
+    setError('');
+    setRefreshWarning('');
+    setCustomItemError('');
+
+    try {
+      const result = await addItemsToTableOrder({
+        order_id: orderId,
+        created_by: 'STAFF',
+        items: [
+          {
+            menu_id: CUSTOM_COUNTER_MENU_ID,
+            item_type: CUSTOM_COUNTER_MENU_ID,
+            menu_name: name,
+            menu_name_snapshot: name,
+            quantity,
+            unit_price: price,
+            note: customItemDraft.note,
+            discount: 0,
+          },
+        ],
+      });
+
+      if (!result.success) throw new Error(result.message || 'ADD_ITEMS_TO_TABLE_ORDER failed');
+
+      if (!isMountedRef.current || getCurrentRoutePath() !== '/tables') {
+        return;
+      }
+
+      setSelectedDetail(result);
+      setIsCustomItemOpen(false);
+      setCustomItemDraft(makeEmptyCustomItemDraft());
+      commitTablesOptimistically((currentTables) => markTableOrderActive(currentTables, result));
+    } catch (addError) {
+      if (isMountedRef.current) {
+        setCustomItemError(addError.message || 'Cannot add custom item');
       }
     } finally {
       if (isMountedRef.current) {
@@ -1391,6 +1479,89 @@ export default function Tables() {
                       </Button>
                     ) : null}
                   </div>
+                </div>
+
+                <div className="mt-4 rounded-[22px] border border-[#eadbc9] bg-[#fffaf3] p-3">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <h3 className="text-sm font-black text-stone-800">รายการพิเศษเข้าโต๊ะ</h3>
+                      <p className="text-xs font-semibold text-stone-500">ใช้สำหรับขายด่วน/รายการที่ไม่มีในเมนู</p>
+                    </div>
+                    <Button
+                      onClick={() => {
+                        setIsCustomItemOpen((current) => !current);
+                        setCustomItemError('');
+                      }}
+                      disabled={isWorking || isPayingTable}
+                      variant="subtle"
+                      className="rounded-2xl"
+                    >
+                      <Plus size={16} />
+                      เพิ่มรายการพิเศษ
+                    </Button>
+                  </div>
+                  {isCustomItemOpen ? (
+                    <div className="mt-3 grid gap-3 rounded-[20px] border border-[#eadbc9] bg-white p-3">
+                      {customItemError ? (
+                        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-3 text-sm font-bold text-rose-700">
+                          {customItemError}
+                        </div>
+                      ) : null}
+                      <div className="grid gap-2 sm:grid-cols-4">
+                        <Input
+                          value={customItemDraft.name}
+                          onChange={(event) => updateCustomItemDraft('name', event.target.value)}
+                          placeholder="ชื่อรายการ"
+                          className="rounded-2xl border-[#eadbc9] sm:col-span-2"
+                        />
+                        <Input
+                          type="number"
+                          min="0"
+                          value={customItemDraft.price}
+                          onChange={(event) => updateCustomItemDraft('price', event.target.value)}
+                          placeholder="ราคา"
+                          className="rounded-2xl border-[#eadbc9]"
+                        />
+                        <Input
+                          type="number"
+                          min="1"
+                          value={customItemDraft.quantity}
+                          onChange={(event) => updateCustomItemDraft('quantity', event.target.value)}
+                          placeholder="จำนวน"
+                          className="rounded-2xl border-[#eadbc9]"
+                        />
+                      </div>
+                      <Input
+                        value={customItemDraft.note}
+                        onChange={(event) => updateCustomItemDraft('note', event.target.value)}
+                        placeholder="หมายเหตุ (ถ้ามี)"
+                        className="rounded-2xl border-[#eadbc9]"
+                      />
+                      <div className="flex flex-col gap-2 sm:flex-row">
+                        <Button
+                          onClick={handleAddCustomItem}
+                          disabled={isWorking || isPayingTable}
+                          variant="success"
+                          className="rounded-2xl"
+                        >
+                          <CheckCircle2 size={16} />
+                          เพิ่มเข้าโต๊ะ
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setIsCustomItemOpen(false);
+                            setCustomItemDraft(makeEmptyCustomItemDraft());
+                            setCustomItemError('');
+                          }}
+                          disabled={isWorking || isPayingTable}
+                          variant="ghost"
+                          className="rounded-2xl"
+                        >
+                          ยกเลิก
+                        </Button>
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
 
                 {selectedPendingItems.length ? (

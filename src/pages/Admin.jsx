@@ -1,6 +1,6 @@
 import React from 'react';
-import { AlertTriangle, Check, ImagePlus, QrCode, RefreshCw, Save, Search, Settings, SlidersHorizontal } from 'lucide-react';
-import { getAdminMenus, getCachedAdminMenusResponse, updateMenuBasic, uploadMenuImage } from '../services/api.js';
+import { AlertTriangle, Check, ImagePlus, Plus, QrCode, RefreshCw, Save, Search, Settings, SlidersHorizontal } from 'lucide-react';
+import { createMenu, getAdminMenus, getCachedAdminMenusResponse, updateMenuBasic, uploadMenuImage } from '../services/api.js';
 import { navigateTo } from '../App.jsx';
 import AppShell from '../components/AppShell.jsx';
 import Button from '../components/Button.jsx';
@@ -34,11 +34,15 @@ function normalizeMenu(menu) {
     menu_id: menu.menu_id || '',
     category_id: menu.category_id || '',
     name_th: menu.name_th || '',
+    name_en: menu.name_en || '',
+    description: menu.description || '',
     price: toNumber(menu.price),
+    cost: toNumber(menu.cost),
     image_url: menu.image_url || '',
     image_view_url: menu.image_view_url || menu.view_url || '',
     is_available: Boolean(menu.is_available),
     is_recommended: Boolean(menu.is_recommended),
+    recommended_sort: toNumber(menu.recommended_sort),
     track_stock: Boolean(menu.track_stock),
     stock_mode: menu.stock_mode || 'NONE',
     stock_qty: toNumber(menu.stock_qty),
@@ -201,6 +205,22 @@ function ToggleCell({ checked, label, onChange }) {
   );
 }
 
+function makeEmptyMenuDraft(categoryId = '') {
+  return {
+    name_th: '',
+    category_id: categoryId,
+    price: '',
+    description: '',
+    image_url: '',
+    is_available: true,
+    is_recommended: false,
+    track_stock: false,
+    stock_mode: 'NONE',
+    stock_qty: 0,
+    low_stock_level: 0,
+  };
+}
+
 export default function Admin() {
   const cachedAdminMenus = React.useMemo(() => getCachedAdminMenusResponse(), []);
   const cachedNormalizedMenus = React.useMemo(
@@ -220,6 +240,10 @@ export default function Admin() {
   const [savingRows, setSavingRows] = React.useState({});
   const [uploadingRows, setUploadingRows] = React.useState({});
   const [rowMessages, setRowMessages] = React.useState({});
+  const [isCreateOpen, setIsCreateOpen] = React.useState(false);
+  const [isCreatingMenu, setIsCreatingMenu] = React.useState(false);
+  const [createMenuError, setCreateMenuError] = React.useState('');
+  const [newMenuDraft, setNewMenuDraft] = React.useState(() => makeEmptyMenuDraft());
   const [error, setError] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(() => !cachedAdminMenus?.success);
   const [isRefreshing, setIsRefreshing] = React.useState(false);
@@ -301,6 +325,75 @@ export default function Admin() {
       setActiveCategory('ALL');
     }
   }, [activeCategory, categories]);
+
+  function openCreateMenuForm() {
+    setNewMenuDraft(makeEmptyMenuDraft(activeCategory !== 'ALL' ? activeCategory : categories[0] || ''));
+    setCreateMenuError('');
+    setIsCreateOpen(true);
+  }
+
+  function updateNewMenuDraft(field, value) {
+    setNewMenuDraft((current) => ({ ...current, [field]: value }));
+    setCreateMenuError('');
+  }
+
+  async function handleCreateMenu() {
+    const payload = {
+      ...newMenuDraft,
+      name_th: newMenuDraft.name_th.trim(),
+      category_id: newMenuDraft.category_id.trim(),
+      price: toNumber(newMenuDraft.price),
+      stock_qty: toNumber(newMenuDraft.stock_qty),
+      low_stock_level: toNumber(newMenuDraft.low_stock_level),
+    };
+
+    if (!payload.name_th) {
+      setCreateMenuError('กรุณากรอกชื่อเมนู');
+      return;
+    }
+
+    if (!payload.category_id) {
+      setCreateMenuError('กรุณากรอกหมวดหมู่');
+      return;
+    }
+
+    if (payload.price <= 0) {
+      setCreateMenuError('ราคาต้องมากกว่า 0');
+      return;
+    }
+
+    setIsCreatingMenu(true);
+    setCreateMenuError('');
+
+    try {
+      const result = await createMenu(payload);
+
+      if (!result.success) {
+        throw new Error(result.message || 'CREATE_MENU failed');
+      }
+
+      if (!isMountedRef.current) {
+        return;
+      }
+
+      const createdMenu = normalizeMenu(result.menu);
+
+      setMenus((current) => [createdMenu, ...current.filter((menu) => menu.menu_id !== createdMenu.menu_id)]);
+      setOriginalMenus((current) => ({ ...current, [createdMenu.menu_id]: { ...createdMenu } }));
+      setRowMessages((current) => ({ ...current, [createdMenu.menu_id]: 'Saved' }));
+      setIsCreateOpen(false);
+      setNewMenuDraft(makeEmptyMenuDraft(createdMenu.category_id));
+      await loadMenus({ force: true, clearMessages: false });
+    } catch (createError) {
+      if (isMountedRef.current) {
+        setCreateMenuError(createError.message || 'Cannot create menu');
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setIsCreatingMenu(false);
+      }
+    }
+  }
 
   const filteredMenus = React.useMemo(() => {
     const keyword = search.trim().toLowerCase();
@@ -432,6 +525,10 @@ export default function Admin() {
       subtitle="จัดการเมนู ราคา และสต็อกพื้นฐาน"
       actions={
         <>
+          <Button onClick={openCreateMenuForm} variant="success">
+            <Plus size={18} />
+            เพิ่มเมนู
+          </Button>
           <Button onClick={() => navigateTo('/table-qr')} variant="ghost">
             <QrCode size={18} />
             QR โต๊ะ
@@ -502,6 +599,125 @@ export default function Admin() {
               </div>
             </div>
           </div>
+
+          {isCreateOpen ? (
+            <section className="mt-4 rounded-[24px] border border-emerald-200 bg-emerald-50/70 p-4 shadow-sm">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="text-lg font-black text-stone-950">เพิ่มเมนูใหม่</h3>
+                  <p className="text-sm font-semibold text-emerald-800">บันทึกเมนูใหม่เข้า Google Sheets และแสดงในหน้าเมนูเมื่อเปิดขาย</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsCreateOpen(false)}
+                  className="text-sm font-black text-stone-500 hover:text-stone-900"
+                  disabled={isCreatingMenu}
+                >
+                  ยกเลิก
+                </button>
+              </div>
+              {createMenuError ? (
+                <div className="mt-3 rounded-2xl border border-rose-200 bg-white p-3 text-sm font-bold text-rose-700">
+                  {createMenuError}
+                </div>
+              ) : null}
+              <div className="mt-4 grid gap-3 lg:grid-cols-4">
+                <Input
+                  value={newMenuDraft.name_th}
+                  onChange={(event) => updateNewMenuDraft('name_th', event.target.value)}
+                  placeholder="ชื่อเมนู"
+                  className="rounded-2xl border-[#eadbc9]"
+                />
+                <div>
+                  <Input
+                    value={newMenuDraft.category_id}
+                    onChange={(event) => updateNewMenuDraft('category_id', event.target.value)}
+                    placeholder="หมวดหมู่ เช่น C001"
+                    list="admin-category-options"
+                    className="w-full rounded-2xl border-[#eadbc9]"
+                  />
+                  <datalist id="admin-category-options">
+                    {categories.map((category) => (
+                      <option key={category} value={category} />
+                    ))}
+                  </datalist>
+                </div>
+                <Input
+                  type="number"
+                  min="0"
+                  value={newMenuDraft.price}
+                  onChange={(event) => updateNewMenuDraft('price', event.target.value)}
+                  placeholder="ราคา"
+                  className="rounded-2xl border-[#eadbc9]"
+                />
+                <Input
+                  value={newMenuDraft.image_url}
+                  onChange={(event) => updateNewMenuDraft('image_url', event.target.value)}
+                  placeholder="image_url (ถ้ามี)"
+                  className="rounded-2xl border-[#eadbc9]"
+                />
+                <Input
+                  as="textarea"
+                  value={newMenuDraft.description}
+                  onChange={(event) => updateNewMenuDraft('description', event.target.value)}
+                  placeholder="รายละเอียด/หมายเหตุ"
+                  rows={2}
+                  className="resize-none rounded-2xl border-[#eadbc9] lg:col-span-2"
+                />
+                <select
+                  value={newMenuDraft.stock_mode}
+                  onChange={(event) => updateNewMenuDraft('stock_mode', event.target.value)}
+                  className="h-11 rounded-2xl border border-[#eadbc9] bg-white px-3 text-sm font-bold outline-none ring-[#6f4e37] focus:ring-2"
+                >
+                  <option value="NONE">Stock: NONE</option>
+                  <option value="DIRECT">Stock: DIRECT</option>
+                  <option value="RECIPE">Stock: RECIPE</option>
+                </select>
+                <div className="flex flex-wrap items-center gap-2">
+                  <ToggleCell
+                    checked={newMenuDraft.is_available}
+                    label="เปิดขาย"
+                    onChange={(value) => updateNewMenuDraft('is_available', value)}
+                  />
+                  <ToggleCell
+                    checked={newMenuDraft.is_recommended}
+                    label="แนะนำ"
+                    onChange={(value) => updateNewMenuDraft('is_recommended', value)}
+                  />
+                  <ToggleCell
+                    checked={newMenuDraft.track_stock}
+                    label="Track"
+                    onChange={(value) => updateNewMenuDraft('track_stock', value)}
+                  />
+                </div>
+                <Input
+                  type="number"
+                  value={newMenuDraft.stock_qty}
+                  onChange={(event) => updateNewMenuDraft('stock_qty', event.target.value)}
+                  placeholder="คงเหลือ"
+                  className="rounded-2xl border-[#eadbc9]"
+                />
+                <Input
+                  type="number"
+                  min="0"
+                  value={newMenuDraft.low_stock_level}
+                  onChange={(event) => updateNewMenuDraft('low_stock_level', event.target.value)}
+                  placeholder="จุดเตือน"
+                  className="rounded-2xl border-[#eadbc9]"
+                />
+              </div>
+              <Button
+                onClick={handleCreateMenu}
+                disabled={isCreatingMenu}
+                variant="success"
+                size="lg"
+                className="mt-4 rounded-2xl"
+              >
+                <Save size={18} />
+                {isCreatingMenu ? 'กำลังบันทึก...' : 'บันทึกเมนูใหม่'}
+              </Button>
+            </section>
+          ) : null}
 
           <div className="mt-4 overflow-hidden rounded-[24px] border border-[#eadbc9] bg-white shadow-sm">
             <div className="max-h-[calc(100vh-290px)] overflow-auto">

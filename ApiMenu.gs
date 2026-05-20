@@ -7,6 +7,9 @@ function handleMenuAction_(action, request) {
     case 'GET_ADMIN_MENUS':
       return getAdminMenus_();
 
+    case 'CREATE_MENU':
+      return createMenu_(request || {});
+
     case 'UPDATE_MENU_BASIC':
       return updateMenuBasic_(request || {});
 
@@ -151,6 +154,82 @@ function getAdminMenus_() {
   return {
     success: true,
     menus: menus
+  };
+}
+
+function createMenu_(request) {
+  var source = request.fields && typeof request.fields === 'object' ? request.fields : request;
+  var table = getSheetRecordsWithRowNumbers_('menus');
+  var timestamp = nowIso_();
+  var menuId = stringValue_(source.menu_id || source.menuId || '');
+  var nameTh = stringValue_(source.name_th || source.name || source.menu_name || source.menuName || '');
+  var categoryId = stringValue_(source.category_id || source.categoryId || '');
+  var price = numberValue_(source.price || source.base_price || source.basePrice || 0);
+
+  if (!nameTh) {
+    return {
+      success: false,
+      error: 'MISSING_MENU_NAME',
+      message: 'menu name is required'
+    };
+  }
+
+  if (!categoryId) {
+    return {
+      success: false,
+      error: 'MISSING_CATEGORY_ID',
+      message: 'category_id is required'
+    };
+  }
+
+  if (price <= 0) {
+    return {
+      success: false,
+      error: 'INVALID_PRICE',
+      message: 'price must be greater than 0'
+    };
+  }
+
+  if (!menuId) {
+    menuId = makeNextMenuId_(table.records);
+  }
+
+  if (findRecordByValue_(table.records, ['menu_id'], menuId)) {
+    return {
+      success: false,
+      error: 'MENU_ID_EXISTS',
+      message: 'Menu already exists: ' + menuId
+    };
+  }
+
+  var record = {
+    menu_id: menuId,
+    category_id: categoryId,
+    name_th: nameTh,
+    name_en: stringValue_(source.name_en || source.nameEn || ''),
+    description: stringValue_(source.description || source.note || ''),
+    price: price,
+    cost: numberValue_(source.cost || 0),
+    image_url: stringValue_(source.image_url || source.imageUrl || ''),
+    is_available: source.is_available === undefined ? true : isTruthy_(source.is_available),
+    is_recommended: isTruthy_(source.is_recommended || source.isRecommended),
+    recommended_sort: numberValue_(source.recommended_sort || source.recommendedSort || 0),
+    track_stock: isTruthy_(source.track_stock || source.trackStock),
+    stock_mode: normalizeStockMode_(source.stock_mode || source.stockMode || 'NONE'),
+    stock_qty: numberValue_(source.stock_qty || source.stockQty || 0),
+    low_stock_level: numberValue_(source.low_stock_level || source.lowStockLevel || 0),
+    sort_order: source.sort_order === undefined ? getNextMenuSortOrder_(table.records, categoryId) : numberValue_(source.sort_order),
+    created_at: timestamp,
+    updated_at: timestamp
+  };
+
+  appendRowsToTable_(table, [record]);
+  clearMenuCache_();
+
+  return {
+    success: true,
+    message: 'Menu created',
+    menu: normalizeAdminMenuRecord_(record)
   };
 }
 
@@ -372,10 +451,14 @@ function normalizeAdminMenuRecord_(row) {
     menu_id: stringValue_(getValueByAliases_(row, ['menu_id'], '')),
     category_id: stringValue_(getValueByAliases_(row, ['category_id'], '')),
     name_th: stringValue_(getValueByAliases_(row, ['name_th'], '')),
+    name_en: stringValue_(getValueByAliases_(row, ['name_en'], '')),
+    description: stringValue_(getValueByAliases_(row, ['description'], '')),
     price: numberValue_(getValueByAliases_(row, ['price'], 0)),
+    cost: numberValue_(getValueByAliases_(row, ['cost'], 0)),
     image_url: stringValue_(getValueByAliases_(row, ['image_url', 'image url', 'imageUrl', 'image', 'image_link', 'photo_url'], '')),
     is_available: isTruthy_(getValueByAliases_(row, ['is_available'], false)),
     is_recommended: isTruthy_(getValueByAliases_(row, ['is_recommended'], false)),
+    recommended_sort: numberValue_(getValueByAliases_(row, ['recommended_sort'], 0)),
     track_stock: isTruthy_(getValueByAliases_(row, ['track_stock'], false)),
     stock_mode: normalizeStockMode_(getValueByAliases_(row, ['stock_mode'], 'NONE')),
     stock_qty: numberValue_(getValueByAliases_(row, ['stock_qty'], 0)),
@@ -386,6 +469,43 @@ function normalizeAdminMenuRecord_(row) {
 
 function normalizeAdminNumberUpdate_(value) {
   return numberValue_(value);
+}
+
+function makeNextMenuId_(records) {
+  var maxNumber = 0;
+
+  records.forEach(function (record) {
+    var menuId = stringValue_(getValueByAliases_(record, ['menu_id'], '')).toUpperCase();
+    var match = menuId.match(/^MN(\d+)$/);
+
+    if (match) {
+      maxNumber = Math.max(maxNumber, numberValue_(match[1]));
+    }
+  });
+
+  var nextNumber = maxNumber + 1;
+  var suffix = String(nextNumber);
+
+  while (suffix.length < 3) {
+    suffix = '0' + suffix;
+  }
+
+  return 'MN' + suffix;
+}
+
+function getNextMenuSortOrder_(records, categoryId) {
+  var maxSort = 0;
+  var categoryKey = normalizeLookupKey_(categoryId);
+
+  records.forEach(function (record) {
+    if (normalizeLookupKey_(getValueByAliases_(record, ['category_id'], '')) !== categoryKey) {
+      return;
+    }
+
+    maxSort = Math.max(maxSort, numberValue_(getValueByAliases_(record, ['sort_order'], 0)));
+  });
+
+  return maxSort + 1;
 }
 
 function addCategoryLookup_(categoryByKey, key, category) {

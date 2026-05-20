@@ -1341,19 +1341,39 @@ function buildTableOrderItemRecords_(orderId, items, menuById, createdBy, timest
   return items.map(function (item) {
     var menuId = stringValue_(item.menu_id || item.menuId);
     var quantity = numberValue_(item.quantity || item.qty || 0);
+    var isCustomItem = isCustomCounterSaleItem_(item);
+
+    if (!menuId && isCustomItem) {
+      menuId = CUSTOM_COUNTER_MENU_ID;
+    }
 
     if (!menuId || quantity <= 0) {
       throw new Error('Invalid order item');
     }
 
     var menu = menuById[menuId];
+    var menuNameSnapshot = '';
+    var unitPrice = 0;
 
-    if (!menu) {
+    if (isCustomItem) {
+      menuId = CUSTOM_COUNTER_MENU_ID;
+      menuNameSnapshot = getCustomCounterItemName_(item);
+      unitPrice = numberValue_(item.unit_price || item.unitPrice || item.price || 0);
+
+      if (!menuNameSnapshot) {
+        throw new Error('Custom table item name is required');
+      }
+
+      if (unitPrice <= 0) {
+        throw new Error('Custom table item price must be greater than 0');
+      }
+    } else if (!menu) {
       throw new Error('Menu not found: ' + menuId);
+    } else {
+      menuNameSnapshot = stringValue_(getValueByAliases_(menu, ['name_th', 'menu_name'], menuId));
+      unitPrice = numberValue_(getValueByAliases_(menu, ['price', 'base_price'], 0));
     }
 
-    var menuNameSnapshot = stringValue_(getValueByAliases_(menu, ['name_th', 'menu_name'], menuId));
-    var unitPrice = numberValue_(getValueByAliases_(menu, ['price', 'base_price'], 0));
     var discount = numberValue_(item.discount || 0);
     var total = Math.max(0, quantity * unitPrice - discount);
 

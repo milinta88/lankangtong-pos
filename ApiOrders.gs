@@ -3,6 +3,7 @@ var ORDER_STATUS_PAID = 'PAID';
 var PAYMENT_STATUS_UNPAID = 'UNPAID';
 var PAYMENT_STATUS_PAID = 'PAID';
 var CUSTOM_COUNTER_MENU_ID = 'CUSTOM_COUNTER';
+var CUSTOM_TABLE_MENU_ID = 'CUSTOM';
 var CUSTOM_COUNTER_ITEM_TYPE = 'CUSTOM_COUNTER';
 var TEST_DIRECT_STOCK_MENU_ID = 'MN066';
 var TEST_DIRECT_STOCK_MENU_NAME = 'น้ำเปล่า (เล็ก)';
@@ -764,7 +765,9 @@ function isCustomCounterSaleItem_(item) {
   var itemType = stringValue_(item.item_type || item.itemType).toUpperCase();
   var menuId = stringValue_(item.menu_id || item.menuId).toUpperCase();
 
-  return itemType === CUSTOM_COUNTER_ITEM_TYPE || menuId === CUSTOM_COUNTER_MENU_ID;
+  return itemType === CUSTOM_COUNTER_ITEM_TYPE ||
+    menuId === CUSTOM_COUNTER_MENU_ID ||
+    menuId === CUSTOM_TABLE_MENU_ID;
 }
 
 function getCustomCounterItemName_(item) {

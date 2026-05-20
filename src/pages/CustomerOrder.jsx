@@ -40,7 +40,7 @@ function makeCartItem(menu) {
   };
 }
 
-function MenuTile({ menu, selectedQuantity = 0, onAdd }) {
+function MenuTile({ menu, selectedQuantity = 0, onAdd, onDecrease }) {
   const [imageFailed, setImageFailed] = React.useState(false);
   const imageUrl = typeof menu.image_url === 'string' ? menu.image_url.trim() : '';
   const shouldShowImage = imageUrl.startsWith('https://') && !imageFailed;
@@ -51,9 +51,7 @@ function MenuTile({ menu, selectedQuantity = 0, onAdd }) {
   }, [imageUrl]);
 
   return (
-    <button
-      type="button"
-      onClick={() => onAdd(menu)}
+    <div
       className="flex gap-3 rounded-[24px] border border-[#eadbc9] bg-white p-3 text-left shadow-sm shadow-stone-900/5 transition active:scale-[0.99] hover:border-[#d4b99d]"
     >
       <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[20px] bg-[#efe5da]">
@@ -83,17 +81,29 @@ function MenuTile({ menu, selectedQuantity = 0, onAdd }) {
         {menu.description ? <p className="mt-1 line-clamp-2 text-xs font-semibold text-stone-500">{menu.description}</p> : null}
         <div className="mt-3 flex items-center justify-between gap-2">
           <span className="text-lg font-black text-[#6f4e37]">฿{formatMoney(menu.base_price)}</span>
-          <span
-            className={`inline-flex h-10 items-center justify-center gap-1.5 rounded-2xl text-white shadow-md shadow-stone-950/15 ${
-              hasSelectedQuantity ? 'min-w-16 bg-emerald-600 px-3' : 'w-10 bg-[#0f0b08]'
-            }`}
-          >
-            <Plus size={18} />
-            {hasSelectedQuantity ? <span className="text-sm font-black">{selectedQuantity}</span> : null}
-          </span>
+          <div className="flex items-center rounded-2xl bg-[#f4ede6] p-1 shadow-sm">
+            <button
+              type="button"
+              onClick={() => onDecrease(menu)}
+              disabled={!hasSelectedQuantity}
+              aria-label={`ลด ${menu.menu_name}`}
+              className="flex h-9 w-9 items-center justify-center rounded-xl text-stone-700 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <Minus size={16} />
+            </button>
+            <span className="min-w-9 text-center text-sm font-black text-stone-950">{selectedQuantity}</span>
+            <button
+              type="button"
+              onClick={() => onAdd(menu)}
+              aria-label={`เพิ่ม ${menu.menu_name}`}
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0f0b08] text-white shadow-sm shadow-stone-950/15 transition active:scale-95"
+            >
+              <Plus size={17} />
+            </button>
+          </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -256,6 +266,25 @@ export default function CustomerOrder() {
     });
   }
 
+  function decreaseFromMenu(menu) {
+    setCart((current) => {
+      const target = [...current]
+        .reverse()
+        .find((item) => item.menu_id === menu.menu_id && item.note === '') ||
+        [...current].reverse().find((item) => item.menu_id === menu.menu_id);
+
+      if (!target) return current;
+
+      return current
+        .map((item) => {
+          if (item.cart_id !== target.cart_id) return item;
+          const quantity = Math.max(0, item.quantity - 1);
+          return { ...item, quantity, total: quantity * item.unit_price };
+        })
+        .filter((item) => item.quantity > 0);
+    });
+  }
+
   function updateCartItem(cartId, updates) {
     setCart((current) =>
       current
@@ -410,6 +439,7 @@ export default function CustomerOrder() {
                       menu={menu}
                       selectedQuantity={cartQuantityByMenuId[menu.menu_id] || 0}
                       onAdd={addToCart}
+                      onDecrease={decreaseFromMenu}
                     />
                   ))}
             </section>

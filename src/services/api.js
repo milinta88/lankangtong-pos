@@ -337,6 +337,17 @@ export function getAdminMenus(options = {}) {
   return postCachedAction('GET_ADMIN_MENUS', {}, ADMIN_MENUS_CACHE_KEY, ADMIN_MENUS_CACHE_TTL_MS, options);
 }
 
+export async function createMenu(payload) {
+  const result = await postAction('CREATE_MENU', payload);
+
+  if (result && result.success) {
+    clearAdminMenusClientCache();
+    clearMenuClientCache();
+  }
+
+  return result;
+}
+
 export async function updateMenuBasic(menu_id, fields) {
   const result = await postAction('UPDATE_MENU_BASIC', { menu_id, fields });
 
